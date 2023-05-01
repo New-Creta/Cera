@@ -10,8 +10,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(cera_include_dir "${CMAKE_CURRENT_LIST_DIR}/src/cera/include")
 set(cera_src_dir "${CMAKE_CURRENT_LIST_DIR}/src/cera/src")
 
-set(cera_include_files "${cera_include_dir}/cera/types.h")
-set(cera_source_files "${cera_src_dir}/types.cpp")
+set(cera_include_files "${cera_include_dir}/cera/types.h"
+                        "${cera_include_dir}/cera/buffer.h"
+                        "${cera_include_dir}/cera/swap_chain.h")
+set(cera_source_files "${cera_src_dir}/types.cpp"
+                        "${cera_src_dir}/buffer.cpp"
+                        "${cera_src_dir}/swap_chain.cpp")
 
 add_library(cera ${cera_include_files} ${cera_source_files})
 
