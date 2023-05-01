@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Windows.h>
+
 namespace os
 {
     struct window_viewport
@@ -21,6 +23,7 @@ namespace os
 
     int app_initialize();
     int app_update();
-    int app_render();
+    int app_render(HDC hdc, const PAINTSTRUCT& ps);
+    int app_present();
     int app_shutdown();
 }

@@ -1,6 +1,5 @@
 #include "entry.h"
 
-#include <Windows.h>
 #include <shellapi.h>
 #include <stdlib.h>
 
@@ -29,6 +28,8 @@ namespace os
 
     window_context s_ctx;
 
+    constexpr int kTimerID = 101;
+
     LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         PAINTSTRUCT ps;
@@ -36,9 +37,16 @@ namespace os
 
         switch (message)
         {
+        case WM_CREATE:
+            SetTimer(hWnd, kTimerID, 1, NULL);
+            break;
+        case WM_TIMER:
+            os::app_present();
+            InvalidateRect(hWnd, NULL, FALSE);
+            break;
         case WM_PAINT:
             hdc = BeginPaint(hWnd, &ps);
-            if(FAILED(os::app_render()))
+            if(FAILED(os::app_render(hdc, ps)))
             {
                 std::cout << "[ERROR] Client code failed to render" << std::endl;
 
