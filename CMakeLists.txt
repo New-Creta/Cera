@@ -1,58 +1,41 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.28)
 
 project(cera)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+# Use C++ 17 as a standard
+set(CMAKE_CXX_STANDARD 17)
 
-# cera
-set(cera_include_dir "${CMAKE_CURRENT_LIST_DIR}/src/cera/include")
-set(cera_src_dir "${CMAKE_CURRENT_LIST_DIR}/src/cera/src")
+# Enable folder structure in the IDE
+SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
-set(cera_include_files "${cera_include_dir}/cera/types.h"
-                        "${cera_include_dir}/cera/buffer.h"
-                        "${cera_include_dir}/cera/swap_chain.h")
-set(cera_source_files "${cera_src_dir}/types.cpp"
-                        "${cera_src_dir}/buffer.cpp"
-                        "${cera_src_dir}/swap_chain.cpp")
+if(MSVC)
+	# Remove the always defined _WINDOWS flag
+	# CPP
+	string (REPLACE "/D_WINDOWS" "" CMAKE_CUSTOM_CPP_FLAGS ${CMAKE_CXX_FLAGS})
+	string (REPLACE "/DWIN32" "" CMAKE_CUSTOM_CPP_FLAGS ${CMAKE_CUSTOM_CPP_FLAGS}) 
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CUSTOM_CPP_FLAGS}" CACHE STRING "" FORCE)
+	# C
+	string (REPLACE "/D_WINDOWS" "" CMAKE_CUSTOM_C_FLAGS ${CMAKE_C_FLAGS})
+	string (REPLACE "/DWIN32" "" CMAKE_CUSTOM_C_FLAGS ${CMAKE_CUSTOM_C_FLAGS})
+	SET(CMAKE_C_FLAGS "${CMAKE_CUSTOM_C_FLAGS}" CACHE STRING "" FORCE)
+endif()
 
-add_library(cera ${cera_include_files} ${cera_source_files})
+# Debug postfix
+SET (CMAKE_DEBUG_POSTFIX _d)
 
-set_property(TARGET cera PROPERTY CXX_STANDARD 17)
-set_property(TARGET cera PROPERTY CXX_STANDARD_REQUIRED ON)
+# Some easy access to folders within this repository
+SET(SOURCE_THIRDPARTY_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/source/third-party)
+SET(SOURCE_RUNTIME_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/source/runtime)
+SET(SOURCE_TOOLS_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/source/tools)
 
-target_include_directories(cera PRIVATE ${cera_include_dir})
+MESSAGE(STATUS ${SOURCE_THIRDPARTY_DIRECTORY})
+MESSAGE(STATUS ${SOURCE_RUNTIME_DIRECTORY})
+MESSAGE(STATUS ${SOURCE_TOOLS_DIRECTORY})
 
-set_target_properties( cera PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-set_target_properties( cera PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-set_target_properties( cera PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+# Specify the usage of UNICODE
+add_definitions(-DUNICODE)
+add_definitions(-D_UNICODE)
 
-# sandbox
-set(common_include_dir "${CMAKE_CURRENT_LIST_DIR}/examples/common/include")
-set(common_src_dir "${CMAKE_CURRENT_LIST_DIR}/examples/common/src")
-set(sandbox_include_dir "${CMAKE_CURRENT_LIST_DIR}/examples/sandbox/include")
-set(sandbox_src_dir "${CMAKE_CURRENT_LIST_DIR}/examples/sandbox/src")
-
-set(sandbox_include_files "${common_include_dir}/entry.h")
-                        
-set(sandbox_source_files "${common_src_dir}/win32/entry.cpp"
-                        "${sandbox_src_dir}/sandbox.cpp")
-
-add_executable(sandbox ${sandbox_include_files} ${sandbox_source_files})
-
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
-
-set_property(TARGET sandbox PROPERTY CXX_STANDARD 17)
-set_property(TARGET sandbox PROPERTY CXX_STANDARD_REQUIRED ON)
-
-target_include_directories(sandbox PRIVATE ${cera_include_dir})
-target_include_directories(sandbox PRIVATE ${common_include_dir})
-target_include_directories(sandbox PRIVATE ${common_include_dir}/win32)
-target_include_directories(sandbox PRIVATE ${sandbox_include_dir})
-
-target_link_libraries(sandbox PRIVATE cera)
-
-set_target_properties(sandbox PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-set_target_properties(sandbox PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-set_target_properties(sandbox PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_subdirectory(${SOURCE_THIRDPARTY_DIRECTORY})
+add_subdirectory(${SOURCE_RUNTIME_DIRECTORY})
+add_subdirectory(${SOURCE_TOOLS_DIRECTORY})
