@@ -187,14 +187,14 @@ namespace cera
         if (!get_definition().has_os_window_border)
         {
             const DWMNCRENDERINGPOLICY rendering_policy = DWMNCRP_DISABLED;
-            if(FAILED(DwmSetWindowAttribute(m_hwnd, DWMWA_NCRENDERING_POLICY, &rendering_policy, sizeof(rendering_policy))))
+            if(FAILED(::DwmSetWindowAttribute(m_hwnd, DWMWA_NCRENDERING_POLICY, &rendering_policy, sizeof(rendering_policy))))
             {
                 log::error("DwmSetWindowAttribute -> DWMWA_NCRENDERING_POLICY: failed");
                 return;
             }
 
             const BOOL enable_nc_paint = false;
-            if(FAILED(DwmSetWindowAttribute(m_hwnd, DWMWA_ALLOW_NCPAINT, &enable_nc_paint, sizeof(enable_nc_paint))))
+            if(FAILED(::DwmSetWindowAttribute(m_hwnd, DWMWA_ALLOW_NCPAINT, &enable_nc_paint, sizeof(enable_nc_paint))))
             {
                 log::error("DwmSetWindowAttribute -> DWMWA_ALLOW_NCPAINT: failed");
                 return;
@@ -262,7 +262,7 @@ namespace cera
 
         // NOTE: We explicitly don't delete the region object, because the OS deletes the handle when it no longer needed after
         // a call to SetWindowRgn.
-        if(!SetWindowRgn(m_hwnd, region, false))
+        if(!::SetWindowRgn(m_hwnd, region, false))
         {
             log::error("Failed to adjust window region");
             return;
