@@ -19,8 +19,8 @@ namespace cera
 {
     struct resolution_settings
     {
-        s32 rex_x = 1280;
-        s32 rex_y = 720;
+        s32 res_x = 1280;
+        s32 res_y = 720;
         window_mode window_mode = window_mode::windowed;
     };
 
@@ -46,9 +46,13 @@ namespace cera
 
         m_game_window = create_game_window(game_window_width, game_window_height);
         m_game_window->set_window_mode(window_mode::windowed);
-        m_game_window->show();
 
         return true;
+    }
+
+    bool game_engine::start()
+    {
+        m_game_window->show();
     }
     
     void game_engine::tick()
@@ -59,8 +63,16 @@ namespace cera
         m_game_instance->on_update(update_args);
     }
 
+    void game_engine::end()
+    {
+        m_game_window->hide();
+    }
+
     void game_engine::shutdown()
     {
+        m_game_window->destroy();
+        m_game_window.reset();
+
         m_game_instance->unload_content();
         m_game_instance->destroy();
         m_game_instance.reset();
@@ -68,8 +80,8 @@ namespace cera
 
     std::shared_ptr<generic_window> game_engine::create_game_window(s32 game_window_width, s32 game_window_height)
     {
-        s32 rex_x               = g_game_window_settings_override_enabled || game_window_width == -1 ? g_system_resolution.rex_x : game_window_width;
-        s32 rex_y               = g_game_window_settings_override_enabled || game_window_height == -1 ? g_system_resolution.rex_y : game_window_height;
+        s32 res_x               = g_game_window_settings_override_enabled || game_window_width == -1 ? g_system_resolution.res_x : game_window_width;
+        s32 res_y               = g_game_window_settings_override_enabled || game_window_height == -1 ? g_system_resolution.res_y : game_window_height;
         window_mode window_mode = g_system_resolution.window_mode;
        
         // here we override settings given by the user on the command line
@@ -119,8 +131,8 @@ namespace cera
             .set_type(window_type::normal)
             .set_x_position(win_x.has_value() ? win_x.value() : 0.0f)
             .set_y_position(win_y.has_value() ? win_y.value() : 0.0f)
-            .set_width(rex_x)
-            .set_height(rex_y)
+            .set_width(res_x)
+            .set_height(res_y)
             .set_has_os_window_border(!use_borderless_window)
             .set_appears_in_taskbar(true)
             .set_is_topmost_window(true)

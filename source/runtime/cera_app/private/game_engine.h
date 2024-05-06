@@ -17,7 +17,9 @@ namespace cera
         game_engine(gui_application& application, const std::shared_ptr<abstract_game>& in_game);
 
         bool initialize(s32 game_window_width, s32 game_window_height);
+        bool start();
         void tick();
+        void end();
         void shutdown();
 
     private:

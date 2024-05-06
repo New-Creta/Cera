@@ -19,13 +19,40 @@ namespace cera
         
         static s32 engine_init(const std::shared_ptr<abstract_game>& game, s32 game_window_width, s32 game_window_height)
         {
+            // Create the application
             gui_application::create();
 
+            // Initialize the renderer
+            if (!renderer::initialize(user_data))
+            {
+                log::error("Renderer initialization failed.");
+                return false;
+            }
+
+            display_renderer_info();
+
+            // Create the engine
             g_engine = std::make_unique<game_engine>(gui_application::get(), game);
             if(!g_engine->initialize(game_window_width, game_window_height))
             {
                 log::error("Game Engine initialization failed.");
                 return 1;
+            }
+
+            // Post initialize the renderer
+            if (renderer::post_initialize() == false) // NOLINT(readability-simplify-boolean-expr)
+            {
+                log::error("Renderer post initialization failed.");
+                return false;
+            }
+
+            renderer::flush();
+
+            // Post initialize the engine
+            if (!g_engine->start())
+            {
+                log::error("Renderer post initialization failed.");
+                return false;
             }
 
             g_is_running = true;
@@ -45,6 +72,7 @@ namespace cera
         {
             g_is_running = false;
 
+            g_engine->end();
             g_engine->shutdown();
             g_engine.reset();
         }
