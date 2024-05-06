@@ -157,7 +157,7 @@ namespace cera
         }
 
         // Creating the Window
-        m_hwnd = CreateWindowEx(
+        m_hwnd = ::CreateWindowEx(
             window_ex_style,
             s_app_window_class,
             get_definition().title.c_str(),
