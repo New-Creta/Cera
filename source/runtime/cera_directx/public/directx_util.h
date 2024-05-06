@@ -1,0 +1,70 @@
+#pragma once
+
+// NOLINTBEGIN(llvm-include-order)
+// clang-format off
+
+#include "cera_engine/platform/win/win_com_ptr.h"
+
+#include <d3d12.h>
+#include <d3dx12.h>
+#include <d3d11on12.h>
+  
+#if defined(CERA_BUILD_DEBUG) || defined(CERA_BUILD_DEBUG_OPT)
+#define CERA_ENABLE_GFX_DEBUGGING
+#endif
+
+#ifdef CERA_ENABLE_GFX_DEBUGGING
+#   define CERA_ENABLE_DEBUG_SHADER_COMPILATION 1
+#   define CERA_ENABLE_DEBUG_RESOURCE_NAMES 1
+#   define CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_INFO 1
+#   define CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_WARNING 1
+#   define CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_ERROR 1
+#   define CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_CORRUPTION 1
+#   define CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_MESSAGE 1
+#   define CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_INFO 1
+#   define CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_WARNING 1
+#   define CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_ERROR 1
+#   define CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_CORRUPTION 1
+#   define CERA_ENABLE_DXGI_DEBUG_LAYER 1
+#   define CERA_ENABLE_DXGI_LIVE_OBJECT_REPORT 1
+#   define CERA_ENABLE_DX12_DEBUG_LAYER 1
+#   define CERA_ENABLE_DX12_LIVE_OBJECT_REPORT 1
+#   define CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_MESSAGE 1
+# else
+#   define CERA_ENABLE_DEBUG_SHADER_COMPILATION 0
+#   define CERA_ENABLE_DEBUG_RESOURCE_NAMES 0
+#   define CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_INFO 0
+#   define CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_WARNING 0
+#   define CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_ERROR 0
+#   define CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_CORRUPTION 0
+#   define CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_MESSAGE 0
+#   define CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_INFO 0
+#   define CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_WARNING 0
+#   define CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_ERROR 0
+#   define CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_CORRUPTION 0
+#   define CERA_ENABLE_DXGI_DEBUG_LAYER 0
+#   define CERA_ENABLE_DXGI_LIVE_OBJECT_REPORT 0
+#   define CERA_ENABLE_DX12_DEBUG_LAYER 0
+#   define CERA_ENABLE_DX12_LIVE_OBJECT_REPORT 0
+#   define CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_MESSAGE 0
+#endif
+
+namespace cera 
+{ 
+  namespace globals 
+  { 
+    constexpr bool g_enable_dx12_severity_message     = CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_MESSAGE; 
+    constexpr bool g_enable_dx12_severity_info        = CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_INFO;
+    constexpr bool g_enable_dx12_severity_warning     = CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_WARNING;
+    constexpr bool g_enable_dx12_severity_error       = CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_ERROR;
+    constexpr bool g_enable_dx12_severity_corruption  = CERA_ENABLE_DX12_BREAK_SEVERITY_LEVEL_CORRUPTION;
+    constexpr bool g_enable_dxgi_severity_message     = CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_MESSAGE;
+    constexpr bool g_enable_dxgi_severity_info        = CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_INFO;
+    constexpr bool g_enable_dxgi_severity_warning     = CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_WARNING;
+    constexpr bool g_enable_dxgi_severity_error       = CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_ERROR;
+    constexpr bool g_enable_dxgi_severity_corruption  = CERA_ENABLE_DXGI_BREAK_SEVERITY_LEVEL_CORRUPTION;
+  } // namespace globals 
+} // namespace cera
+
+// clang-format on
+// NOLINTEND(llvm-include-order)

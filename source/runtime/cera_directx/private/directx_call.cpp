@@ -1,0 +1,52 @@
+#include "directx_call.h"
+
+#include "directx_util.h"
+#include "log.h"
+
+#include <comdef.h>
+
+namespace cera
+{
+  namespace renderer
+  {
+    namespace directx
+    {
+      //-------------------------------------------------------------------------
+      rsl::big_stack_string report_hr_error(HRESULT hr, const rsl::string_view file, const rsl::string_view function, card32 lineNr)
+      {
+        const _com_error err(hr);
+        rsl::big_stack_string error_message(err.ErrorMessage());
+        CERA_ERROR(LogDirectX, "DirectX Error\nFile: {}\nFunction: {}\nOn line: {}\nDX error: {}", file, function, lineNr, error_message);
+        return error_message;
+      }
+
+      //-------------------------------------------------------------------------
+      DXCall::DXCall(HResult error, rsl::string_view file, rsl::string_view function, card32 lineNr)
+          : m_error(error)
+      {
+        if(FAILED(m_error))
+        {
+          m_error_message  = report_hr_error(m_error, file, function, lineNr);
+        }
+      }
+
+      //-------------------------------------------------------------------------
+      bool DXCall::has_failed() const
+      {
+        return FAILED(m_error);
+      }
+
+      //-------------------------------------------------------------------------
+      bool DXCall::has_succeeded() const
+      {
+        return !has_failed();
+      }
+
+      //-------------------------------------------------------------------------
+      rsl::string_view DXCall::error_message() const
+      {
+        return m_error_message.to_view();
+      }
+    } // namespace directx
+  }   // namespace renderer
+} // namespace cera
