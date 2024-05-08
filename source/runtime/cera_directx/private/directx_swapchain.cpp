@@ -149,8 +149,8 @@ namespace cera
     {
       if(m_width != clientWidth || m_height != clientHeight)
       {
-        m_width  = (rsl::max)(1, clientWidth);
-        m_height = (rsl::max)(1, clientHeight);
+        m_width  = (std::max)(1, clientWidth);
+        m_height = (std::max)(1, clientHeight);
 
         m_device.flush();
 
@@ -195,7 +195,7 @@ namespace cera
       return m_render_target;
     }
 
-    u32 Swapchain::present(const rsl::shared_ptr<Texture>& texture)
+    u32 Swapchain::present(const std::shared_ptr<Texture>& texture)
     {
       auto command_list = m_command_queue.command_list();
       auto back_buffer  = m_back_buffer_textures[m_current_back_buffer_index];
@@ -263,7 +263,7 @@ namespace cera
 
         // Set the names for the backbuffer textures.
         // Useful for debugging.
-        m_back_buffer_textures[i]->set_resource_name(L"Backbuffer[" + rsl::to_wstring(i) + L"]");
+        m_back_buffer_textures[i]->set_resource_name(L"Backbuffer[" + std::to_wstring(i) + L"]");
       }
 
       return true;

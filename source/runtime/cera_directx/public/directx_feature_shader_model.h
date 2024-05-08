@@ -1,12 +1,12 @@
 #pragma once
 
-#include "cera_std/string.h"
+#include "directx_util.h"
 
-#include <d3d12.h>
+#include <string>
 
 namespace cera
 {
-  rsl::string_view shader_model_name(D3D_SHADER_MODEL shaderModel);
+  std::string_view shader_model_name(D3D_SHADER_MODEL shaderModel);
 
   bool check_for_shader_model_support(ID3D12Device* device, D3D_SHADER_MODEL version);
 

@@ -8,24 +8,24 @@
 
 namespace cera
 {
-  const rsl::array g_expected_feature_levels = {D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_12_0, D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_12_1};
+  const std::array g_expected_feature_levels = {D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_12_0, D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_12_1};
 
   //-------------------------------------------------------------------------
-  rsl::string_view feature_level_name(D3D_FEATURE_LEVEL level)
+  std::string_view feature_level_name(D3D_FEATURE_LEVEL level)
   {
     switch(level)
     {
-      case D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_12_0: return rsl::string_view("D3D_FEATURE_LEVEL_12_0");
-      case D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_12_1: return rsl::string_view("D3D_FEATURE_LEVEL_12_1");
-      case D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_1_0_CORE: return rsl::string_view("D3D_FEATURE_LEVEL_1_0_CORE");
-      default: return rsl::string_view("Unknown feature level");
+      case D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_12_0: return std::string_view("D3D_FEATURE_LEVEL_12_0");
+      case D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_12_1: return std::string_view("D3D_FEATURE_LEVEL_12_1");
+      case D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_1_0_CORE: return std::string_view("D3D_FEATURE_LEVEL_1_0_CORE");
+      default: return std::string_view("Unknown feature level");
     }
   }
 
   //-------------------------------------------------------------------------
   bool is_correct_feature_level(D3D_FEATURE_LEVEL level)
   {
-    return rsl::cend(g_expected_feature_levels) != rsl::find(rsl::cbegin(g_expected_feature_levels), rsl::cend(g_expected_feature_levels), level);
+    return std::cend(g_expected_feature_levels) != std::find(std::cbegin(g_expected_feature_levels), std::cend(g_expected_feature_levels), level);
   }
 
   //-------------------------------------------------------------------------

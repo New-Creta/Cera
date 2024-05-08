@@ -29,6 +29,9 @@ target_include_directories(cera_rhi PRIVATE ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi
 # Public includes
 target_include_directories(cera_rhi PUBLIC ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public)
 
+# Link libraries
+target_link_libraries(cera_rhi PUBLIC cera_core)
+
 # Target properties
 set_target_properties(cera_rhi PROPERTIES FOLDER "runtime")
 

@@ -96,7 +96,7 @@ namespace cera
         default: break;
       }
 
-      m_process_in_flight_command_lists_thread = rsl::thread([&] { proccess_in_flight_command_lists(); });
+      m_process_in_flight_command_lists_thread = std::thread([&] { proccess_in_flight_command_lists(); });
 
       threading::set_thread_name(m_process_in_flight_command_lists_thread, thread_name);
     }
@@ -107,9 +107,9 @@ namespace cera
       m_process_in_flight_command_lists_thread.join();
     }
 
-    rsl::shared_ptr<CommandList> CommandQueue::command_list()
+    std::shared_ptr<CommandList> CommandQueue::command_list()
     {
-      rsl::shared_ptr<CommandList> command_list;
+      std::shared_ptr<CommandList> command_list;
 
       // If there is a command list on the queue.
       if(!m_available_command_lists.empty())
@@ -119,7 +119,7 @@ namespace cera
       else
       {
         // Otherwise create a new command list.
-        command_list = rsl::make_shared<adaptors::MakeCommandList>(m_device, m_command_list_type);
+        command_list = std::make_shared<adaptors::MakeCommandList>(m_device, m_command_list_type);
       }
 
       return command_list;
@@ -132,21 +132,21 @@ namespace cera
 
     // Execute a command list.
     // Returns the fence value to wait for for this command list.
-    uint64_t CommandQueue::execute_command_list(rsl::shared_ptr<CommandList> commandList)
+    uint64_t CommandQueue::execute_command_list(std::shared_ptr<CommandList> commandList)
     {
-      return execute_command_lists(rsl::vector<rsl::shared_ptr<CommandList>>({commandList}));
+      return execute_command_lists(std::vector<std::shared_ptr<CommandList>>({commandList}));
     }
 
-    uint64_t CommandQueue::execute_command_lists(const rsl::vector<rsl::shared_ptr<CommandList>>& commandLists)
+    uint64_t CommandQueue::execute_command_lists(const std::vector<std::shared_ptr<CommandList>>& commandLists)
     {
       ResourceStateTracker::lock();
 
       // Command lists that need to put back on the command list queue.
-      rsl::vector<rsl::shared_ptr<CommandList>> to_be_queued;
+      std::vector<std::shared_ptr<CommandList>> to_be_queued;
       to_be_queued.reserve(commandLists.size() * 2); // 2x since each command list will have a pending command list.
 
       // Command lists that need to be executed.
-      rsl::vector<ID3D12CommandList*> d3d_command_lists;
+      std::vector<ID3D12CommandList*> d3d_command_lists;
       d3d_command_lists.reserve(commandLists.size() * 2); // 2x since each command list will have a pending command list.
 
       for(auto commandList: commandLists)
@@ -203,7 +203,7 @@ namespace cera
         if(event)
         {
           m_d3d_fence->SetEventOnCompletion(fenceValue, event);
-          ::WaitForSingleObject(event, (rsl::numeric_limits<unsigned long>::max)());
+          ::WaitForSingleObject(event, (std::numeric_limits<unsigned long>::max)());
 
           ::CloseHandle(event);
         }
@@ -212,7 +212,7 @@ namespace cera
 
     void CommandQueue::flush()
     {
-      rsl::unique_lock<rsl::mutex> lock(m_process_in_flight_command_lists_thread_mutex);
+      std::unique_lock<std::mutex> lock(m_process_in_flight_command_lists_thread_mutex);
       m_process_in_flight_command_lists_thread_CV.wait(lock, [this] { return m_in_flight_command_lists.empty(); });
 
       // In case the command queue was signaled directly
@@ -229,7 +229,7 @@ namespace cera
 
     void CommandQueue::proccess_in_flight_command_lists()
     {
-      std::unique_lock<rsl::mutex> lock(m_process_in_flight_command_lists_thread_mutex, std::defer_lock);
+      std::unique_lock<std::mutex> lock(m_process_in_flight_command_lists_thread_mutex, std::defer_lock);
 
       while(m_bprocess_in_flight_command_lists)
       {
@@ -251,7 +251,7 @@ namespace cera
 
         m_process_in_flight_command_lists_thread_CV.notify_one();
 
-        rsl::this_thread::yield();
+        std::this_thread::yield();
       }
     }
   } // namespace renderer

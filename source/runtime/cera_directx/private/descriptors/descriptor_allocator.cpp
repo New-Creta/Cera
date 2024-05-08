@@ -31,7 +31,7 @@ namespace cera
 
     DescriptorAllocation DescriptorAllocator::allocate(u32 numDescriptors)
     {
-      rsl::unique_lock<rsl::mutex> lock(m_allocation_mutex);
+      std::unique_lock<std::mutex> lock(m_allocation_mutex);
 
       DescriptorAllocation allocation;
 
@@ -56,7 +56,7 @@ namespace cera
       // No available heap could satisfy the requested number of descriptors.
       if(allocation.is_null())
       {
-        m_num_descriptors_per_heap = (rsl::max)(m_num_descriptors_per_heap, numDescriptors);
+        m_num_descriptors_per_heap = (std::max)(m_num_descriptors_per_heap, numDescriptors);
         auto new_page              = create_allocator_page();
 
         allocation = new_page->allocate(numDescriptors);
@@ -67,7 +67,7 @@ namespace cera
 
     void DescriptorAllocator::release_stale_descriptors()
     {
-      rsl::unique_lock<rsl::mutex> lock(m_allocation_mutex);
+      std::unique_lock<std::mutex> lock(m_allocation_mutex);
 
       for(size_t i = 0; i < m_heap_pool.size(); ++i)
       {
@@ -82,9 +82,9 @@ namespace cera
       }
     }
 
-    rsl::shared_ptr<DescriptorAllocatorPage> DescriptorAllocator::create_allocator_page()
+    std::shared_ptr<DescriptorAllocatorPage> DescriptorAllocator::create_allocator_page()
     {
-      auto new_page = rsl::make_shared<internal::MakeAllocatorPage>(m_device, m_heap_type, m_num_descriptors_per_heap);
+      auto new_page = std::make_shared<internal::MakeAllocatorPage>(m_device, m_heap_type, m_num_descriptors_per_heap);
 
       m_heap_pool.emplace_back(new_page);
       m_available_heaps.insert(m_heap_pool.size() - 1);

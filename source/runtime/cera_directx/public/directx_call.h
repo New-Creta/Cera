@@ -1,7 +1,8 @@
 #pragma once
 
-#include "cera_std/bonus/string.h"
-#include "cera_std/bonus/types.h"
+#include "util/types.h"
+
+#include <string>
 
 namespace cera
 {
@@ -14,23 +15,23 @@ namespace cera
       class DXCall
       {
       public:
-        DXCall(HResult error, rsl::string_view file, rsl::string_view function, card32 lineNr);
+        DXCall(HResult error, std::string_view file, std::string_view function, s32 lineNr);
 
         bool has_failed() const;
         bool has_succeeded() const;
 
-        rsl::string_view error_message() const;
+        std::string_view error_message() const;
 
       private:
         HResult m_error;
-        rsl::big_stack_string m_error_message;
+        std::string m_error_message;
       };
 
       namespace internal
       {
         //-------------------------------------------------------------------------
         template <typename Func>
-        HResult call_to_dx_api(Func func, rsl::string_view file, rsl::string_view function, card32 lineNr)
+        HResult call_to_dx_api(Func func, std::string_view file, std::string_view function, s32 lineNr)
         {
           HResult hr = func();
           cera::renderer::directx::DXCall(hr, file, function, lineNr);
@@ -39,7 +40,7 @@ namespace cera
 
         //-------------------------------------------------------------------------
         template <typename Func>
-        bool call_to_dx_api_has_succeeded(Func func, rsl::string_view file, rsl::string_view function, card32 lineNr)
+        bool call_to_dx_api_has_succeeded(Func func, std::string_view file, std::string_view function, s32 lineNr)
         {
           HResult hr = func();
           return cera::renderer::directx::DXCall(hr, file, function, lineNr).has_succeeded();
@@ -47,7 +48,7 @@ namespace cera
 
         //-------------------------------------------------------------------------
         template <typename Func>
-        bool call_to_dx_api_has_failed(Func func, rsl::string_view file, rsl::string_view function, card32 lineNr)
+        bool call_to_dx_api_has_failed(Func func, std::string_view file, std::string_view function, s32 lineNr)
         {
           HResult hr = func();
           return cera::renderer::directx::DXCall(hr, file, function, lineNr).has_failed();

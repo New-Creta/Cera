@@ -28,7 +28,7 @@ namespace cera
       m_descriptor_handle_increment_size = device.d3d_device()->GetDescriptorHandleIncrementSize(heapType);
 
       // Allocate space for staging CPU visible descriptors.
-      m_descriptor_handle_cache = rsl::make_unique<D3D12_CPU_DESCRIPTOR_HANDLE[]>(m_num_descriptors_per_heap);
+      m_descriptor_handle_cache = std::make_unique<D3D12_CPU_DESCRIPTOR_HANDLE[]>(m_num_descriptors_per_heap);
     }
 
     DynamicDescriptorHeap::~DynamicDescriptorHeap() {}
@@ -126,7 +126,7 @@ namespace cera
       return h_GPU;
     }
 
-    void DynamicDescriptorHeap::parse_root_signature(const rsl::shared_ptr<RootSignature>& rootSignature)
+    void DynamicDescriptorHeap::parse_root_signature(const std::shared_ptr<RootSignature>& rootSignature)
     {
       // If the root signature changes, all descriptors must be (re)bound to the
       // command list.
@@ -235,7 +235,7 @@ namespace cera
       return num_stale_descriptors;
     }
 
-    void DynamicDescriptorHeap::commit_descriptor_tables(CommandList& commandList, rsl::function<void(ID3D12GraphicsCommandList*, u32, D3D12_GPU_DESCRIPTOR_HANDLE)> setFunc)
+    void DynamicDescriptorHeap::commit_descriptor_tables(CommandList& commandList, std::function<void(ID3D12GraphicsCommandList*, u32, D3D12_GPU_DESCRIPTOR_HANDLE)> setFunc)
     {
       // Compute the number of descriptors that need to be copied
       u32 num_descriptors_to_commit = compute_stale_descriptor_count();
@@ -290,7 +290,7 @@ namespace cera
       }
     }
 
-    void DynamicDescriptorHeap::commit_inline_descriptors(CommandList& commandList, const D3D12_GPU_VIRTUAL_ADDRESS* bufferLocations, u32& bitMask, rsl::function<void(ID3D12GraphicsCommandList*, u32, D3D12_GPU_VIRTUAL_ADDRESS)> setFunc)
+    void DynamicDescriptorHeap::commit_inline_descriptors(CommandList& commandList, const D3D12_GPU_VIRTUAL_ADDRESS* bufferLocations, u32& bitMask, std::function<void(ID3D12GraphicsCommandList*, u32, D3D12_GPU_VIRTUAL_ADDRESS)> setFunc)
     {
       if(bitMask != 0)
       {

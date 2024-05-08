@@ -7,18 +7,18 @@
 namespace cera
 {
   //-------------------------------------------------------------------------
-  rsl::string_view shader_model_name(D3D_SHADER_MODEL shaderModel)
+  std::string_view shader_model_name(D3D_SHADER_MODEL shaderModel)
   {
     switch(shaderModel)
     {
-      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_6: return rsl::string_view("D3D_SHADER_MODEL_6_6");
-      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_5: return rsl::string_view("D3D_SHADER_MODEL_6_5");
-      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_4: return rsl::string_view("D3D_SHADER_MODEL_6_4");
-      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_2: return rsl::string_view("D3D_SHADER_MODEL_6_2");
-      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_1: return rsl::string_view("D3D_SHADER_MODEL_6_1");
-      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_0: return rsl::string_view("D3D_SHADER_MODEL_6_0");
-      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_5_1: return rsl::string_view("D3D_SHADER_MODEL_5_1");
-      default: return rsl::string_view("Unknown shader model");
+      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_6: return std::string_view("D3D_SHADER_MODEL_6_6");
+      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_5: return std::string_view("D3D_SHADER_MODEL_6_5");
+      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_4: return std::string_view("D3D_SHADER_MODEL_6_4");
+      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_2: return std::string_view("D3D_SHADER_MODEL_6_2");
+      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_1: return std::string_view("D3D_SHADER_MODEL_6_1");
+      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_0: return std::string_view("D3D_SHADER_MODEL_6_0");
+      case D3D_SHADER_MODEL::D3D_SHADER_MODEL_5_1: return std::string_view("D3D_SHADER_MODEL_5_1");
+      default: return std::string_view("Unknown shader model");
     }
   }
 

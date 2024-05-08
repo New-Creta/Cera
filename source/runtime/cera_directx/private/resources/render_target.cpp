@@ -6,14 +6,14 @@ namespace cera
   namespace renderer
   {
     RenderTarget::RenderTarget()
-        : m_textures(rsl::Size(AttachmentPoint::NumAttachmentPoints))
+        : m_textures(std::Size(AttachmentPoint::NumAttachmentPoints))
         , m_size(0, 0)
     {
     }
 
     // Attach a texture to the render target.
     // The texture will be copied into the texture array.
-    void RenderTarget::attach_texture(AttachmentPoint attachmentPoint, const rsl::shared_ptr<Texture>& texture)
+    void RenderTarget::attach_texture(AttachmentPoint attachmentPoint, const std::shared_ptr<Texture>& texture)
     {
       m_textures[attachmentPoint] = texture;
 
@@ -71,8 +71,8 @@ namespace cera
         {
           auto desc = texture->d3d_resource_desc();
 
-          width     = (rsl::max)(width, desc.Width);
-          height    = (rsl::max)(height, desc.Height);
+          width     = (std::max)(width, desc.Width);
+          height    = (std::max)(height, desc.Height);
         }
       }
 
@@ -88,7 +88,7 @@ namespace cera
       return viewport;
     }
 
-    const rsl::shared_ptr<Texture>& RenderTarget::texture(AttachmentPoint attachmentPoint) const
+    const std::shared_ptr<Texture>& RenderTarget::texture(AttachmentPoint attachmentPoint) const
     {
       return m_textures[attachmentPoint];
     }
@@ -96,7 +96,7 @@ namespace cera
     // Get a list of the textures attached to the render target.
     // This method is primarily used by the command_list when binding the
     // render target to the output merger stage of the rendering pipeline.
-    const rsl::vector<rsl::shared_ptr<Texture>>& RenderTarget::textures() const
+    const std::vector<std::shared_ptr<Texture>>& RenderTarget::textures() const
     {
       return m_textures;
     }
@@ -148,7 +148,7 @@ namespace cera
 
     void RenderTarget::reset()
     {
-      m_textures = render_target_list(rsl::Size(AttachmentPoint::NumAttachmentPoints));
+      m_textures = render_target_list(std::Size(AttachmentPoint::NumAttachmentPoints));
     }
   } // namespace renderer
 } // namespace cera

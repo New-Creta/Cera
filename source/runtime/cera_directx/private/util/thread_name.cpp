@@ -6,7 +6,7 @@ namespace cera
     {
         namespace threading
         {
-          void set_thread_name(rsl::thread& thread, const char* threadName)
+          void set_thread_name(std::thread& thread, const char* threadName)
           {
             THREADNAME_INFO info;
             info.dwType     = 0x1000;

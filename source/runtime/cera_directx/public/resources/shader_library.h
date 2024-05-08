@@ -1,10 +1,11 @@
 #pragma once
 
 #include "directx_util.h"
+
 #include "cera_engine/memory/blob.h"
-#include "cera_renderer_core/shader_type.h"
-#include "cera_std/memory.h"
-#include "cera_std/string_view.h"
+
+#include <memory>
+#include <string>
 
 namespace cera
 {
@@ -17,7 +18,7 @@ namespace cera
     {
       D3D12_INPUT_LAYOUT_DESC input_layout;
 
-      rsl::shared_ptr<RootSignature> root_signature;
+      std::shared_ptr<RootSignature> root_signature;
 
       wrl::ComPtr<ID3DBlob> vertex_shader;
       wrl::ComPtr<ID3DBlob> pixel_shader;
@@ -39,15 +40,15 @@ namespace cera
 
       namespace tags
       {
-        static const rsl::string_view unlit = "unlit";
+        static const std::string_view unlit = "unlit";
       }
 
       struct ShaderCompilationDesc
       {
         ShaderType shader_type = ShaderType::None;
-        rsl::string_view shader_entry_point;
-        rsl::small_stack_string shader_name;
-        rsl::tiny_stack_string shader_feature_target;
+        std::string_view shader_entry_point;
+        std::small_stack_string shader_name;
+        std::tiny_stack_string shader_feature_target;
         memory::Blob shader_code;
       };
 
@@ -56,7 +57,7 @@ namespace cera
       void load(Device* device);
       void unload();
 
-      ShaderInfo find_shader_info(rsl::string_view name);
+      ShaderInfo find_shader_info(std::string_view name);
     } // namespace shader_library
   }   // namespace renderer
 } // namespace cera

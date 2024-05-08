@@ -9,7 +9,7 @@ namespace cera
 {
   namespace renderer
   {
-    UploadBuffer::UploadBuffer(Device& device, rsl::memory_size pageSize)
+    UploadBuffer::UploadBuffer(Device& device, std::memory_size pageSize)
         : m_device(device)
         , m_page_size(pageSize)
     {
@@ -22,7 +22,7 @@ namespace cera
       return m_page_size;
     }
 
-    UploadBuffer::Allocation UploadBuffer::allocate(rsl::memory_size sizeInBytes, s64 alignment)
+    UploadBuffer::Allocation UploadBuffer::allocate(std::memory_size sizeInBytes, s64 alignment)
     {
       CERA_ASSERT_X(sizeInBytes <= m_page_size, "bad allocation");
 
@@ -50,9 +50,9 @@ namespace cera
       }
     }
 
-    rsl::shared_ptr<UploadBuffer::Page> UploadBuffer::request_page()
+    std::shared_ptr<UploadBuffer::Page> UploadBuffer::request_page()
     {
-      rsl::shared_ptr<Page> new_page;
+      std::shared_ptr<Page> new_page;
 
       if(!m_available_pages.empty())
       {
@@ -61,14 +61,14 @@ namespace cera
       }
       else
       {
-        new_page = rsl::make_shared<Page>(m_device, m_page_size);
+        new_page = std::make_shared<Page>(m_device, m_page_size);
         m_page_pool.push_back(new_page);
       }
 
       return new_page;
     }
 
-    UploadBuffer::Page::Page(Device& device, rsl::memory_size sizeInBytes)
+    UploadBuffer::Page::Page(Device& device, std::memory_size sizeInBytes)
         : m_device(device)
         , m_page_size(sizeInBytes)
         , m_offset(0)
@@ -98,7 +98,7 @@ namespace cera
       m_GPU_ptr = D3D12_GPU_VIRTUAL_ADDRESS(0);
     }
 
-    bool UploadBuffer::Page::has_space(rsl::memory_size sizeInBytes, s64 alignment) const
+    bool UploadBuffer::Page::has_space(std::memory_size sizeInBytes, s64 alignment) const
     {
       auto aligned_size   = (s64)align_up((s64)sizeInBytes.size_in_bytes(), alignment);
       auto aligned_offset = (s64)align_up((s64)m_offset, alignment);
@@ -106,9 +106,9 @@ namespace cera
       return aligned_offset + aligned_size <= m_page_size.size_in_bytes();
     }
 
-    UploadBuffer::Allocation UploadBuffer::Page::allocate(rsl::memory_size sizeInBytes, s64 alignment)
+    UploadBuffer::Allocation UploadBuffer::Page::allocate(std::memory_size sizeInBytes, s64 alignment)
     {
-      // function is not thread safe! insert a rsl::unique_lock if thread safety is a requirement.
+      // function is not thread safe! insert a std::unique_lock if thread safety is a requirement.
       //
       // since UploadBuffer class instances are not used across multiple threads this is unnecessay
       // overhead to incorperate this functionality

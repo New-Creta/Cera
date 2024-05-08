@@ -1,16 +1,17 @@
 #pragma once
 
-#include "rex_dxgi/objects/adapter.h"
-#include "rex_renderer_core/gpu_scorer.h"
-#include "rex_std/vector.h"
+#include "dxgi/objects/adapter.h"
+#include "gpu_scorer.h"
 
-namespace rex
+#include <vector>
+
+namespace cera
 {
   namespace dxgi
   {
     class Factory;
 
-    using AdapterVec = rsl::vector<rsl::shared_ptr<Adapter>>;
+    using AdapterVec = std::vector<std::shared_ptr<Adapter>>;
 
     class AdapterManager
     {
@@ -25,13 +26,13 @@ namespace rex
 
       bool load_adapters(Factory* factory);
 
-      rsl::shared_ptr<Adapter> selected() const;
-      rsl::shared_ptr<Adapter> first() const;
+      std::shared_ptr<Adapter> selected() const;
+      std::shared_ptr<Adapter> first() const;
       const AdapterVec& all() const;
 
     private:
-      rsl::shared_ptr<Adapter> m_selected_adapter;
+      std::shared_ptr<Adapter> m_selected_adapter;
       AdapterVec m_adapters;
     };
   } // namespace dxgi
-} // namespace rex
+} // namespace cera

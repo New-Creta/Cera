@@ -37,7 +37,7 @@
  *  visible descriptor heaps when a Draw or Dispatch method is invoked on the command list.
  */
 
-#include "cera_engine/engine/types.h"
+#include "util/types.h"
 
 #include "directx_util.h"
 
@@ -119,7 +119,7 @@ namespace cera
        * descriptor tables and determine the number of descriptors needed for
        * each table.
        */
-      void parse_root_signature(const rsl::shared_ptr<RootSignature>& rootSignature);
+      void parse_root_signature(const std::shared_ptr<RootSignature>& rootSignature);
 
       /**
        * Reset used descriptors. This should only be done if any descriptors
@@ -149,8 +149,8 @@ namespace cera
        * Since the DynamicDescriptorHeap can't know which function will be used, it must
        * be passed as an argument to the function.
        */
-      void commit_descriptor_tables(CommandList& commandList, rsl::function<void(ID3D12GraphicsCommandList*, u32, D3D12_GPU_DESCRIPTOR_HANDLE)> setFunc);
-      void commit_inline_descriptors(CommandList& commandList, const D3D12_GPU_VIRTUAL_ADDRESS* bufferLocations, u32& bitMask, rsl::function<void(ID3D12GraphicsCommandList*, u32, D3D12_GPU_VIRTUAL_ADDRESS)> setFunc);
+      void commit_descriptor_tables(CommandList& commandList, std::function<void(ID3D12GraphicsCommandList*, u32, D3D12_GPU_DESCRIPTOR_HANDLE)> setFunc);
+      void commit_inline_descriptors(CommandList& commandList, const D3D12_GPU_VIRTUAL_ADDRESS* bufferLocations, u32& bitMask, std::function<void(ID3D12GraphicsCommandList*, u32, D3D12_GPU_VIRTUAL_ADDRESS)> setFunc);
 
     private:
       /**
@@ -204,7 +204,7 @@ namespace cera
       u32 m_descriptor_handle_increment_size;
 
       // The descriptor handle cache.
-      rsl::unique_array<D3D12_CPU_DESCRIPTOR_HANDLE> m_descriptor_handle_cache;
+      std::unique_array<D3D12_CPU_DESCRIPTOR_HANDLE> m_descriptor_handle_cache;
 
       // Descriptor handle cache per descriptor table.
       DescriptorTableCache m_descriptor_table_cache[s_max_descriptor_tables];
@@ -228,7 +228,7 @@ namespace cera
       u32 m_stale_SRV_bit_mask;
       u32 m_stale_UAV_bit_mask;
 
-      using DescriptorHeapPool = rsl::queue<wrl::ComPtr<ID3D12DescriptorHeap>>;
+      using DescriptorHeapPool = std::queue<wrl::ComPtr<ID3D12DescriptorHeap>>;
 
       DescriptorHeapPool m_descriptor_heap_pool;
       DescriptorHeapPool m_available_descriptor_heaps;

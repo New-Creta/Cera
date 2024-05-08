@@ -28,11 +28,11 @@ namespace cera
   {
     namespace adaptors
     {
-      // Adapter for rsl::make_unique
+      // Adapter for std::make_unique
       class MakeUploadBuffer : public UploadBuffer
       {
       public:
-        MakeUploadBuffer(Device& device, rsl::memory_size pageSize = 2_mb)
+        MakeUploadBuffer(Device& device, std::memory_size pageSize = 2_mb)
             : UploadBuffer(device, pageSize)
         {
         }
@@ -56,13 +56,13 @@ namespace cera
       hr = d3d_device->CreateCommandList(0, m_d3d_command_list_type, m_d3d_command_allocator.Get(), nullptr, IID_PPV_ARGS(&m_d3d_command_list));
       CERA_ASSERT_X(DX_SUCCESS(hr), "Failed to CreateCommandList");
 
-      m_upload_buffer = rsl::make_unique<adaptors::MakeUploadBuffer>(device);
+      m_upload_buffer = std::make_unique<adaptors::MakeUploadBuffer>(device);
 
-      m_resource_state_tracker = rsl::make_unique<ResourceStateTracker>();
+      m_resource_state_tracker = std::make_unique<ResourceStateTracker>();
 
       for(int i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i)
       {
-        m_dynamic_descriptor_heap[i] = rsl::make_unique<DynamicDescriptorHeap>(device, static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(i));
+        m_dynamic_descriptor_heap[i] = std::make_unique<DynamicDescriptorHeap>(device, static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(i));
         m_descriptor_heaps[i]        = nullptr;
       }
     }
@@ -99,7 +99,7 @@ namespace cera
       }
     }
 
-    void CommandList::transition_barrier(const rsl::shared_ptr<Resource>& resource, D3D12_RESOURCE_STATES stateAfter, u32 subresource, bool flushBarriers)
+    void CommandList::transition_barrier(const std::shared_ptr<Resource>& resource, D3D12_RESOURCE_STATES stateAfter, u32 subresource, bool flushBarriers)
     {
       if(resource)
       {
@@ -125,14 +125,14 @@ namespace cera
       track_resource(srcRes);
     }
 
-    void CommandList::copy_resource(const rsl::shared_ptr<Resource>& dstRes, const rsl::shared_ptr<Resource>& srcRes)
+    void CommandList::copy_resource(const std::shared_ptr<Resource>& dstRes, const std::shared_ptr<Resource>& srcRes)
     {
       assert(dstRes && srcRes);
 
       copy_resource(dstRes->d3d_resource(), srcRes->d3d_resource());
     }
 
-    void CommandList::resolve_subresource(const rsl::shared_ptr<Resource>& dstRes, const rsl::shared_ptr<Resource>& srcRes, u32 dstSubresource, u32 srcSubresource)
+    void CommandList::resolve_subresource(const std::shared_ptr<Resource>& dstRes, const std::shared_ptr<Resource>& srcRes, u32 dstSubresource, u32 srcSubresource)
     {
       transition_barrier(dstRes, D3D12_RESOURCE_STATE_RESOLVE_DEST, dstSubresource);
       transition_barrier(srcRes, D3D12_RESOURCE_STATE_RESOLVE_SOURCE, srcSubresource);
@@ -146,7 +146,7 @@ namespace cera
       track_resource(dstRes);
     }
 
-    wrl::ComPtr<ID3D12Resource> CommandList::copy_buffer(rsl::memory_size bufferSize, const void* bufferData, D3D12_RESOURCE_FLAGS flags)
+    wrl::ComPtr<ID3D12Resource> CommandList::copy_buffer(std::memory_size bufferSize, const void* bufferData, D3D12_RESOURCE_FLAGS flags)
     {
       wrl::ComPtr<ID3D12Resource> d3d_resource;
 
@@ -203,40 +203,40 @@ namespace cera
       return d3d_resource;
     }
 
-    rsl::shared_ptr<VertexBuffer> CommandList::copy_vertex_buffer(size_t numVertices, size_t vertexStride, const void* vertexBufferData)
+    std::shared_ptr<VertexBuffer> CommandList::copy_vertex_buffer(size_t numVertices, size_t vertexStride, const void* vertexBufferData)
     {
-      auto d3d_resource = copy_buffer(rsl::memory_size(numVertices * vertexStride), vertexBufferData);
+      auto d3d_resource = copy_buffer(std::memory_size(numVertices * vertexStride), vertexBufferData);
 
-      rsl::shared_ptr<VertexBuffer> vertex_buffer = m_device.create_vertex_buffer(d3d_resource, numVertices, vertexStride);
+      std::shared_ptr<VertexBuffer> vertex_buffer = m_device.create_vertex_buffer(d3d_resource, numVertices, vertexStride);
 
       return vertex_buffer;
     }
 
-    rsl::shared_ptr<IndexBuffer> CommandList::copy_index_buffer(size_t numIndices, DXGI_FORMAT indexFormat, const void* indexBufferData)
+    std::shared_ptr<IndexBuffer> CommandList::copy_index_buffer(size_t numIndices, DXGI_FORMAT indexFormat, const void* indexBufferData)
     {
       size_t elementSize = indexFormat == DXGI_FORMAT_R16_UINT ? 2 : 4;
 
-      auto d3d_resource = copy_buffer(rsl::memory_size(numIndices * elementSize), indexBufferData);
+      auto d3d_resource = copy_buffer(std::memory_size(numIndices * elementSize), indexBufferData);
 
-      rsl::shared_ptr<IndexBuffer> index_buffer = m_device.create_index_buffer(d3d_resource, numIndices, indexFormat);
+      std::shared_ptr<IndexBuffer> index_buffer = m_device.create_index_buffer(d3d_resource, numIndices, indexFormat);
 
       return index_buffer;
     }
 
-    rsl::shared_ptr<ConstantBuffer> CommandList::copy_constant_buffer(rsl::memory_size bufferSize, const void* bufferData)
+    std::shared_ptr<ConstantBuffer> CommandList::copy_constant_buffer(std::memory_size bufferSize, const void* bufferData)
     {
       auto d3d_resource = copy_buffer(bufferSize, bufferData);
 
-      rsl::shared_ptr<ConstantBuffer> constant_buffer = m_device.create_constant_buffer(d3d_resource);
+      std::shared_ptr<ConstantBuffer> constant_buffer = m_device.create_constant_buffer(d3d_resource);
 
       return constant_buffer;
     }
 
-    rsl::shared_ptr<ByteAddressBuffer> CommandList::copy_byte_address_buffer(rsl::memory_size bufferSize, const void* bufferData)
+    std::shared_ptr<ByteAddressBuffer> CommandList::copy_byte_address_buffer(std::memory_size bufferSize, const void* bufferData)
     {
       auto d3d_resource = copy_buffer(bufferSize, bufferData, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 
-      rsl::shared_ptr<ByteAddressBuffer> byte_address_buffer = m_device.create_byte_address_buffer(d3d_resource);
+      std::shared_ptr<ByteAddressBuffer> byte_address_buffer = m_device.create_byte_address_buffer(d3d_resource);
 
       return byte_address_buffer;
     }
@@ -246,7 +246,7 @@ namespace cera
       m_d3d_command_list->IASetPrimitiveTopology(primitiveTopology);
     }
 
-    void CommandList::clear_texture(const rsl::shared_ptr<Texture>& texture, const float clearColor[4])
+    void CommandList::clear_texture(const std::shared_ptr<Texture>& texture, const float clearColor[4])
     {
       assert(texture);
 
@@ -256,7 +256,7 @@ namespace cera
       track_resource(texture);
     }
 
-    void CommandList::clear_depth_stencil_texture(const rsl::shared_ptr<Texture>& texture, D3D12_CLEAR_FLAGS clearFlags, float depth, u8 stencil)
+    void CommandList::clear_depth_stencil_texture(const std::shared_ptr<Texture>& texture, D3D12_CLEAR_FLAGS clearFlags, float depth, u8 stencil)
     {
       assert(texture);
 
@@ -266,7 +266,7 @@ namespace cera
       track_resource(texture);
     }
 
-    bool CommandList::copy_texture_subresource(const rsl::shared_ptr<Texture>& texture, u32 firstSubresource, u32 numSubresources, D3D12_SUBRESOURCE_DATA* subresourceData)
+    bool CommandList::copy_texture_subresource(const std::shared_ptr<Texture>& texture, u32 firstSubresource, u32 numSubresources, D3D12_SUBRESOURCE_DATA* subresourceData)
     {
       assert(texture);
 
@@ -301,7 +301,7 @@ namespace cera
       return true;
     }
 
-    void CommandList::set_graphics_dynamic_constant_buffer(u32 rootParameterIndex, rsl::memory_size sizeInBytes, const void* bufferData)
+    void CommandList::set_graphics_dynamic_constant_buffer(u32 rootParameterIndex, std::memory_size sizeInBytes, const void* bufferData)
     {
       // Constant buffers must be 256-byte aligned.
       auto heap_allocation = m_upload_buffer->allocate(sizeInBytes, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
@@ -315,9 +315,9 @@ namespace cera
       m_d3d_command_list->SetGraphicsRoot32BitConstants(rootParameterIndex, numConstants, constants, 0);
     }
 
-    void CommandList::set_vertex_buffers(u32 startSlot, const rsl::vector<rsl::shared_ptr<VertexBuffer>>& vertexBuffers)
+    void CommandList::set_vertex_buffers(u32 startSlot, const std::vector<std::shared_ptr<VertexBuffer>>& vertexBuffers)
     {
-      rsl::vector<D3D12_VERTEX_BUFFER_VIEW> views;
+      std::vector<D3D12_VERTEX_BUFFER_VIEW> views;
       views.reserve(vertexBuffers.size());
 
       for(auto vertex_buffer: vertexBuffers)
@@ -334,14 +334,14 @@ namespace cera
       m_d3d_command_list->IASetVertexBuffers(startSlot, static_cast<u32>(views.size()), views.data());
     }
 
-    void CommandList::set_vertex_buffer(u32 slot, const rsl::shared_ptr<VertexBuffer>& vertexBuffer)
+    void CommandList::set_vertex_buffer(u32 slot, const std::shared_ptr<VertexBuffer>& vertexBuffer)
     {
       set_vertex_buffers(slot, {vertexBuffer});
     }
 
-    void CommandList::set_dynamic_vertex_buffer(u32 slot, size_t numVertices, rsl::memory_size vertexSize, const void* vertexBufferData)
+    void CommandList::set_dynamic_vertex_buffer(u32 slot, size_t numVertices, std::memory_size vertexSize, const void* vertexBufferData)
     {
-      rsl::memory_size bufferSize = rsl::memory_size(numVertices * vertexSize);
+      std::memory_size bufferSize = std::memory_size(numVertices * vertexSize);
 
       auto heap_allocation = m_upload_buffer->allocate(bufferSize, vertexSize);
       memcpy(heap_allocation.CPU, vertexBufferData, bufferSize);
@@ -354,7 +354,7 @@ namespace cera
       m_d3d_command_list->IASetVertexBuffers(slot, 1, &vertex_buffer_view);
     }
 
-    void CommandList::set_index_buffer(const rsl::shared_ptr<IndexBuffer>& indexBuffer)
+    void CommandList::set_index_buffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
     {
       if(indexBuffer)
       {
@@ -370,7 +370,7 @@ namespace cera
     void CommandList::set_dynamic_index_buffer(size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData)
     {
       size_t index_size_in_bytes = indexFormat == DXGI_FORMAT_R16_UINT ? 2 : 4;
-      rsl::memory_size bufferSize = rsl::memory_size(numIndicies * index_size_in_bytes);
+      std::memory_size bufferSize = std::memory_size(numIndicies * index_size_in_bytes);
 
       auto heap_allocation = m_upload_buffer->allocate(bufferSize, index_size_in_bytes);
       memcpy(heap_allocation.CPU, indexBufferData, bufferSize);
@@ -388,7 +388,7 @@ namespace cera
       set_viewports({viewport});
     }
 
-    void CommandList::set_viewports(const rsl::vector<D3D12_VIEWPORT>& viewports)
+    void CommandList::set_viewports(const std::vector<D3D12_VIEWPORT>& viewports)
     {
       assert(viewports.size() < D3D12_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE);
       m_d3d_command_list->RSSetViewports(static_cast<u32>(viewports.size()), viewports.data());
@@ -399,13 +399,13 @@ namespace cera
       set_scissor_rects({scissorRect});
     }
 
-    void CommandList::set_scissor_rects(const rsl::vector<D3D12_RECT>& scissorRects)
+    void CommandList::set_scissor_rects(const std::vector<D3D12_RECT>& scissorRects)
     {
       assert(scissorRects.size() < D3D12_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE);
       m_d3d_command_list->RSSetScissorRects(static_cast<u32>(scissorRects.size()), scissorRects.data());
     }
 
-    void CommandList::set_pipeline_state(const rsl::shared_ptr<PipelineStateObject>& pipelineState)
+    void CommandList::set_pipeline_state(const std::shared_ptr<PipelineStateObject>& pipelineState)
     {
       assert(pipelineState);
 
@@ -420,7 +420,7 @@ namespace cera
       }
     }
 
-    void CommandList::set_graphics_root_signature(const rsl::shared_ptr<RootSignature>& rootSignature)
+    void CommandList::set_graphics_root_signature(const std::shared_ptr<RootSignature>& rootSignature)
     {
       assert(rootSignature);
 
@@ -440,7 +440,7 @@ namespace cera
       }
     }
 
-    void CommandList::set_constant_buffer_view(u32 rootParameterIndex, const rsl::shared_ptr<ConstantBuffer>& buffer, D3D12_RESOURCE_STATES stateAfter, size_t bufferOffset)
+    void CommandList::set_constant_buffer_view(u32 rootParameterIndex, const std::shared_ptr<ConstantBuffer>& buffer, D3D12_RESOURCE_STATES stateAfter, size_t bufferOffset)
     {
       if(buffer)
       {
@@ -451,7 +451,7 @@ namespace cera
       }
     }
 
-    void CommandList::set_constant_buffer_view(u32 rootParameterIndex, u32 descriptorOffset, const rsl::shared_ptr<ConstantBufferView>& cbv, D3D12_RESOURCE_STATES stateAfter)
+    void CommandList::set_constant_buffer_view(u32 rootParameterIndex, u32 descriptorOffset, const std::shared_ptr<ConstantBufferView>& cbv, D3D12_RESOURCE_STATES stateAfter)
     {
       assert(cbv);
 
@@ -465,7 +465,7 @@ namespace cera
       m_dynamic_descriptor_heap[D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV]->stage_descriptors(rootParameterIndex, descriptorOffset, 1, cbv->descriptor_handle());
     }
 
-    void CommandList::set_shader_resource_view(u32 rootParameterIndex, const rsl::shared_ptr<Buffer>& buffer, D3D12_RESOURCE_STATES stateAfter, size_t bufferOffset)
+    void CommandList::set_shader_resource_view(u32 rootParameterIndex, const std::shared_ptr<Buffer>& buffer, D3D12_RESOURCE_STATES stateAfter, size_t bufferOffset)
     {
       if(buffer)
       {
@@ -476,7 +476,7 @@ namespace cera
       }
     }
 
-    void CommandList::set_shader_resource_view_with_SRV(u32 rootParameterIndex, u32 descriptorOffset, const rsl::shared_ptr<ShaderResourceView>& srv, D3D12_RESOURCE_STATES stateAfter, u32 firstSubresource, u32 numSubresources)
+    void CommandList::set_shader_resource_view_with_SRV(u32 rootParameterIndex, u32 descriptorOffset, const std::shared_ptr<ShaderResourceView>& srv, D3D12_RESOURCE_STATES stateAfter, u32 firstSubresource, u32 numSubresources)
     {
       assert(srv);
 
@@ -501,7 +501,7 @@ namespace cera
       m_dynamic_descriptor_heap[D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV]->stage_descriptors(rootParameterIndex, descriptorOffset, 1, srv->descriptor_handle());
     }
 
-    void CommandList::set_shader_resource_view_with_texture(s32 rootParameterIndex, u32 descriptorOffset, const rsl::shared_ptr<Texture>& texture, D3D12_RESOURCE_STATES stateAfter, u32 firstSubresource, u32 numSubresources)
+    void CommandList::set_shader_resource_view_with_texture(s32 rootParameterIndex, u32 descriptorOffset, const std::shared_ptr<Texture>& texture, D3D12_RESOURCE_STATES stateAfter, u32 firstSubresource, u32 numSubresources)
     {
       if(texture)
       {
@@ -523,7 +523,7 @@ namespace cera
       }
     }
 
-    void CommandList::set_unordered_access_view(u32 rootParameterIndex, u32 descriptorOffset, const rsl::shared_ptr<UnorderedAccessView>& uav, D3D12_RESOURCE_STATES stateAfter, u32 firstSubresource, u32 numSubresources)
+    void CommandList::set_unordered_access_view(u32 rootParameterIndex, u32 descriptorOffset, const std::shared_ptr<UnorderedAccessView>& uav, D3D12_RESOURCE_STATES stateAfter, u32 firstSubresource, u32 numSubresources)
     {
       assert(uav);
 
@@ -548,7 +548,7 @@ namespace cera
       m_dynamic_descriptor_heap[D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV]->stage_descriptors(rootParameterIndex, descriptorOffset, 1, uav->descriptor_handle());
     }
 
-    void CommandList::set_unordered_access_view(u32 rootParameterIndex, u32 descriptorOffset, const rsl::shared_ptr<Texture>& texture, u32 mip, D3D12_RESOURCE_STATES stateAfter, u32 firstSubresource, u32 numSubresources)
+    void CommandList::set_unordered_access_view(u32 rootParameterIndex, u32 descriptorOffset, const std::shared_ptr<Texture>& texture, u32 mip, D3D12_RESOURCE_STATES stateAfter, u32 firstSubresource, u32 numSubresources)
     {
       if(texture)
       {
@@ -570,7 +570,7 @@ namespace cera
       }
     }
 
-    void CommandList::set_unordered_access_view(u32 rootParameterIndex, const rsl::shared_ptr<Buffer>& buffer, D3D12_RESOURCE_STATES stateAfter, size_t bufferOffset)
+    void CommandList::set_unordered_access_view(u32 rootParameterIndex, const std::shared_ptr<Buffer>& buffer, D3D12_RESOURCE_STATES stateAfter, size_t bufferOffset)
     {
       if(buffer)
       {
@@ -583,7 +583,7 @@ namespace cera
 
     void CommandList::set_render_target(const RenderTarget& renderTarget)
     {
-      rsl::vector<D3D12_CPU_DESCRIPTOR_HANDLE> render_target_descriptors;
+      std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> render_target_descriptors;
       render_target_descriptors.reserve(AttachmentPoint::NumAttachmentPoints);
 
       const auto& textures = renderTarget.textures();
@@ -642,7 +642,7 @@ namespace cera
       m_d3d_command_list->DrawIndexedInstanced(indexCount, instanceCount, startIndex, baseVertex, startInstance);
     }
 
-    bool CommandList::close(const rsl::shared_ptr<CommandList>& pendingCommandList)
+    bool CommandList::close(const std::shared_ptr<CommandList>& pendingCommandList)
     {
       // Flush any remaining barriers.
       flush_resource_barriers();
@@ -699,7 +699,7 @@ namespace cera
       m_tracked_objects.push_back(object);
     }
 
-    void CommandList::track_resource(const rsl::shared_ptr<Resource>& res)
+    void CommandList::track_resource(const std::shared_ptr<Resource>& res)
     {
       assert(res);
 

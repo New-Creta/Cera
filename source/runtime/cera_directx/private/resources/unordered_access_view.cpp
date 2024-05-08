@@ -9,7 +9,7 @@ namespace cera
 {
   namespace renderer
   {
-    UnorderedAccessView::UnorderedAccessView(Device& device, const rsl::shared_ptr<Resource>& inResource, const rsl::shared_ptr<Resource>& inCounterResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav)
+    UnorderedAccessView::UnorderedAccessView(Device& device, const std::shared_ptr<Resource>& inResource, const std::shared_ptr<Resource>& inCounterResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav)
         : m_device(device)
         , m_resource(inResource)
         , m_counter_resource(inCounterResource)
@@ -34,12 +34,12 @@ namespace cera
 
     UnorderedAccessView::~UnorderedAccessView() = default;
 
-    rsl::shared_ptr<Resource> UnorderedAccessView::resource() const
+    std::shared_ptr<Resource> UnorderedAccessView::resource() const
     {
       return m_resource;
     }
 
-    rsl::shared_ptr<Resource> UnorderedAccessView::counter_resource() const
+    std::shared_ptr<Resource> UnorderedAccessView::counter_resource() const
     {
       return m_counter_resource;
     }

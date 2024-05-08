@@ -9,7 +9,7 @@ namespace cera
 {
   namespace renderer
   {
-    ConstantBufferView::ConstantBufferView(Device& device, const rsl::shared_ptr<ConstantBuffer>& constantBuffer, size_t offset)
+    ConstantBufferView::ConstantBufferView(Device& device, const std::shared_ptr<ConstantBuffer>& constantBuffer, size_t offset)
         : m_device(device)
         , m_constant_buffer(constantBuffer)
     {
@@ -29,7 +29,7 @@ namespace cera
 
     ConstantBufferView::~ConstantBufferView() = default;
 
-    rsl::shared_ptr<ConstantBuffer> ConstantBufferView::constant_buffer() const
+    std::shared_ptr<ConstantBuffer> ConstantBufferView::constant_buffer() const
     {
       return m_constant_buffer;
     }

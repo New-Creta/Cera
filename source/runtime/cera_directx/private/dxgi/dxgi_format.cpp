@@ -1,7 +1,7 @@
-#include "rex_dxgi/dxgi_format.h"
+#include "dxgi/dxgi_format.h"
 #include "rex_engine/diagnostics/assert.h"
 
-namespace rex
+namespace cera
 {
   namespace dxgi
   {
@@ -113,4 +113,4 @@ namespace rex
       }
     } // namespace conversions
   }   // namespace renderer
-} // namespace rex
+} // namespace cera

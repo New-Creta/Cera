@@ -1,9 +1,12 @@
 #pragma once
 
-#include "cera_engine/engine/types.h"
+#include "util/types.h"
 
 #include "directx_util.h"
+
 #include "resources/render_target.h"
+
+#include "wrl/windows_types.h"
 
 struct IDXGISwapChain4;
 
@@ -87,7 +90,7 @@ namespace cera
        *
        * @returns The current backbuffer index after the present.
        */
-      u32 present(const rsl::shared_ptr<Texture>& texture = nullptr);
+      u32 present(const std::shared_ptr<Texture>& texture = nullptr);
 
       /**
        * Get the format that is used to create the backbuffer.
@@ -118,7 +121,7 @@ namespace cera
       CommandQueue& m_command_queue;
 
       wrl::ComPtr<IDXGISwapChain4> m_dxgi_swap_chain;
-      rsl::shared_ptr<Texture> m_back_buffer_textures[s_buffer_count];
+      std::shared_ptr<Texture> m_back_buffer_textures[s_buffer_count];
       mutable RenderTarget m_render_target;
 
       // The current backbuffer index of the swap chain.

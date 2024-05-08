@@ -18,16 +18,14 @@
  *  @see https://msdn.microsoft.com/en-us/library/dn899226(v=vs.85).aspx#implicit_state_transitions
  */
 
-#include "cera_engine/engine/types.h"
+#include "util/types.h"
 
 #include "directx_util.h"
 
-#include "cera_std/mutex.h"
-#include "cera_std/map.h"
-#include "cera_std/unordered_map.h"
-#include "cera_std/vector.h"
-
 #include <mutex>
+#include <map>
+#include <unordered_map>
+#include <vector>
 
 namespace cera
 {
@@ -65,13 +63,13 @@ namespace cera
              *
              * @return The number of resource barriers that were flushed to the command list.
              */
-            u32 flush_pending_resource_barriers(const rsl::shared_ptr<CommandList>& commandList);
+            u32 flush_pending_resource_barriers(const std::shared_ptr<CommandList>& commandList);
 
             /**
              * Flush any (non-pending) resource barriers that have been pushed to the resource state
              * tracker.
              */
-            void flush_resource_barriers(const rsl::shared_ptr<CommandList>& commandList);
+            void flush_resource_barriers(const std::shared_ptr<CommandList>& commandList);
 
             /**
              * Commit final resource states to the global resource state map.
@@ -106,7 +104,7 @@ namespace cera
 
         private:
             // An array (vector) of resource barriers.
-            using ResourceBarriers = rsl::vector<D3D12_RESOURCE_BARRIER>;
+            using ResourceBarriers = std::vector<D3D12_RESOURCE_BARRIER>;
 
             // Pending resource transitions are committed before a command list
             // is executed on the command queue. This guarantees that resources will
@@ -156,10 +154,10 @@ namespace cera
                 // If the SubresourceState array (map) is empty, then the State variable defines 
                 // the state of all of the subresources.
                 D3D12_RESOURCE_STATES state;
-                rsl::map<u32, D3D12_RESOURCE_STATES> subresource_state_map;
+                std::map<u32, D3D12_RESOURCE_STATES> subresource_state_map;
             };
 
-            using ResourceStateMap = rsl::unordered_map<ID3D12Resource*, ResourceState>;
+            using ResourceStateMap = std::unordered_map<ID3D12Resource*, ResourceState>;
 
             // The final (last known state) of the resources within a command list.
             // The final resource state is committed to the global resource state when the 
@@ -171,7 +169,7 @@ namespace cera
             static ResourceStateMap s_global_resource_state;
 
             // The mutex protects shared access to the GlobalResourceState map.
-            static rsl::mutex s_global_mutex;
+            static std::mutex s_global_mutex;
             static bool s_is_locked;
         };
     }

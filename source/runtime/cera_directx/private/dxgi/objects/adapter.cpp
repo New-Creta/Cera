@@ -1,18 +1,15 @@
-#include "rex_dxgi/objects/adapter.h"
-#include "rex_dxgi/dxgi_util.h"
+#include "dxgi/objects/adapter.h"
+#include "dxgi/dxgi_util.h"
+#include "dxgi/log.h"
 #include "rex_engine/diagnostics/logging/log_macros.h"
 #include "rex_engine/engine/types.h"
-#include "rex_std/bonus/memory/memory_size.h"
-#include "rex_std/bonus/string.h"
-#include "rex_std/string.h"
-#include "rex_dxgi/log.h"
 
 #include <cstdlib>
 #include <wrl/client.h>
 
 namespace
 {
-  const uint32 g_adapter_description_size = rsl::small_stack_string::max_size();
+  const uint32 g_adapter_description_size = std::small_stack_string::max_size();
 
   //-------------------------------------------------------------------------
   /**
@@ -30,23 +27,23 @@ namespace
   };
 
   //-------------------------------------------------------------------------
-  rsl::string vendor_to_string(s32 vendor)
+  std::string vendor_to_string(s32 vendor)
   {
     // Enum reflection is not possible here as the integer values are
     // outside the valid range of values [0, 127] for this enumeration type
     switch(static_cast<Vendor>(vendor))
     {
-      case Vendor::AMD: return rsl::string("AMD");
-      case Vendor::NVIDIA: return rsl::string("NVIDIA");
-      case Vendor::INTEL: return rsl::string("INTEL");
-      default: return rsl::string("Unknown Vendor");
+      case Vendor::AMD: return std::string("AMD");
+      case Vendor::NVIDIA: return std::string("NVIDIA");
+      case Vendor::INTEL: return std::string("INTEL");
+      default: return std::string("Unknown Vendor");
     }
   }
 
   //-------------------------------------------------------------------------
-  rsl::small_stack_string to_multibyte(const tchar* wideCharacterBuffer, count_t size)
+  std::small_stack_string to_multibyte(const tchar* wideCharacterBuffer, size_t size)
   {
-    rsl::small_stack_string buffer;
+    std::small_stack_string buffer;
 
     // Convert wide character string to multi byte character string.
     // size_t converted_chars => The amount of converted characters.
@@ -56,19 +53,19 @@ namespace
     if(result != 0)
     {
       REX_ERROR(LogDXGI, "Failed to convert wide character string to multi byte character string.");
-      return rsl::small_stack_string("Invalid String");
+      return std::small_stack_string("Invalid String");
     }
 
     buffer.reset_null_termination_offset();
 
-    return rsl::small_stack_string(buffer.data(), static_cast<count_t>(converted_chars)); // NOLINT(readability-redundant-string-cstr)
+    return std::small_stack_string(buffer.data(), static_cast<size_t>(converted_chars)); // NOLINT(readability-redundant-string-cstr)
   }
 
   //-------------------------------------------------------------------------
   template <typename DXGIAdapterDesc>
-  rex::renderer::GpuDescription convert_description(const DXGIAdapterDesc& dxgiDesc)
+  cera::renderer::GpuDescription convert_description(const DXGIAdapterDesc& dxgiDesc)
   {
-    rex::renderer::GpuDescription desc;
+    cera::renderer::GpuDescription desc;
 
     desc.name        = to_multibyte(dxgiDesc.Description, g_adapter_description_size);
     desc.vendor_name = vendor_to_string(dxgiDesc.VendorId);
@@ -76,17 +73,17 @@ namespace
     desc.vendor_id = dxgiDesc.VendorId;
     desc.device_id = dxgiDesc.DeviceId;
 
-    desc.dedicated_video_memory  = rsl::memory_size(dxgiDesc.DedicatedVideoMemory);
-    desc.dedicated_system_memory = rsl::memory_size(dxgiDesc.DedicatedSystemMemory);
-    desc.shared_system_memory    = rsl::memory_size(dxgiDesc.SharedSystemMemory);
+    desc.dedicated_video_memory  = std::memory_size(dxgiDesc.DedicatedVideoMemory);
+    desc.dedicated_system_memory = std::memory_size(dxgiDesc.DedicatedSystemMemory);
+    desc.shared_system_memory    = std::memory_size(dxgiDesc.SharedSystemMemory);
 
     return desc;
   }
 
   //-------------------------------------------------------------------------
-  rex::renderer::GpuDescription get_description(const rex::wrl::ComPtr<IDXGIAdapter4>& adapter)
+  cera::renderer::GpuDescription get_description(const cera::wrl::ComPtr<IDXGIAdapter4>& adapter)
   {
-    rex::renderer::GpuDescription desc;
+    cera::renderer::GpuDescription desc;
 
     DXGI_ADAPTER_DESC1 dxgi_desc;
     adapter->GetDesc1(&dxgi_desc);
@@ -96,13 +93,13 @@ namespace
   }
 } // namespace
 
-namespace rex
+namespace cera
 {
   namespace dxgi
   {
     //-------------------------------------------------------------------------
     Adapter::Adapter(wrl::ComPtr<IDXGIAdapter4>&& adapter)
-        : ComObject(rsl::move(adapter))
+        : ComObject(std::move(adapter))
         , m_description(::get_description(com_ptr()))
     {
     }
@@ -113,4 +110,4 @@ namespace rex
       return m_description;
     }
   } // namespace dxgi
-} // namespace rex
+} // namespace cera

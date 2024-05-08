@@ -33,7 +33,7 @@
  *  Date Accessed: May 9, 2018
  */
 
-#include "cera_engine/engine/types.h"
+#include "util/types.h"
 
 #include "directx_util.h"
 
@@ -52,7 +52,7 @@ namespace cera
         public:
             // Creates a NULL descriptor
             DescriptorAllocation();
-            DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE descriptor, u32 numHandles, rsl::memory_size descriptorSize, rsl::shared_ptr<DescriptorAllocatorPage> page);
+            DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE descriptor, u32 numHandles, std::memory_size descriptorSize, std::shared_ptr<DescriptorAllocatorPage> page);
 
             // The destructor will automatically free the allocation.
             ~DescriptorAllocation();
@@ -77,7 +77,7 @@ namespace cera
 
         private:
             // Get the heap that this allocation came from.
-            rsl::shared_ptr<DescriptorAllocatorPage> descriptor_allocator_page() const;
+            std::shared_ptr<DescriptorAllocatorPage> descriptor_allocator_page() const;
 
             // Free the descriptor back to the heap it came from.
             void free();
@@ -88,10 +88,10 @@ namespace cera
             // The number of descriptors in this allocation.
             u32 m_num_handles;
             // The offset to the next descriptor.
-            rsl::memory_size m_descriptor_size;
+            std::memory_size m_descriptor_size;
 
             // A pointer back to the original page where this allocation came from.
-            rsl::shared_ptr<DescriptorAllocatorPage> m_page;
+            std::shared_ptr<DescriptorAllocatorPage> m_page;
         };
     }
 }

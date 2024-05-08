@@ -52,7 +52,7 @@ namespace cera
 
     DescriptorAllocation DescriptorAllocatorPage::allocate(u32 numDescriptors)
     {
-      rsl::unique_lock<rsl::mutex> lock(m_allocation_mutex);
+      std::unique_lock<std::mutex> lock(m_allocation_mutex);
 
       // There are less than the requested number of descriptors left in the heap.
       // Return a NULL descriptor and try another heap.
@@ -96,7 +96,7 @@ namespace cera
       // Decrement free handles.
       m_num_free_handles -= numDescriptors;
 
-      return DescriptorAllocation(CD3DX12_CPU_DESCRIPTOR_HANDLE(m_base_descriptor, offset, m_descriptor_handle_increment_size), numDescriptors, rsl::memory_size(m_descriptor_handle_increment_size), shared_from_this());
+      return DescriptorAllocation(CD3DX12_CPU_DESCRIPTOR_HANDLE(m_base_descriptor, offset, m_descriptor_handle_increment_size), numDescriptors, std::memory_size(m_descriptor_handle_increment_size), shared_from_this());
     }
 
     void DescriptorAllocatorPage::free(DescriptorAllocation&& descriptorHandle)
@@ -104,7 +104,7 @@ namespace cera
       // Compute the offset of the descriptor within the descriptor heap.
       auto offset = compute_offset(descriptorHandle.descriptor_handle());
 
-      rsl::unique_lock<rsl::mutex> lock(m_allocation_mutex);
+      std::unique_lock<std::mutex> lock(m_allocation_mutex);
 
       // Don't add the block directly to the free list until the frame has completed.
       m_stale_descriptors.emplace(offset, descriptorHandle.num_handles());
@@ -112,7 +112,7 @@ namespace cera
 
     void DescriptorAllocatorPage::release_stale_descriptors()
     {
-      rsl::unique_lock<rsl::mutex> lock(m_allocation_mutex);
+      std::unique_lock<std::mutex> lock(m_allocation_mutex);
 
       while(!m_stale_descriptors.empty())
       {

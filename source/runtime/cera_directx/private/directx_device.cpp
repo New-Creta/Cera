@@ -17,11 +17,11 @@
 #include "descriptors/descriptor_allocator.h"
 #include "log.h"
 
-#include "cera_dxgi/objects/adapter.h"
-#include "cera_dxgi/objects/factory.h"
-#include "cera_dxgi/dxgi_adapter_manager.h"
+#include "dxgi/objects/adapter.h"
+#include "dxgi/objects/factory.h"
+#include "dxgi/dxgi_adapter_manager.h"
 
-#include "cera_renderer_core/gpu_description.h"
+#include "gpu_description.h"
 
 #include "cera_engine/memory/pointer_math.h"
 
@@ -35,9 +35,9 @@ namespace cera
     namespace internal
     {
       //-------------------------------------------------------------------------
-      count_t highest_scoring_gpu(const rsl::vector<GpuDescription>& gpus)
+      size_t highest_scoring_gpu(const std::vector<GpuDescription>& gpus)
       {
-        auto it = rsl::max_element(gpus.cbegin(), gpus.cend(),
+        auto it = std::max_element(gpus.cbegin(), gpus.cend(),
                                    [](const GpuDescription& lhs, const GpuDescription& rhs)
                                    {
                                      const size_t lhs_vram = lhs.dedicated_video_memory.size_in_bytes();
@@ -46,10 +46,10 @@ namespace cera
                                      return rhs_vram > lhs_vram;
                                    });
 
-        return it != gpus.cend() ? rsl::distance(gpus.cbegin(), it) : -1;
+        return it != gpus.cend() ? std::distance(gpus.cbegin(), it) : -1;
       }
 
-      wrl::ComPtr<ID3D12Device2> create_device(const rsl::shared_ptr<dxgi::Adapter>& adaptor)
+      wrl::ComPtr<ID3D12Device2> create_device(const std::shared_ptr<dxgi::Adapter>& adaptor)
       {
         wrl::ComPtr<ID3D12Device2> d3d12_device;
         if(DX_FAILED((D3D12CreateDevice(const_cast<IDXGIAdapter4*>(adaptor->com_ptr()), D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&d3d12_device)))))
@@ -94,7 +94,7 @@ namespace cera
         return d3d12_device;
       }
 
-      bool check_tearing_support(rsl::shared_ptr<dxgi::Adapter> adapter)
+      bool check_tearing_support(std::shared_ptr<dxgi::Adapter> adapter)
       {
         bool allow_tearing = false;
 
@@ -123,7 +123,7 @@ namespace cera
       class MakeUnorderedAccessView : public UnorderedAccessView
       {
       public:
-        MakeUnorderedAccessView(Device& device, const rsl::shared_ptr<Resource>& inResource, const rsl::shared_ptr<Resource>& inCounterResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav)
+        MakeUnorderedAccessView(Device& device, const std::shared_ptr<Resource>& inResource, const std::shared_ptr<Resource>& inCounterResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav)
             : UnorderedAccessView(device, inResource, inCounterResource, uav)
         {
         }
@@ -134,7 +134,7 @@ namespace cera
       class MakeShaderResourceView : public ShaderResourceView
       {
       public:
-        MakeShaderResourceView(Device& device, const rsl::shared_ptr<Resource>& resource, const D3D12_SHADER_RESOURCE_VIEW_DESC* srv)
+        MakeShaderResourceView(Device& device, const std::shared_ptr<Resource>& resource, const D3D12_SHADER_RESOURCE_VIEW_DESC* srv)
             : ShaderResourceView(device, resource, srv)
         {
         }
@@ -145,7 +145,7 @@ namespace cera
       class MakeConstantBufferView : public ConstantBufferView
       {
       public:
-        MakeConstantBufferView(Device& device, const rsl::shared_ptr<ConstantBuffer>& constantBuffer, size_t offset)
+        MakeConstantBufferView(Device& device, const std::shared_ptr<ConstantBuffer>& constantBuffer, size_t offset)
             : ConstantBufferView(device, constantBuffer, offset)
         {
         }
@@ -274,7 +274,7 @@ namespace cera
       class MakeDevice : public Device
       {
       public:
-        MakeDevice(const rsl::shared_ptr<dxgi::Adapter>& adaptor, wrl::ComPtr<ID3D12Device2> device)
+        MakeDevice(const std::shared_ptr<dxgi::Adapter>& adaptor, wrl::ComPtr<ID3D12Device2> device)
             : Device(adaptor, device)
         {
         }
@@ -315,7 +315,7 @@ namespace cera
       dxgi_debug->Release();
     }
 
-    rsl::shared_ptr<Device> Device::create()
+    std::shared_ptr<Device> Device::create()
     {
       if(!enable_debug_layer())
       {
@@ -328,7 +328,7 @@ namespace cera
       create_factory_flags = DXGI_CREATE_FACTORY_DEBUG;
 #endif
       // Create dxgi factory
-      rsl::unique_ptr<dxgi::Factory> factory = dxgi::Factory::create(create_factory_flags);
+      std::unique_ptr<dxgi::Factory> factory = dxgi::Factory::create(create_factory_flags);
       if(!factory)
       {
         CERA_ERROR(LogDirectX, "Failed to create DXGI Factory");
@@ -337,7 +337,7 @@ namespace cera
 
       // Find highest scoring gpu
       const dxgi::AdapterManager adapter_manager(factory.get(), &internal::highest_scoring_gpu);
-      const rsl::shared_ptr<dxgi::Adapter> selected_gpu = adapter_manager.selected();
+      const std::shared_ptr<dxgi::Adapter> selected_gpu = adapter_manager.selected();
 
       if(selected_gpu)
       {
@@ -345,7 +345,7 @@ namespace cera
 
         if(d3d_device)
         {
-          return rsl::make_shared<adaptors::MakeDevice>(selected_gpu, d3d_device);
+          return std::make_shared<adaptors::MakeDevice>(selected_gpu, d3d_device);
         }
         else
         {
@@ -358,8 +358,8 @@ namespace cera
       return nullptr;
     }
 
-    Device::Device(rsl::shared_ptr<dxgi::Adapter> adaptor, wrl::ComPtr<ID3D12Device2> d3dDevice)
-        : wrl::ComObject<ID3D12Device2>(rsl::move(d3dDevice))
+    Device::Device(std::shared_ptr<dxgi::Adapter> adaptor, wrl::ComPtr<ID3D12Device2> d3dDevice)
+        : wrl::ComObject<ID3D12Device2>(std::move(d3dDevice))
         , m_adapter(adaptor)
         , m_direct_command_queue(nullptr)
         , m_compute_command_queue(nullptr)
@@ -368,9 +368,9 @@ namespace cera
     {
       CERA_ASSERT_X(m_adapter != nullptr, "Invalid Adaptor given");
 
-      m_direct_command_queue  = rsl::make_unique<adaptors::MakeCommandQueue>(*this, D3D12_COMMAND_LIST_TYPE_DIRECT);
-      m_compute_command_queue = rsl::make_unique<adaptors::MakeCommandQueue>(*this, D3D12_COMMAND_LIST_TYPE_COMPUTE);
-      m_copy_command_queue    = rsl::make_unique<adaptors::MakeCommandQueue>(*this, D3D12_COMMAND_LIST_TYPE_COPY);
+      m_direct_command_queue  = std::make_unique<adaptors::MakeCommandQueue>(*this, D3D12_COMMAND_LIST_TYPE_DIRECT);
+      m_compute_command_queue = std::make_unique<adaptors::MakeCommandQueue>(*this, D3D12_COMMAND_LIST_TYPE_COMPUTE);
+      m_copy_command_queue    = std::make_unique<adaptors::MakeCommandQueue>(*this, D3D12_COMMAND_LIST_TYPE_COPY);
 
       m_tearing_supported = internal::check_tearing_support(adaptor);
 
@@ -378,7 +378,7 @@ namespace cera
       {
         for(int i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i)
         {
-          m_descriptor_allocators[i] = rsl::make_unique<adaptors::MakeDescriptorAllocator>(*this, static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(i));
+          m_descriptor_allocators[i] = std::make_unique<adaptors::MakeDescriptorAllocator>(*this, static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(i));
         }
       }
 
@@ -458,103 +458,103 @@ namespace cera
       }
     }
 
-    rsl::shared_ptr<ConstantBuffer> Device::create_constant_buffer(wrl::ComPtr<ID3D12Resource> resource)
+    std::shared_ptr<ConstantBuffer> Device::create_constant_buffer(wrl::ComPtr<ID3D12Resource> resource)
     {
-      rsl::shared_ptr<ConstantBuffer> constant_buffer = rsl::make_shared<adaptors::MakeConstantBuffer>(*this, resource);
+      std::shared_ptr<ConstantBuffer> constant_buffer = std::make_shared<adaptors::MakeConstantBuffer>(*this, resource);
 
       return constant_buffer;
     }
 
-    rsl::shared_ptr<ByteAddressBuffer> Device::create_byte_address_buffer(rsl::memory_size bufferSize)
+    std::shared_ptr<ByteAddressBuffer> Device::create_byte_address_buffer(std::memory_size bufferSize)
     {
       // Align-up to 4-bytes
       auto aligned_buffer_size = align_up(bufferSize.size_in_bytes(), 4);
 
-      rsl::shared_ptr<ByteAddressBuffer> buffer = rsl::make_shared<adaptors::MakeByteAddressBuffer>(*this, CD3DX12_RESOURCE_DESC::Buffer(aligned_buffer_size, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS));
+      std::shared_ptr<ByteAddressBuffer> buffer = std::make_shared<adaptors::MakeByteAddressBuffer>(*this, CD3DX12_RESOURCE_DESC::Buffer(aligned_buffer_size, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS));
 
       return buffer;
     }
 
-    rsl::shared_ptr<ByteAddressBuffer> Device::create_byte_address_buffer(wrl::ComPtr<ID3D12Resource> resource)
+    std::shared_ptr<ByteAddressBuffer> Device::create_byte_address_buffer(wrl::ComPtr<ID3D12Resource> resource)
     {
-      rsl::shared_ptr<ByteAddressBuffer> buffer = rsl::make_shared<adaptors::MakeByteAddressBuffer>(*this, resource);
+      std::shared_ptr<ByteAddressBuffer> buffer = std::make_shared<adaptors::MakeByteAddressBuffer>(*this, resource);
 
       return buffer;
     }
 
-    rsl::shared_ptr<IndexBuffer> Device::create_index_buffer(size_t numIndices, DXGI_FORMAT indexFormat)
+    std::shared_ptr<IndexBuffer> Device::create_index_buffer(size_t numIndices, DXGI_FORMAT indexFormat)
     {
-      rsl::shared_ptr<IndexBuffer> index_buffer = rsl::make_shared<adaptors::MakeIndexBuffer>(*this, numIndices, indexFormat);
+      std::shared_ptr<IndexBuffer> index_buffer = std::make_shared<adaptors::MakeIndexBuffer>(*this, numIndices, indexFormat);
 
       return index_buffer;
     }
 
-    rsl::shared_ptr<IndexBuffer> Device::create_index_buffer(wrl::ComPtr<ID3D12Resource> resource, size_t numIndices, DXGI_FORMAT indexFormat)
+    std::shared_ptr<IndexBuffer> Device::create_index_buffer(wrl::ComPtr<ID3D12Resource> resource, size_t numIndices, DXGI_FORMAT indexFormat)
     {
-      rsl::shared_ptr<IndexBuffer> index_buffer = rsl::make_shared<adaptors::MakeIndexBuffer>(*this, resource, numIndices, indexFormat);
+      std::shared_ptr<IndexBuffer> index_buffer = std::make_shared<adaptors::MakeIndexBuffer>(*this, resource, numIndices, indexFormat);
 
       return index_buffer;
     }
 
-    rsl::shared_ptr<VertexBuffer> Device::create_vertex_buffer(size_t numVertices, size_t vertexStride)
+    std::shared_ptr<VertexBuffer> Device::create_vertex_buffer(size_t numVertices, size_t vertexStride)
     {
-      rsl::shared_ptr<VertexBuffer> vertex_buffer = rsl::make_shared<adaptors::MakeVertexBuffer>(*this, numVertices, vertexStride);
+      std::shared_ptr<VertexBuffer> vertex_buffer = std::make_shared<adaptors::MakeVertexBuffer>(*this, numVertices, vertexStride);
 
       return vertex_buffer;
     }
 
-    rsl::shared_ptr<VertexBuffer> Device::create_vertex_buffer(wrl::ComPtr<ID3D12Resource> resource, size_t numVertices, size_t vertexStride)
+    std::shared_ptr<VertexBuffer> Device::create_vertex_buffer(wrl::ComPtr<ID3D12Resource> resource, size_t numVertices, size_t vertexStride)
     {
-      rsl::shared_ptr<VertexBuffer> vertex_buffer = rsl::make_shared<adaptors::MakeVertexBuffer>(*this, resource, numVertices, vertexStride);
+      std::shared_ptr<VertexBuffer> vertex_buffer = std::make_shared<adaptors::MakeVertexBuffer>(*this, resource, numVertices, vertexStride);
 
       return vertex_buffer;
     }
 
-    rsl::shared_ptr<Texture> Device::create_texture(const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue)
+    std::shared_ptr<Texture> Device::create_texture(const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue)
     {
-      rsl::shared_ptr<Texture> texture = rsl::make_shared<adaptors::MakeTexture>(*this, resourceDesc, clearValue);
+      std::shared_ptr<Texture> texture = std::make_shared<adaptors::MakeTexture>(*this, resourceDesc, clearValue);
 
       return texture;
     }
 
-    rsl::shared_ptr<Texture> Device::create_texture(wrl::ComPtr<ID3D12Resource> resource, const D3D12_CLEAR_VALUE* clearValue)
+    std::shared_ptr<Texture> Device::create_texture(wrl::ComPtr<ID3D12Resource> resource, const D3D12_CLEAR_VALUE* clearValue)
     {
-      rsl::shared_ptr<Texture> texture = rsl::make_shared<adaptors::MakeTexture>(*this, resource, clearValue);
+      std::shared_ptr<Texture> texture = std::make_shared<adaptors::MakeTexture>(*this, resource, clearValue);
 
       return texture;
     }
 
-    rsl::shared_ptr<RootSignature> Device::create_root_signature(const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc)
+    std::shared_ptr<RootSignature> Device::create_root_signature(const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc)
     {
-      rsl::shared_ptr<RootSignature> RootSignature = rsl::make_shared<adaptors::MakeRootSignature>(*this, rootSignatureDesc);
+      std::shared_ptr<RootSignature> RootSignature = std::make_shared<adaptors::MakeRootSignature>(*this, rootSignatureDesc);
 
       return RootSignature;
     }
 
-    rsl::shared_ptr<PipelineStateObject> Device::do_create_pipeline_state_object(const D3D12_PIPELINE_STATE_STREAM_DESC& pipelineStateStreamDesc)
+    std::shared_ptr<PipelineStateObject> Device::do_create_pipeline_state_object(const D3D12_PIPELINE_STATE_STREAM_DESC& pipelineStateStreamDesc)
     {
-      rsl::shared_ptr<PipelineStateObject> pipeline_state_object = rsl::make_shared<adaptors::MakePipelineStateObject>(*this, pipelineStateStreamDesc);
+      std::shared_ptr<PipelineStateObject> pipeline_state_object = std::make_shared<adaptors::MakePipelineStateObject>(*this, pipelineStateStreamDesc);
 
       return pipeline_state_object;
     }
 
-    rsl::shared_ptr<ConstantBufferView> Device::create_constant_buffer_view(const rsl::shared_ptr<ConstantBuffer>& constant_buffer, size_t offset)
+    std::shared_ptr<ConstantBufferView> Device::create_constant_buffer_view(const std::shared_ptr<ConstantBuffer>& constant_buffer, size_t offset)
     {
-      rsl::shared_ptr<ConstantBufferView> constant_buffer_view = rsl::make_shared<adaptors::MakeConstantBufferView>(*this, constant_buffer, offset);
+      std::shared_ptr<ConstantBufferView> constant_buffer_view = std::make_shared<adaptors::MakeConstantBufferView>(*this, constant_buffer, offset);
 
       return constant_buffer_view;
     }
 
-    rsl::shared_ptr<ShaderResourceView> Device::create_shader_resource_view(const rsl::shared_ptr<Resource>& resource, const D3D12_SHADER_RESOURCE_VIEW_DESC* srv)
+    std::shared_ptr<ShaderResourceView> Device::create_shader_resource_view(const std::shared_ptr<Resource>& resource, const D3D12_SHADER_RESOURCE_VIEW_DESC* srv)
     {
-      rsl::shared_ptr<ShaderResourceView> ShaderResourceView = rsl::make_shared<adaptors::MakeShaderResourceView>(*this, resource, srv);
+      std::shared_ptr<ShaderResourceView> ShaderResourceView = std::make_shared<adaptors::MakeShaderResourceView>(*this, resource, srv);
 
       return ShaderResourceView;
     }
 
-    rsl::shared_ptr<UnorderedAccessView> Device::create_unordered_access_view(const rsl::shared_ptr<Resource>& inResource, const rsl::shared_ptr<Resource>& inCounterResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav)
+    std::shared_ptr<UnorderedAccessView> Device::create_unordered_access_view(const std::shared_ptr<Resource>& inResource, const std::shared_ptr<Resource>& inCounterResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav)
     {
-      rsl::shared_ptr<UnorderedAccessView> unordered_access_view = rsl::make_shared<adaptors::MakeUnorderedAccessView>(*this, inResource, inCounterResource, uav);
+      std::shared_ptr<UnorderedAccessView> unordered_access_view = std::make_shared<adaptors::MakeUnorderedAccessView>(*this, inResource, inCounterResource, uav);
 
       return unordered_access_view;
     }

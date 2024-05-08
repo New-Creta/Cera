@@ -1,11 +1,10 @@
 #pragma once
 
-#include "rex_engine/platform/win/win_com_ptr.h"
-#include "rex_std/type_traits.h"
+#include "wrl/windows_types.h"
 
-#include <wrl.h>
+#include <type_traits>
 
-namespace rex
+namespace cera
 {
   namespace wrl
   {
@@ -75,8 +74,8 @@ namespace rex
     }
     //-------------------------------------------------------------------------
     template <typename T>
-    ComObject<T>::ComObject(rex::wrl::ComPtr<T>&& object)
-        : m_pointer(rsl::move(object))
+    ComObject<T>::ComObject(cera::wrl::ComPtr<T>&& object)
+        : m_pointer(std::move(object))
     {
     }
 
@@ -97,7 +96,7 @@ namespace rex
     template <typename T>
     T* ComObject<T>::c_ptr() const
     {
-      static_assert(rsl::is_base_of_v<IUnknown, T>, "T is not a com object!");
+      static_assert(std::is_base_of_v<IUnknown, T>, "T is not a com object!");
       return const_cast<T*>(m_pointer.Get()); // NOLINT(cppcoreguidelines-pro-type-const-cast)
     }
 
@@ -135,4 +134,4 @@ namespace rex
       return m_pointer != nullptr;
     }
   } // namespace wrl
-} // namespace rex
+} // namespace cera

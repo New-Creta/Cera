@@ -9,7 +9,7 @@ namespace cera
 {
   namespace renderer
   {
-    ShaderResourceView::ShaderResourceView(Device& device, const rsl::shared_ptr<Resource>& resource, const D3D12_SHADER_RESOURCE_VIEW_DESC* srv)
+    ShaderResourceView::ShaderResourceView(Device& device, const std::shared_ptr<Resource>& resource, const D3D12_SHADER_RESOURCE_VIEW_DESC* srv)
         : m_device(device)
         , m_resource(resource)
     {
@@ -25,7 +25,7 @@ namespace cera
 
     ShaderResourceView::~ShaderResourceView() = default;
 
-    rsl::shared_ptr<Resource> ShaderResourceView::resource() const
+    std::shared_ptr<Resource> ShaderResourceView::resource() const
     {
       return m_resource;
     }

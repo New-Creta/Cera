@@ -16,7 +16,7 @@ namespace cera
     {
     }
 
-    DescriptorAllocation::DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE descriptor, u32 numHandles, rsl::memory_size descriptorSize, rsl::shared_ptr<DescriptorAllocatorPage> page)
+    DescriptorAllocation::DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE descriptor, u32 numHandles, std::memory_size descriptorSize, std::shared_ptr<DescriptorAllocatorPage> page)
         : m_descriptor(descriptor)
         , m_num_handles(numHandles)
         , m_descriptor_size(descriptorSize)
@@ -30,10 +30,10 @@ namespace cera
     }
 
     DescriptorAllocation::DescriptorAllocation(DescriptorAllocation&& allocation)
-        : m_descriptor(rsl::exchange(allocation.m_descriptor, {0}))
-        , m_num_handles(rsl::exchange(allocation.m_num_handles, 0))
-        , m_descriptor_size(rsl::exchange(allocation.m_descriptor_size, 0))
-        , m_page(rsl::exchange(allocation.m_page, nullptr))
+        : m_descriptor(std::exchange(allocation.m_descriptor, {0}))
+        , m_num_handles(std::exchange(allocation.m_num_handles, 0))
+        , m_descriptor_size(std::exchange(allocation.m_descriptor_size, 0))
+        , m_page(std::exchange(allocation.m_page, nullptr))
     {
     }
 
@@ -42,10 +42,10 @@ namespace cera
       // Free this descriptor if it points to anything.
       free();
 
-      m_descriptor      = rsl::exchange(other.m_descriptor, {0});
-      m_num_handles     = rsl::exchange(other.m_num_handles, 0);
-      m_descriptor_size = rsl::exchange(other.m_descriptor_size, 0);
-      m_page            = rsl::exchange(other.m_page, nullptr);
+      m_descriptor      = std::exchange(other.m_descriptor, {0});
+      m_num_handles     = std::exchange(other.m_num_handles, 0);
+      m_descriptor_size = std::exchange(other.m_descriptor_size, 0);
+      m_page            = std::exchange(other.m_page, nullptr);
 
       return *this;
     }
@@ -72,7 +72,7 @@ namespace cera
       return m_num_handles;
     }
 
-    rsl::shared_ptr<DescriptorAllocatorPage> DescriptorAllocation::descriptor_allocator_page() const
+    std::shared_ptr<DescriptorAllocatorPage> DescriptorAllocation::descriptor_allocator_page() const
     {
       return m_page;
     }
@@ -81,7 +81,7 @@ namespace cera
     {
       if(!is_null() && m_page)
       {
-        m_page->free(rsl::move(*this));
+        m_page->free(std::move(*this));
 
         m_descriptor.ptr  = 0;
         m_num_handles     = 0;

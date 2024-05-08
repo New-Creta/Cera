@@ -12,7 +12,8 @@ MACRO(GROUPSOURCES curdir folder_name)
     ENDFOREACH()
 ENDMACRO(GROUPSOURCES)
 
-# add_subdirectory(cera_engine)
-add_subdirectory(cera_app)
+add_subdirectory(cera_core)
 add_subdirectory(cera_rhi)
 add_subdirectory(cera_directx)
+add_subdirectory(cera_app)
+

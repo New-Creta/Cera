@@ -5,13 +5,11 @@
  *  other resource types (Buffers & Textures).
  */
 
-#include "cera_engine/engine/types.h"
+#include "util/types.h"
 
-#include "cera_renderer_core/iresource.h"
+#include "resources/iresource.h"
 
 #include "directx_util.h"
-
-#include "cera_std/bonus/utility/type_id.h"
 
 namespace cera
 {
@@ -35,7 +33,7 @@ namespace cera
              * Set the name of the resource. 
              * Useful for debugging purposes.
              */
-            void set_resource_name(const rsl::wstring& name);
+            void set_resource_name(const std::wstring& name);
 
             /**
             * Check if the resource format supports a specific feature.
@@ -52,7 +50,7 @@ namespace cera
 
             const D3D12_CLEAR_VALUE* d3d_clear_value() const;
 
-            const rsl::wstring& resource_name() const;
+            const std::wstring& resource_name() const;
 
         private:
             // Check the format support and populate the m_format_support structure.
@@ -61,9 +59,9 @@ namespace cera
         private:
             Device&                             m_device_ref;
             wrl::ComPtr<ID3D12Resource>         m_d3d_resource;
-            rsl::unique_ptr<D3D12_CLEAR_VALUE>  m_d3d_clear_value;
+            std::unique_ptr<D3D12_CLEAR_VALUE>  m_d3d_clear_value;
             D3D12_FEATURE_DATA_FORMAT_SUPPORT   m_format_support;
-            rsl::wstring                        m_resource_name;
+            std::wstring                        m_resource_name;
         };
     }
 }

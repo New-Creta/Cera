@@ -1,12 +1,16 @@
 #pragma once
 
-#include "cera_engine/engine/types.h"
-#include "cera_dxgi/wrl/comobject.h"
-#include "cera_dxgi/dxgi_util.h"
+#include "util/types.h"
+
+#include "wrl/comobject.h"
+
+#include "dxgi/dxgi_util.h"
+
 #include "directx_util.h"
+
 #include "descriptors/descriptor_allocation.h"
 
-#include "cera_std/memory.h"
+#include <memory>
 
 namespace cera
 {
@@ -51,7 +55,7 @@ namespace cera
             /**
              * Create a new device
             */
-            static rsl::shared_ptr<Device> create();
+            static std::shared_ptr<Device> create();
 
         public:
             /**
@@ -101,15 +105,15 @@ namespace cera
             /**
              * Create a ConstantBuffer from a given ID3D12Resoure.
              */
-            rsl::shared_ptr<ConstantBuffer> create_constant_buffer(wrl::ComPtr<ID3D12Resource> resource);
+            std::shared_ptr<ConstantBuffer> create_constant_buffer(wrl::ComPtr<ID3D12Resource> resource);
 
             /**
              * Create a ByteAddressBuffer resource.
              *
              * @param resDesc A description of the resource.
              */
-            rsl::shared_ptr<ByteAddressBuffer> create_byte_address_buffer(rsl::memory_size bufferSize);
-            rsl::shared_ptr<ByteAddressBuffer> create_byte_address_buffer(wrl::ComPtr<ID3D12Resource> resource);
+            std::shared_ptr<ByteAddressBuffer> create_byte_address_buffer(std::memory_size bufferSize);
+            std::shared_ptr<ByteAddressBuffer> create_byte_address_buffer(wrl::ComPtr<ID3D12Resource> resource);
 
             /**
              * Create a Texture resource.
@@ -120,23 +124,23 @@ namespace cera
              *
              * @returns A pointer to the created texture.
              */
-            rsl::shared_ptr<Texture> create_texture(const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue = nullptr);
-            rsl::shared_ptr<Texture> create_texture(wrl::ComPtr<ID3D12Resource> resource, const D3D12_CLEAR_VALUE* clearValue = nullptr);
+            std::shared_ptr<Texture> create_texture(const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue = nullptr);
+            std::shared_ptr<Texture> create_texture(wrl::ComPtr<ID3D12Resource> resource, const D3D12_CLEAR_VALUE* clearValue = nullptr);
 
-            rsl::shared_ptr<IndexBuffer> create_index_buffer(size_t numIndices, DXGI_FORMAT indexFormat);
-            rsl::shared_ptr<IndexBuffer> create_index_buffer(wrl::ComPtr<ID3D12Resource> resource, size_t numIndices, DXGI_FORMAT indexFormat);
+            std::shared_ptr<IndexBuffer> create_index_buffer(size_t numIndices, DXGI_FORMAT indexFormat);
+            std::shared_ptr<IndexBuffer> create_index_buffer(wrl::ComPtr<ID3D12Resource> resource, size_t numIndices, DXGI_FORMAT indexFormat);
 
-            rsl::shared_ptr<VertexBuffer> create_vertex_buffer(size_t numVertices, size_t vertexStride);
-            rsl::shared_ptr<VertexBuffer> create_vertex_buffer(wrl::ComPtr<ID3D12Resource> resource, size_t numVertices, size_t vertexStride);
+            std::shared_ptr<VertexBuffer> create_vertex_buffer(size_t numVertices, size_t vertexStride);
+            std::shared_ptr<VertexBuffer> create_vertex_buffer(wrl::ComPtr<ID3D12Resource> resource, size_t numVertices, size_t vertexStride);
 
-            rsl::shared_ptr<RootSignature> create_root_signature(const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc);
+            std::shared_ptr<RootSignature> create_root_signature(const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc);
 
             template<class TPipelineStateStream>
-            rsl::shared_ptr<PipelineStateObject> create_pipeline_state_object(TPipelineStateStream& pipelineStateStream);
+            std::shared_ptr<PipelineStateObject> create_pipeline_state_object(TPipelineStateStream& pipelineStateStream);
 
-            rsl::shared_ptr<ConstantBufferView> create_constant_buffer_view(const rsl::shared_ptr<ConstantBuffer>& constantBuffer, size_t offset = 0);
-            rsl::shared_ptr<ShaderResourceView> create_shader_resource_view(const rsl::shared_ptr<Resource>& resource, const D3D12_SHADER_RESOURCE_VIEW_DESC* srv = nullptr);
-            rsl::shared_ptr<UnorderedAccessView> create_unordered_access_view(const rsl::shared_ptr<Resource>& inResource, const rsl::shared_ptr<Resource>& inCounterResource = nullptr, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav = nullptr);
+            std::shared_ptr<ConstantBufferView> create_constant_buffer_view(const std::shared_ptr<ConstantBuffer>& constantBuffer, size_t offset = 0);
+            std::shared_ptr<ShaderResourceView> create_shader_resource_view(const std::shared_ptr<Resource>& resource, const D3D12_SHADER_RESOURCE_VIEW_DESC* srv = nullptr);
+            std::shared_ptr<UnorderedAccessView> create_unordered_access_view(const std::shared_ptr<Resource>& inResource, const std::shared_ptr<Resource>& inCounterResource = nullptr, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav = nullptr);
 
             /**
             * Flush all command queues.
@@ -162,7 +166,7 @@ namespace cera
             /**
             * The device's constructor should always be private to prevent direct construction calls
             */
-          Device(rsl::shared_ptr<dxgi::Adapter> adaptor, wrl::ComPtr<ID3D12Device2> device);
+          Device(std::shared_ptr<dxgi::Adapter> adaptor, wrl::ComPtr<ID3D12Device2> device);
 
             virtual ~Device();
 
@@ -170,24 +174,24 @@ namespace cera
             /**
              * Execute logic to create the pipeline state object
             */
-            rsl::shared_ptr<PipelineStateObject> do_create_pipeline_state_object( const D3D12_PIPELINE_STATE_STREAM_DESC& pipelineStateStreamDesc );
+            std::shared_ptr<PipelineStateObject> do_create_pipeline_state_object( const D3D12_PIPELINE_STATE_STREAM_DESC& pipelineStateStreamDesc );
 
         private:
-            rsl::shared_ptr<dxgi::Adapter> m_adapter;
+            std::shared_ptr<dxgi::Adapter> m_adapter;
 
-            rsl::unique_ptr<CommandQueue> m_direct_command_queue;
-            rsl::unique_ptr<CommandQueue> m_compute_command_queue;
-            rsl::unique_ptr<CommandQueue> m_copy_command_queue;
+            std::unique_ptr<CommandQueue> m_direct_command_queue;
+            std::unique_ptr<CommandQueue> m_compute_command_queue;
+            std::unique_ptr<CommandQueue> m_copy_command_queue;
 
             D3D_ROOT_SIGNATURE_VERSION m_highest_root_signature_version;
 
             bool m_tearing_supported;
 
-            rsl::unique_ptr<DescriptorAllocator> m_descriptor_allocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
+            std::unique_ptr<DescriptorAllocator> m_descriptor_allocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
         };
 
         template<class TPipelineStateStream>
-        rsl::shared_ptr<PipelineStateObject> Device::create_pipeline_state_object(TPipelineStateStream& pipelineStateStream)
+        std::shared_ptr<PipelineStateObject> Device::create_pipeline_state_object(TPipelineStateStream& pipelineStateStream)
         {
             D3D12_PIPELINE_STATE_STREAM_DESC pipeline_state_stream_desc = { sizeof(TPipelineStateStream), &pipelineStateStream };
 

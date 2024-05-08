@@ -1,5 +1,5 @@
-#include "cera_renderer_core/mesh_factory.h"
-#include "cera_renderer_core/renderer.h"
+#include "mesh_factory.h"
+#include "renderer.h"
 
 #include "scenegraph/mesh_node.h"
 #include "utility/vertex_types.h"
@@ -14,12 +14,12 @@ namespace cera
 {
     namespace mesh_factory
     {
-        using VertexCollection = rsl::vector<renderer::XMVertexPosCol>;
-        using IndexCollection = rsl::vector<uint16_t>;
+        using VertexCollection = std::vector<renderer::XMVertexPosCol>;
+        using IndexCollection = std::vector<uint16_t>;
 
         namespace internal
         {
-            rsl::shared_ptr<SceneNode> create_scene(const VertexCollection& vertices, const IndexCollection& indices)
+            std::shared_ptr<SceneNode> create_scene(const VertexCollection& vertices, const IndexCollection& indices)
             {
                 if (vertices.empty())
                 {
@@ -29,12 +29,12 @@ namespace cera
                 auto new_vertex_buffer = renderer::copy_vertex_buffer(vertices);
                 auto new_index_Buffer  = renderer::copy_index_buffer(indices);
 
-                auto new_mesh = rsl::make_shared<renderer::Mesh>();
+                auto new_mesh = std::make_shared<renderer::Mesh>();
 
                 new_mesh->set_vertex_buffer(0, new_vertex_buffer, vertices.size());
                 new_mesh->set_index_buffer(new_index_Buffer, indices.size());
 
-                auto new_node = rsl::make_shared<MeshNode>();
+                auto new_node = std::make_shared<MeshNode>();
                 new_node->add_mesh(new_mesh);
 
                 return new_node;
@@ -62,7 +62,7 @@ namespace cera
 
                     if (isTop)
                     {
-                        rsl::swap(i1, i2);
+                        std::swap(i1, i2);
                     }
 
                     u16 vbase = (u16)vertices.size();
@@ -95,7 +95,7 @@ namespace cera
          * @param size The size of one side of the cube.
          * @param reverseWinding Whether to reverse the winding order of the triangles (useful for skyboxes).
          */
-        rsl::shared_ptr<SceneNode> create_cube(const glm::vec3& color, f32 size)
+        std::shared_ptr<SceneNode> create_cube(const glm::vec3& color, f32 size)
         {
           // Convert to directx type
           DirectX::XMFLOAT3 xm_color;
@@ -162,7 +162,7 @@ namespace cera
          * @param tessellation Determines how smooth the sphere is.
          * @param reverseWinding Whether to reverse the winding order of the triangles (useful for sydomes).
          */
-        rsl::shared_ptr<SceneNode> create_sphere(const glm::vec3& color, f32 radius, u32 tessellation)
+        std::shared_ptr<SceneNode> create_sphere(const glm::vec3& color, f32 radius, u32 tessellation)
         {
             assert(tessellation > 3 && "tessellation parameter out of range");
 
@@ -235,7 +235,7 @@ namespace cera
          * @param tessellation How smooth the cylinder will be.
          * @param reverseWinding Whether to reverse the winding order of the triangles.
          */
-        rsl::shared_ptr<SceneNode> create_cylinder(const glm::vec3& color, f32 radius, f32 height, u32 tessellation)
+        std::shared_ptr<SceneNode> create_cylinder(const glm::vec3& color, f32 radius, f32 height, u32 tessellation)
         {
             assert(tessellation > 3 && "tessellation parameter out of range");
 
@@ -288,7 +288,7 @@ namespace cera
          * @param height The height of the plane.
          * @reverseWinding Whether to reverse the winding order of the plane.
          */
-        rsl::shared_ptr<SceneNode> create_plane(const glm::vec3& color, f32 width, f32 height)
+        std::shared_ptr<SceneNode> create_plane(const glm::vec3& color, f32 width, f32 height)
         {
           // Convert to directx type
           DirectX::XMFLOAT3 xm_color;

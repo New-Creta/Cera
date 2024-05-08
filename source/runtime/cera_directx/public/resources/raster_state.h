@@ -1,7 +1,7 @@
 #pragma once
 
-#include "cera_renderer_core/iresource.h"
-#include "cera_renderer_core/resource_descriptions/create_raster_state_desc.h"
+#include "resources/iresource.h"
+#include "resource_descriptions/create_raster_state_desc.h"
 
 namespace cera
 {

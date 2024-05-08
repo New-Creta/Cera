@@ -44,10 +44,6 @@ target_sources(cera_app PRIVATE
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/launch.h)
 ## public sources
 target_sources(cera_app PUBLIC 
-    ### util
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_app/public/util/log.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_app/public/util/types.h
-
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/public/generic_application_creation_params.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/public/abstract_game.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/public/events.h
@@ -66,7 +62,7 @@ target_include_directories(cera_app PUBLIC ${SOURCE_RUNTIME_DIRECTORY}/cera_app/
 target_include_directories(cera_app PUBLIC ${SOURCE_THIRDPARTY_DIRECTORY}/fmt/include)
 
 # Link libraries
-# target_link_libraries(cera_app PUBLIC cera_engine)
+target_link_libraries(cera_app PUBLIC cera_core)
 
 if(WIN32)
     target_link_libraries(cera_app PUBLIC Shlwapi.lib)

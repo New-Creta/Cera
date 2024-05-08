@@ -40,6 +40,7 @@ target_sources(cera_directx PRIVATE
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/util/thread_name.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/util/vertex_types.cpp
 
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/gpu_description.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/command_list.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/command_queue.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/directx_call.cpp
@@ -61,11 +62,13 @@ target_sources(cera_directx PUBLIC
 
     ### dxgi
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/dxgi/objects/adapter.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/dxgi/objects/factory.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/dxgi/wrl/comobject.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/dxgi/objects/factory.h 
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/dxgi/dxgi_adapter_manager.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/dxgi/dxgi_format.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/dxgi/dxgi_util.h
+
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/wrl/comobject.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/wrl/windows_types.h
 
     ### resources
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resources/buffer.h
@@ -79,6 +82,7 @@ target_sources(cera_directx PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resources/render_target.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resources/resource_state_tracker.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resources/resource.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resources/iresource.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resources/root_signature.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resources/shader_library.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resources/shader_resource_view.h
@@ -92,6 +96,17 @@ target_sources(cera_directx PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/util/thread_name.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/util/vertex_types.h
 
+    ### resource descriptions
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resource_descriptions/create_clear_state_desc.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resource_descriptions/create_index_buffer_desc.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resource_descriptions/create_pipeline_state_desc.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resource_descriptions/create_raster_state_desc.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resource_descriptions/create_resource_desc.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resource_descriptions/create_texture_desc.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resource_descriptions/create_vertex_buffer_desc.h
+
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/gpu_description.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/gpu_scorer.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/command_list.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/command_queue.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/directx_call.h
@@ -110,6 +125,11 @@ target_include_directories(cera_directx PRIVATE ${SOURCE_RUNTIME_DIRECTORY}/cera
 
 # Public includes
 target_include_directories(cera_directx PUBLIC ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public)
+
+# Link libraries
+target_link_libraries(cera_directx PUBLIC cera_rhi)
+target_link_libraries(cera_directx PUBLIC DirectXTex)
+target_link_libraries(cera_directx PUBLIC DirectXExtra)
 
 # Target properties
 set_target_properties(cera_directx PROPERTIES FOLDER "runtime")

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "cera_std/thread.h"
-
 #include <thread>
 
 #define WIN32_LEAN_AND_MEAN
@@ -14,7 +12,7 @@ namespace cera
   {
     namespace threading
     {
-      // Set the name of an rsl::thread.
+      // Set the name of an std::thread.
       // Useful for debugging.
       const DWORD MS_VC_EXCEPTION = 0x406D1388;
 
@@ -29,7 +27,7 @@ namespace cera
       } THREADNAME_INFO;
 #pragma pack(pop)
 
-      void set_thread_name(rsl::thread& thread, const char* threadName);
+      void set_thread_name(std::thread& thread, const char* threadName);
     } // namespace threading
   }   // namespace renderer
 } // namespace cera

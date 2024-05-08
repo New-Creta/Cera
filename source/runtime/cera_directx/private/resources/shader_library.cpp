@@ -17,7 +17,7 @@ namespace cera
     {
       namespace internal
       {
-        rsl::shared_ptr<RootSignature> load_unlit_root_signature(Device* device)
+        std::shared_ptr<RootSignature> load_unlit_root_signature(Device* device)
         {
           // Create a root signature.
           // Allow input layout and deny unnecessary access to certain pipeline stages.
@@ -128,7 +128,7 @@ namespace cera
         }
       } // namespace internal
 
-      rsl::unordered_map<rsl::string, ShaderInfo> g_shader_info;
+      std::unordered_map<std::string, ShaderInfo> g_shader_info;
 
       //-------------------------------------------------------------------------
       wrl::ComPtr<ID3DBlob> compile_shader(const ShaderCompilationDesc& desc)
@@ -181,7 +181,7 @@ namespace cera
         g_shader_info.clear();
       }
 
-      ShaderInfo find_shader_info(rsl::string_view name)
+      ShaderInfo find_shader_info(std::string_view name)
       {
         auto it = g_shader_info.find(name);
         if(it == g_shader_info.cend())

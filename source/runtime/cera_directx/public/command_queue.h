@@ -1,21 +1,17 @@
 #pragma once
 
+#include "util/types.h"
+#include "util/queue.h"
+
 #include "directx_util.h"
-#include "threading/queue.h"
-#include "cera_engine/engine/types.h"
 
-#include "cera_std/memory.h"
-#include "cera_std/queue.h"
-#include "cera_std/vector.h"
-#include "cera_std/atomic.h"
-#include "cera_std/condition_variable.h"
-#include "cera_std/thread.h"
-#include "cera_std/mutex.h"
-
-#include <thread>
-#include <mutex>
+#include <memory>
+#include <queue>
+#include <vector>
 #include <atomic>
 #include <condition_variable>
+#include <thread>
+#include <mutex>
 
 namespace cera
 {
@@ -27,13 +23,13 @@ namespace cera
     class CommandQueue
     {
     public:
-      rsl::shared_ptr<CommandList> command_list();
+      std::shared_ptr<CommandList> command_list();
       wrl::ComPtr<ID3D12CommandQueue> d3d_command_queue() const;
 
       // Execute a command list.
       // Returns the fence value to wait for for this command list.
-      u64 execute_command_list(rsl::shared_ptr<CommandList> commandList);
-      u64 execute_command_lists(const rsl::vector<rsl::shared_ptr<CommandList>>& commandLists);
+      u64 execute_command_list(std::shared_ptr<CommandList> commandList);
+      u64 execute_command_lists(const std::vector<std::shared_ptr<CommandList>>& commandLists);
 
       u64 signal();
       bool is_fence_complete(u64 fenceValue) const;
@@ -44,7 +40,7 @@ namespace cera
       void wait(const CommandQueue& other);
 
     protected:
-      friend struct rsl::default_delete<CommandQueue>;
+      friend struct std::default_delete<CommandQueue>;
 
       // Only the device can create command queues.
       CommandQueue(Device& device, D3D12_COMMAND_LIST_TYPE type);
@@ -68,7 +64,7 @@ namespace cera
       struct CommandListEntry
       {
         u64 fence_value;
-        rsl::shared_ptr<CommandList> command_list;
+        std::shared_ptr<CommandList> command_list;
       };
 
       Device& m_device;
@@ -78,13 +74,13 @@ namespace cera
       u64 m_fence_value;
 
       threading::Queue<CommandListEntry> m_in_flight_command_lists;
-      threading::Queue<rsl::shared_ptr<CommandList>> m_available_command_lists;
+      threading::Queue<std::shared_ptr<CommandList>> m_available_command_lists;
 
       // A thread to process in-flight command lists.
-      rsl::thread m_process_in_flight_command_lists_thread;
-      rsl::atomic<bool> m_bprocess_in_flight_command_lists;
-      rsl::mutex m_process_in_flight_command_lists_thread_mutex;
-      rsl::condition_variable m_process_in_flight_command_lists_thread_CV;
+      std::thread m_process_in_flight_command_lists_thread;
+      std::atomic<bool> m_bprocess_in_flight_command_lists;
+      std::mutex m_process_in_flight_command_lists_thread_mutex;
+      std::condition_variable m_process_in_flight_command_lists_thread_CV;
     };
   } // namespace renderer
 } // namespace cera

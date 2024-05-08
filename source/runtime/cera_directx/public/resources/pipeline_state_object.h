@@ -1,10 +1,10 @@
 #pragma once
 
-#include "cera_engine/engine/types.h"
+#include "util/types.h"
 
 #include "directx_util.h"
 
-#include "cera_renderer_core/iresource.h"
+#include "resources/iresource.h"
 
 namespace cera
 {

@@ -1,14 +1,13 @@
 #pragma once
 
-#include "rex_dxgi/wrl/comobject.h"
-#include "rex_engine/engine/types.h"
-#include "rex_engine/platform/win/win_com_ptr.h"
-#include "rex_renderer_core/gpu_description.h"
-#include "rex_std/bonus/types.h"
+#include "util/types.h"
+
+#include "wrl/comobject.h"
+#include "gpu_description.h"
 
 struct IDXGIAdapter4;
 
-namespace rex
+namespace cera
 {
   namespace dxgi
   {
@@ -23,4 +22,4 @@ namespace rex
       renderer::GpuDescription m_description;
     };
   } // namespace dxgi
-} // namespace rex
+} // namespace cera

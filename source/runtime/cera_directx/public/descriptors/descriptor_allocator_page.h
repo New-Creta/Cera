@@ -48,7 +48,7 @@ namespace cera
   {
     class Device;
 
-    class DescriptorAllocatorPage : public rsl::enable_shared_from_this<DescriptorAllocatorPage>
+    class DescriptorAllocatorPage : public std::enable_shared_from_this<DescriptorAllocatorPage>
     {
     public:
       D3D12_DESCRIPTOR_HEAP_TYPE heap_type() const;
@@ -117,10 +117,10 @@ namespace cera
       struct FreeBlockInfo;
 
       // A map that lists the free blocks by the offset within the descriptor heap.
-      using FreeListByOffset = rsl::map<OffsetType, FreeBlockInfo>;
+      using FreeListByOffset = std::map<OffsetType, FreeBlockInfo>;
       // A map that lists the free blocks by size.
       // Needs to be a multimap since multiple blocks can have the same size.
-      using FreeListBySize = rsl::multimap<SizeType, FreeListByOffset::iterator>;
+      using FreeListBySize = std::multimap<SizeType, FreeListByOffset::iterator>;
 
       struct FreeBlockInfo
       {
@@ -153,7 +153,7 @@ namespace cera
 
       // Stale descriptors are queued for release until the frame that they were freed
       // has completed.
-      using StaleDescriptorQueue = rsl::queue<StaleDescriptorInfo>;
+      using StaleDescriptorQueue = std::queue<StaleDescriptorInfo>;
 
       StaleDescriptorQueue m_stale_descriptors;
 
@@ -166,7 +166,7 @@ namespace cera
       u32 m_num_descriptors_in_heap;
       u32 m_num_free_handles;
 
-      rsl::mutex m_allocation_mutex;
+      std::mutex m_allocation_mutex;
     };
   } // namespace renderer
 }

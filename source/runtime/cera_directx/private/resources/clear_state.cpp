@@ -9,13 +9,13 @@ namespace cera
     {
     }
     ClearState::ClearState(CreateClearStateDesc&& desc)
-        : m_desc(rsl::move(desc))
+        : m_desc(std::move(desc))
     {
     }
 
     ClearState::~ClearState() = default;
 
-    rsl::Color4f ClearState::rgba() const
+    std::Color4f ClearState::rgba() const
     {
       return m_desc.rgba;
     }

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "cera_engine/engine/types.h"
+#include "util/types.h"
 
 #include "directx_util.h"
 
-#include "cera_renderer_core/iresource.h"
+#include "resources/iresource.h"
 
-#include "cera_std/vector.h"
-#include "cera_std/memory.h"
+#include <vector>
+#include <memory>
 
 #include <DirectXMath.h>
 
@@ -55,7 +55,7 @@ namespace cera
              * @param attachmentPoint The point to attach the texture to.
              * @param [texture] Optional texture to bind to the render target. Specify nullptr to remove the texture.
              */
-            void attach_texture( AttachmentPoint attachmentPoint, const rsl::shared_ptr<Texture>& texture );
+            void attach_texture( AttachmentPoint attachmentPoint, const std::shared_ptr<Texture>& texture );
 
             // Resize all of the textures associated with the render target.
             void                resize(DirectX::XMUINT2 size);
@@ -70,11 +70,11 @@ namespace cera
             // By default, a fullscreen viewport is returned.
             D3D12_VIEWPORT viewport(DirectX::XMFLOAT2 scale = { 1.0f, 1.0f }, DirectX::XMFLOAT2 bias = { 0.0f, 0.0f }, float minDepth = 0.0f, float maxDepth = 1.0f) const;
 
-            const rsl::shared_ptr<Texture>& texture( AttachmentPoint attachmentPoint ) const;
+            const std::shared_ptr<Texture>& texture( AttachmentPoint attachmentPoint ) const;
             // Get a list of the textures attached to the render target.
             // This method is primarily used by the CommandList when binding the
             // render target to the output merger stage of the rendering pipeline.
-            const rsl::vector<rsl::shared_ptr<Texture>>& textures() const;
+            const std::vector<std::shared_ptr<Texture>>& textures() const;
 
             // Get the render target formats of the textures currently 
             // attached to this render target object.
@@ -91,7 +91,7 @@ namespace cera
             void reset();
 
         private:
-            using render_target_list = rsl::vector<rsl::shared_ptr<Texture>>;
+            using render_target_list = std::vector<std::shared_ptr<Texture>>;
 
             render_target_list m_textures;
             DirectX::XMUINT2 m_size;

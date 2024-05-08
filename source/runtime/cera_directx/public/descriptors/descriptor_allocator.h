@@ -35,7 +35,7 @@
  *  Descriptors that are no longer used (for example, when a resource is unloaded from memory) will be automatically returned back to the descriptor heap for reuse.
  */
 
-#include "cera_engine/engine/types.h"
+#include "util/types.h"
 
 #include "directx_util.h"
 #include "descriptors/descriptor_allocation.h"
@@ -71,7 +71,7 @@ namespace cera
       void release_stale_descriptors();
 
     protected:
-      friend struct rsl::default_delete<DescriptorAllocator>;
+      friend struct std::default_delete<DescriptorAllocator>;
 
       // Can only be created by the Device.
       DescriptorAllocator(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, u32 numDescriptorsPerHeap = 256);
@@ -79,10 +79,10 @@ namespace cera
 
     private:
       // Create a new heap with a specific number of descriptors.
-      rsl::shared_ptr<DescriptorAllocatorPage> create_allocator_page();
+      std::shared_ptr<DescriptorAllocatorPage> create_allocator_page();
 
     private:
-      using DescriptorHeapPool = rsl::vector<rsl::shared_ptr<DescriptorAllocatorPage>>;
+      using DescriptorHeapPool = std::vector<std::shared_ptr<DescriptorAllocatorPage>>;
 
       Device& m_device;
       D3D12_DESCRIPTOR_HEAP_TYPE m_heap_type;
@@ -90,9 +90,9 @@ namespace cera
 
       DescriptorHeapPool m_heap_pool;
       // Indices of available heaps in the heap pool.
-      rsl::set<size_t> m_available_heaps;
+      std::set<size_t> m_available_heaps;
 
-      rsl::mutex m_allocation_mutex;
+      std::mutex m_allocation_mutex;
     };
   } // namespace renderer
 }

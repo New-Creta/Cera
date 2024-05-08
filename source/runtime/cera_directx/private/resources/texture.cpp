@@ -15,18 +15,18 @@ namespace std
 {
   // Source: https://stackoverflow.com/questions/2590677/how-do-i-combine-hash-values-in-c0x
   template <typename T>
-  inline void hash_combine(rsl::size_t& seed, const T& v)
+  inline void hash_combine(std::size_t& seed, const T& v)
   {
-    rsl::hash<T> hasher;
+    std::hash<T> hasher;
     seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
   }
 
   template <>
   struct hash<D3D12_SHADER_RESOURCE_VIEW_DESC>
   {
-    rsl::size_t operator()(const D3D12_SHADER_RESOURCE_VIEW_DESC& srvDesc) const noexcept
+    std::size_t operator()(const D3D12_SHADER_RESOURCE_VIEW_DESC& srvDesc) const noexcept
     {
-      rsl::size_t seed = 0;
+      std::size_t seed = 0;
 
       hash_combine(seed, srvDesc.Format);
       hash_combine(seed, srvDesc.ViewDimension);
@@ -103,9 +103,9 @@ namespace std
   template <>
   struct hash<D3D12_UNORDERED_ACCESS_VIEW_DESC>
   {
-    rsl::size_t operator()(const D3D12_UNORDERED_ACCESS_VIEW_DESC& uavDesc) const noexcept
+    std::size_t operator()(const D3D12_UNORDERED_ACCESS_VIEW_DESC& uavDesc) const noexcept
     {
-      rsl::size_t seed = 0;
+      std::size_t seed = 0;
 
       hash_combine(seed, uavDesc.Format);
       hash_combine(seed, uavDesc.ViewDimension);
@@ -223,8 +223,8 @@ namespace cera
       {
         CD3DX12_RESOURCE_DESC res_desc(d3d_resource()->GetDesc());
 
-        res_desc.Width            = (rsl::max)(width, 1u);
-        res_desc.Height           = (rsl::max)(height, 1u);
+        res_desc.Width            = (std::max)(width, 1u);
+        res_desc.Height           = (std::max)(height, 1u);
         res_desc.DepthOrArraySize = depthOrArraySize;
         res_desc.MipLevels        = res_desc.SampleDesc.Count > 1 ? 1 : 0;
 

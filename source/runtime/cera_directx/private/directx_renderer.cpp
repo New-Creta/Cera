@@ -17,23 +17,23 @@
 #include "scenegraph/camera_visitor.h"
 #include "scenegraph/mesh_node.h"
 #include "scenegraph/mesh_visitor.h"
-#include "cera_dxgi/dxgi_format.h"
+#include "dxgi/dxgi_format.h"
 #include "cera_engine/scenegraph/scene.h"
-#include "cera_renderer_core/clear_bits.h"
-#include "cera_renderer_core/gpu_description.h"
-#include "cera_renderer_core/primitive_topology.h"
-#include "cera_renderer_core/renderer_backend.h"
-#include "cera_renderer_core/renderer_info.h"
-#include "cera_renderer_core/renderer_output_window_user_data.h"
-#include "cera_renderer_core/resource_descriptions/create_clear_state_desc.h"
-#include "cera_renderer_core/resource_descriptions/create_index_buffer_desc.h"
-#include "cera_renderer_core/resource_descriptions/create_pipeline_state_desc.h"
-#include "cera_renderer_core/resource_descriptions/create_raster_state_desc.h"
-#include "cera_renderer_core/resource_descriptions/create_texture_desc.h"
-#include "cera_renderer_core/resource_descriptions/create_vertex_buffer_desc.h"
-#include "cera_renderer_core/resource_pool.h"
-#include "cera_renderer_core/scissor_rect.h"
-#include "cera_renderer_core/viewport.h"
+#include "clear_bits.h"
+#include "gpu_description.h"
+#include "primitive_topology.h"
+#include "renderer_backend.h"
+#include "renderer_info.h"
+#include "renderer_output_window_user_data.h"
+#include "resource_descriptions/create_clear_state_desc.h"
+#include "resource_descriptions/create_index_buffer_desc.h"
+#include "resource_descriptions/create_pipeline_state_desc.h"
+#include "resource_descriptions/create_raster_state_desc.h"
+#include "resource_descriptions/create_texture_desc.h"
+#include "resource_descriptions/create_vertex_buffer_desc.h"
+#include "resource_pool.h"
+#include "scissor_rect.h"
+#include "viewport.h"
 #include "cera_std/memory.h"
 
 namespace cera
@@ -219,7 +219,7 @@ namespace cera
       }
 
       //-------------------------------------------------------------------------
-      D3D12_RASTERIZER_DESC to_RASTERIZER_DESC(const rsl::shared_ptr<RasterState>& rasterState)
+      D3D12_RASTERIZER_DESC to_RASTERIZER_DESC(const std::shared_ptr<RasterState>& rasterState)
       {
         D3D12_RASTERIZER_DESC raster_desc;
 
@@ -274,7 +274,7 @@ namespace cera
           {
           }
           MakeClearState(CreateClearStateDesc&& desc)
-              : ClearState(rsl::move(desc))
+              : ClearState(std::move(desc))
           {
           }
 
@@ -285,7 +285,7 @@ namespace cera
         {
         public:
           MakeRasterState(CreateRasterStateDesc&& desc)
-              : RasterState(rsl::move(desc))
+              : RasterState(std::move(desc))
           {
           }
 
@@ -302,9 +302,9 @@ namespace cera
             , m_current_backbuffer_index(0)
         {
           m_device        = Device::create();
-          m_swapchain     = rsl::make_shared<adaptors::MakeSwapchain>(m_device.get(), userData.primary_display_handle, userData.window_width, userData.window_height, DXGI_FORMAT_R8G8B8A8_UNORM);
-          m_resource_pool = rsl::make_unique<ResourcePool>();
-          m_render_target = rsl::make_unique<RenderTarget>();
+          m_swapchain     = std::make_shared<adaptors::MakeSwapchain>(m_device.get(), userData.primary_display_handle, userData.window_width, userData.window_height, DXGI_FORMAT_R8G8B8A8_UNORM);
+          m_resource_pool = std::make_unique<ResourcePool>();
+          m_render_target = std::make_unique<RenderTarget>();
 
           auto& command_queue = m_device->command_queue(D3D12_COMMAND_LIST_TYPE_COPY);
 
@@ -367,9 +367,9 @@ namespace cera
           color_clear_value.Color[3] = 1.0f;
 
           auto color_texture = m_device->create_texture(color_desc, &color_clear_value);
-          color_texture->set_resource_name(rsl::wstring(L"Color Render Target"));
+          color_texture->set_resource_name(std::wstring(L"Color Render Target"));
           ResourceSlot color_texture_slot             = m_resource_pool->allocate(color_texture);
-          ResourceSlot color_texture_clear_state_slot = m_resource_pool->allocate(rsl::make_shared<adaptors::MakeClearState>(rsl::move(clear_state_desc)));
+          ResourceSlot color_texture_clear_state_slot = m_resource_pool->allocate(std::make_shared<adaptors::MakeClearState>(std::move(clear_state_desc)));
 
           // Create a depth buffer.
           auto depth_desc = CD3DX12_RESOURCE_DESC::Tex2D(depth_buffer_format, userData.window_width, userData.window_height, 1, 1, sample_desc.Count, sample_desc.Quality, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
@@ -383,25 +383,25 @@ namespace cera
           depth_clear_value.DepthStencil = {1.0f, 0};
 
           auto depth_texture = m_device->create_texture(depth_desc, &depth_clear_value);
-          depth_texture->set_resource_name(rsl::wstring(L"Depth Render Target"));
+          depth_texture->set_resource_name(std::wstring(L"Depth Render Target"));
           ResourceSlot depth_texture_slot             = m_resource_pool->allocate(depth_texture);
-          ResourceSlot depth_texture_clear_state_slot = m_resource_pool->allocate(rsl::make_shared<adaptors::MakeClearState>(rsl::move(depth_state_desc)));
+          ResourceSlot depth_texture_clear_state_slot = m_resource_pool->allocate(std::make_shared<adaptors::MakeClearState>(std::move(depth_state_desc)));
 
           // Attach the textures to the render target.
           m_render_target->attach_texture(AttachmentPoint::Color0, color_texture);
           m_render_target->attach_texture(AttachmentPoint::DepthStencil, depth_texture);
 
           // Creat imgui renderer
-          m_gui_renderer = rsl::make_unique<adaptors::MakeImGUIRenderer>(m_device.get(), userData.primary_display_handle, m_swapchain->render_target());
+          m_gui_renderer = std::make_unique<adaptors::MakeImGUIRenderer>(m_device.get(), userData.primary_display_handle, m_swapchain->render_target());
 
           // Setup sccene visitors
           Viewport viewport        = {0.0f, 0.0f, static_cast<float>(userData.window_width), static_cast<float>(userData.window_height), 0.0f, 1.0f};
           ScissorRect scissor_rect = {0, 0, LONG_MAX, LONG_MAX};
 
-          m_camera_visitor = rsl::make_unique<CameraVisitor>(viewport, scissor_rect);
+          m_camera_visitor = std::make_unique<CameraVisitor>(viewport, scissor_rect);
           m_camera_visitor->set_clear_state(color_texture_slot, color_texture_clear_state_slot);
           m_camera_visitor->set_clear_depth_state(depth_texture_slot, depth_texture_clear_state_slot);
-          m_mesh_visitor = rsl::make_unique<MeshVisitor>();
+          m_mesh_visitor = std::make_unique<MeshVisitor>();
 
           // Find shader model
           auto adapter = m_device->dxgi_adapter();
@@ -549,7 +549,7 @@ namespace cera
         }
 
         //-------------------------------------------------------------------------
-        rsl::shared_ptr<CommandList> command_list_for_backbuffer_index(D3D12_COMMAND_LIST_TYPE type, s32 index)
+        std::shared_ptr<CommandList> command_list_for_backbuffer_index(D3D12_COMMAND_LIST_TYPE type, s32 index)
         {
           switch(type)
           {
@@ -563,7 +563,7 @@ namespace cera
         }
 
         //-------------------------------------------------------------------------
-        rsl::shared_ptr<CommandList> command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE type)
+        std::shared_ptr<CommandList> command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE type)
         {
           return command_list_for_backbuffer_index(type, m_current_backbuffer_index);
         }
@@ -587,20 +587,20 @@ namespace cera
         }
 
       private:
-        rsl::unique_ptr<CameraVisitor> m_camera_visitor;
-        rsl::unique_ptr<MeshVisitor> m_mesh_visitor;
+        std::unique_ptr<CameraVisitor> m_camera_visitor;
+        std::unique_ptr<MeshVisitor> m_mesh_visitor;
 
-        rsl::unique_ptr<ImGUIRenderer> m_gui_renderer;
+        std::unique_ptr<ImGUIRenderer> m_gui_renderer;
 
-        rsl::unique_ptr<RenderTarget> m_render_target;
-        rsl::unique_ptr<ResourcePool> m_resource_pool;
-        rsl::shared_ptr<PipelineStateObject> m_pipeline_state_object;
-        rsl::shared_ptr<Device> m_device;
-        rsl::shared_ptr<Swapchain> m_swapchain;
+        std::unique_ptr<RenderTarget> m_render_target;
+        std::unique_ptr<ResourcePool> m_resource_pool;
+        std::shared_ptr<PipelineStateObject> m_pipeline_state_object;
+        std::shared_ptr<Device> m_device;
+        std::shared_ptr<Swapchain> m_swapchain;
 
-        rsl::unordered_map<s32, rsl::shared_ptr<CommandList>> m_direct_active_command_lists;
-        rsl::unordered_map<s32, rsl::shared_ptr<CommandList>> m_copy_active_command_lists;
-        rsl::unordered_map<s32, rsl::shared_ptr<CommandList>> m_compute_active_command_lists;
+        std::unordered_map<s32, std::shared_ptr<CommandList>> m_direct_active_command_lists;
+        std::unordered_map<s32, std::shared_ptr<CommandList>> m_copy_active_command_lists;
+        std::unordered_map<s32, std::shared_ptr<CommandList>> m_compute_active_command_lists;
 
         Info m_renderer_info;
 
@@ -608,12 +608,12 @@ namespace cera
         s32 m_current_backbuffer_index;
       };
 
-      rsl::unique_ptr<Context> g_ctx; // NOLINT (fuchsia-statically-constructed-objects, cppcoreguidelines-avoid-non-const-global-variables)
+      std::unique_ptr<Context> g_ctx; // NOLINT (fuchsia-statically-constructed-objects, cppcoreguidelines-avoid-non-const-global-variables)
 
       //-------------------------------------------------------------------------
       bool initialize(const OutputWindowUserData& userData)
       {
-        g_ctx = rsl::make_unique<Context>(userData);
+        g_ctx = std::make_unique<Context>(userData);
 
         return true;
       }
@@ -684,7 +684,7 @@ namespace cera
       //-------------------------------------------------------------------------
       ResourceSlot copy_vertex_buffer(size_t numVertices, size_t vertexStride, const void* vertexBufferData)
       {
-        rsl::shared_ptr<VertexBuffer> vertex_buffer = g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_COPY)->copy_vertex_buffer(numVertices, vertexStride, vertexBufferData);
+        std::shared_ptr<VertexBuffer> vertex_buffer = g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_COPY)->copy_vertex_buffer(numVertices, vertexStride, vertexBufferData);
 
         return g_ctx->resource_pool()->allocate(vertex_buffer);
       }
@@ -692,7 +692,7 @@ namespace cera
       //-------------------------------------------------------------------------
       ResourceSlot copy_index_buffer(size_t numIndices, Format indexFormat, const void* indexBufferData)
       {
-        rsl::shared_ptr<IndexBuffer> index_buffer = g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_COPY)->copy_index_buffer(numIndices, dxgi::conversions::to_DXGI(indexFormat), indexBufferData);
+        std::shared_ptr<IndexBuffer> index_buffer = g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_COPY)->copy_index_buffer(numIndices, dxgi::conversions::to_DXGI(indexFormat), indexBufferData);
 
         return g_ctx->resource_pool()->allocate(index_buffer);
       }
@@ -700,19 +700,19 @@ namespace cera
       //-------------------------------------------------------------------------
       ResourceSlot create_clear_state(CreateClearStateDesc&& desc)
       {
-        return g_ctx->resource_pool()->allocate(rsl::make_shared<adaptors::MakeClearState>(rsl::move(desc)));
+        return g_ctx->resource_pool()->allocate(std::make_shared<adaptors::MakeClearState>(std::move(desc)));
       }
 
       //-------------------------------------------------------------------------
       ResourceSlot create_raster_state(CreateRasterStateDesc&& desc)
       {
-        return g_ctx->resource_pool()->allocate(rsl::make_shared<adaptors::MakeRasterState>(rsl::move(desc)));
+        return g_ctx->resource_pool()->allocate(std::make_shared<adaptors::MakeRasterState>(std::move(desc)));
       }
 
       //-------------------------------------------------------------------------
       ResourceSlot create_texture(CreateTextureDesc&& desc)
       {
-        rsl::shared_ptr<Texture> texture = nullptr;
+        std::shared_ptr<Texture> texture = nullptr;
 
         D3D12_RESOURCE_DESC resource_desc = conversions::to_RESOURCE_DESC(desc.resource_desc);
         if(desc.clear_state_desc)
@@ -731,7 +731,7 @@ namespace cera
       //-------------------------------------------------------------------------
       ResourceSlot create_vertex_buffer(CreateVertexBufferDesc&& desc)
       {
-        rsl::shared_ptr<VertexBuffer> vertex_buffer = g_ctx->device()->create_vertex_buffer(desc.num_vertices, desc.vertex_stride);
+        std::shared_ptr<VertexBuffer> vertex_buffer = g_ctx->device()->create_vertex_buffer(desc.num_vertices, desc.vertex_stride);
 
         return g_ctx->resource_pool()->allocate(vertex_buffer);
       }
@@ -741,7 +741,7 @@ namespace cera
       {
         DXGI_FORMAT dxgi_format = dxgi::conversions::to_DXGI(desc.index_format);
 
-        rsl::shared_ptr<IndexBuffer> index_buffer = g_ctx->device()->create_index_buffer(desc.num_indices, dxgi_format);
+        std::shared_ptr<IndexBuffer> index_buffer = g_ctx->device()->create_index_buffer(desc.num_indices, dxgi_format);
 
         return g_ctx->resource_pool()->allocate(index_buffer);
       }
@@ -789,7 +789,7 @@ namespace cera
         pipeline_state_stream.raster_desc             = CD3DX12_RASTERIZER_DESC(raster_desc);
         pipeline_state_stream.blend_desc              = CD3DX12_BLEND_DESC();
 
-        rsl::shared_ptr<PipelineStateObject> pso = g_ctx->device()->create_pipeline_state_object(pipeline_state_stream);
+        std::shared_ptr<PipelineStateObject> pso = g_ctx->device()->create_pipeline_state_object(pipeline_state_stream);
 
         return g_ctx->resource_pool()->allocate(pso);
       }
@@ -802,8 +802,8 @@ namespace cera
       //-------------------------------------------------------------------------
       void clear_texture(const ResourceSlot& clearStateTarget, const ResourceSlot& clearState)
       {
-        rsl::shared_ptr<Texture> texture        = g_ctx->resource_pool()->as<Texture>(clearStateTarget);
-        rsl::shared_ptr<ClearState> clear_state = g_ctx->resource_pool()->as<ClearState>(clearState);
+        std::shared_ptr<Texture> texture        = g_ctx->resource_pool()->as<Texture>(clearStateTarget);
+        std::shared_ptr<ClearState> clear_state = g_ctx->resource_pool()->as<ClearState>(clearState);
 
         g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_DIRECT)->clear_texture(texture, clear_state->rgba().color_data.data());
       }
@@ -811,8 +811,8 @@ namespace cera
       //-------------------------------------------------------------------------
       void clear_depth_stencil_texture(const ResourceSlot& clearStateTarget, const ResourceSlot& clearState)
       {
-        rsl::shared_ptr<Texture> texture        = g_ctx->resource_pool()->as<Texture>(clearStateTarget);
-        rsl::shared_ptr<ClearState> clear_state = g_ctx->resource_pool()->as<ClearState>(clearState);
+        std::shared_ptr<Texture> texture        = g_ctx->resource_pool()->as<Texture>(clearStateTarget);
+        std::shared_ptr<ClearState> clear_state = g_ctx->resource_pool()->as<ClearState>(clearState);
 
         s32 depth_stencil_clear_flags = 0;
         depth_stencil_clear_flags |= (clear_state->flags() & ClearBits::ClearDepthBuffer) ? D3D12_CLEAR_FLAG_DEPTH : 0;
@@ -836,7 +836,7 @@ namespace cera
       //-------------------------------------------------------------------------
       void set_render_target(const ResourceSlot& renderTarget)
       {
-        rsl::shared_ptr<RenderTarget> render_target = g_ctx->resource_pool()->as<RenderTarget>(renderTarget);
+        std::shared_ptr<RenderTarget> render_target = g_ctx->resource_pool()->as<RenderTarget>(renderTarget);
 
         g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_DIRECT)->set_render_target(*render_target);
       }
@@ -844,13 +844,13 @@ namespace cera
       //-------------------------------------------------------------------------
       void set_pipeline_state(const ResourceSlot& pipelineState)
       {
-        rsl::shared_ptr<PipelineStateObject> pso = g_ctx->resource_pool()->as<PipelineStateObject>(pipelineState);
+        std::shared_ptr<PipelineStateObject> pso = g_ctx->resource_pool()->as<PipelineStateObject>(pipelineState);
 
         g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_DIRECT)->set_pipeline_state(pso);
       }
 
       //-------------------------------------------------------------------------
-      void set_graphics_dynamic_constant_buffer(u32 rootParameterIndex, rsl::memory_size sizeInBytes, const void* bufferData)
+      void set_graphics_dynamic_constant_buffer(u32 rootParameterIndex, std::memory_size sizeInBytes, const void* bufferData)
       {
         g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_DIRECT)->set_graphics_dynamic_constant_buffer(rootParameterIndex, sizeInBytes, bufferData);
       }
@@ -864,15 +864,15 @@ namespace cera
       //-------------------------------------------------------------------------
       void set_vertex_buffer(u32 slot, const ResourceSlot& vertexBuffer)
       {
-        rsl::shared_ptr<VertexBuffer> vertex_buffer = g_ctx->resource_pool()->as<VertexBuffer>(vertexBuffer);
+        std::shared_ptr<VertexBuffer> vertex_buffer = g_ctx->resource_pool()->as<VertexBuffer>(vertexBuffer);
 
         g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_DIRECT)->set_vertex_buffer(slot, vertex_buffer);
       }
 
       //-------------------------------------------------------------------------
-      void set_vertex_buffers(u32 slot, const rsl::vector<ResourceSlot>& vertexBuffers)
+      void set_vertex_buffers(u32 slot, const std::vector<ResourceSlot>& vertexBuffers)
       {
-        rsl::vector<rsl::shared_ptr<VertexBuffer>> vertex_buffers;
+        std::vector<std::shared_ptr<VertexBuffer>> vertex_buffers;
         vertex_buffers.reserve(vertexBuffers.size());
 
         for(const ResourceSlot& vertex_buffer_slot: vertexBuffers)
@@ -884,7 +884,7 @@ namespace cera
       }
 
       //-------------------------------------------------------------------------
-      void set_dynamic_vertex_buffer(u32 slot, size_t numVertices, rsl::memory_size vertexSize, const void* vertexBufferData)
+      void set_dynamic_vertex_buffer(u32 slot, size_t numVertices, std::memory_size vertexSize, const void* vertexBufferData)
       {
         g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_DIRECT)->set_dynamic_vertex_buffer(slot, numVertices, vertexSize, vertexBufferData);
       }
@@ -892,7 +892,7 @@ namespace cera
       //-------------------------------------------------------------------------
       void set_index_buffer(const ResourceSlot& indexBuffer)
       {
-        rsl::shared_ptr<IndexBuffer> index_buffer = g_ctx->resource_pool()->as<IndexBuffer>(indexBuffer);
+        std::shared_ptr<IndexBuffer> index_buffer = g_ctx->resource_pool()->as<IndexBuffer>(indexBuffer);
 
         g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_DIRECT)->set_index_buffer(index_buffer);
       }
@@ -916,9 +916,9 @@ namespace cera
       }
 
       //-------------------------------------------------------------------------
-      void set_viewports(const rsl::vector<Viewport>& vps)
+      void set_viewports(const std::vector<Viewport>& vps)
       {
-        rsl::vector<D3D12_VIEWPORT> viewports;
+        std::vector<D3D12_VIEWPORT> viewports;
         viewports.reserve(vps.size());
         for(const Viewport& vp: vps)
         {
@@ -934,9 +934,9 @@ namespace cera
       }
 
       //-------------------------------------------------------------------------
-      void set_scissor_rects(const rsl::vector<ScissorRect>& srs)
+      void set_scissor_rects(const std::vector<ScissorRect>& srs)
       {
-        rsl::vector<D3D12_RECT> rects;
+        std::vector<D3D12_RECT> rects;
         rects.reserve(srs.size());
         for(const ScissorRect& sr: srs)
         {

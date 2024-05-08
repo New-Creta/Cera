@@ -1,8 +1,5 @@
 #pragma once
 
-#include "cera_std/mutex.h"
-#include "cera_std/queue.h"
-
 #include <mutex>
 #include <queue>
 
@@ -41,8 +38,8 @@ namespace cera
         size_t size() const;
 
       private:
-        rsl::queue<T> m_queue;
-        mutable rsl::mutex m_mutex;
+        std::queue<T> m_queue;
+        mutable std::mutex m_mutex;
       };
 
       template <typename T>
@@ -53,21 +50,21 @@ namespace cera
       template <typename T>
       Queue<T>::Queue(const Queue<T>& copy)
       {
-        rsl::unique_lock<rsl::mutex> lock(copy.m_mutex);
+        std::unique_lock<std::mutex> lock(copy.m_mutex);
         m_queue = copy.m_queue;
       }
 
       template <typename T>
       void Queue<T>::push(T value)
       {
-        rsl::unique_lock<rsl::mutex> lock(m_mutex);
-        m_queue.push(rsl::move(value));
+        std::unique_lock<std::mutex> lock(m_mutex);
+        m_queue.push(std::move(value));
       }
 
       template <typename T>
       bool Queue<T>::try_pop(T& value)
       {
-        rsl::unique_lock<rsl::mutex> lock(m_mutex);
+        std::unique_lock<std::mutex> lock(m_mutex);
         if(m_queue.empty())
           return false;
 
@@ -80,14 +77,14 @@ namespace cera
       template <typename T>
       bool Queue<T>::empty() const
       {
-        rsl::unique_lock<rsl::mutex> lock(m_mutex);
+        std::unique_lock<std::mutex> lock(m_mutex);
         return m_queue.empty();
       }
 
       template <typename T>
       size_t Queue<T>::size() const
       {
-        rsl::unique_lock<rsl::mutex> lock(m_mutex);
+        std::unique_lock<std::mutex> lock(m_mutex);
         return m_queue.size();
       }
     } // namespace threading

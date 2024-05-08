@@ -1,15 +1,14 @@
 #pragma once
 
-#include "cera_engine/engine/types.h"
+#include "util/types.h"
 
 #include "directx_util.h"
 
-#include "cera_renderer_core/iresource.h"
+#include "resources/iresource.h"
 
-#include "cera_std/bonus/memory/memory_size.h"
-#include "cera_std/memory.h"
-#include "cera_std/queue.h"
-#include "cera_std/deque.h"
+#include <memory>
+#include <queue>
+#include <deque>
 
 namespace cera
 {
@@ -41,7 +40,7 @@ namespace cera
              * buffer data to CPU pointer in the Allocation structure returned from
              * this function.
              */
-            Allocation allocate(rsl::memory_size sizeInBytes, s64 alignment);
+            Allocation allocate(std::memory_size sizeInBytes, s64 alignment);
 
             /**
              * Release all allocated pages. This should only be done when the command list
@@ -50,12 +49,12 @@ namespace cera
             void reset();
 
         protected:
-            friend struct rsl::default_delete<UploadBuffer>;
+            friend struct std::default_delete<UploadBuffer>;
 
             /**
             * @param pageSize The size to use to allocate new pages in GPU memory.
             */
-            explicit UploadBuffer(Device& device, rsl::memory_size pageSize = 2_mb);
+            explicit UploadBuffer(Device& device, std::memory_size pageSize = 2_mb);
             virtual ~UploadBuffer();
 
         private:
@@ -63,18 +62,18 @@ namespace cera
             class Page
             {
             public:
-                Page(Device& device, rsl::memory_size sizeInBytes);
+                Page(Device& device, std::memory_size sizeInBytes);
                 ~Page();
 
                 // Check to see if the page has room to satisfy the requested
                 // allocation.
-                bool has_space(rsl::memory_size sizeInBytes, s64 alignment) const;
+                bool has_space(std::memory_size sizeInBytes, s64 alignment) const;
 
                 // Allocate memory from the page.
-                // Throws rsl::bad_alloc if the the allocation size is larger
+                // Throws std::bad_alloc if the the allocation size is larger
                 // that the page size or the size of the allocation exceeds the 
                 // remaining space in the page.
-                Allocation allocate(rsl::memory_size sizeInBytes, s64 alignment);
+                Allocation allocate(std::memory_size sizeInBytes, s64 alignment);
 
                 // reset the page for reuse.
                 void reset();
@@ -87,7 +86,7 @@ namespace cera
                 D3D12_GPU_VIRTUAL_ADDRESS m_GPU_ptr;
 
                 // Allocated page size.
-                rsl::memory_size m_page_size;
+                std::memory_size m_page_size;
                 // Current allocation offset in bytes.
                 s64 m_offset;
             };
@@ -95,11 +94,11 @@ namespace cera
         private:
             // Request a page from the pool of available pages
             // or create a new page if there are no available pages.
-            rsl::shared_ptr<Page> request_page();
+            std::shared_ptr<Page> request_page();
 
         private:
             // A pool of memory pages.
-            using PagePool = rsl::deque< rsl::shared_ptr<Page>>;
+            using PagePool = std::deque< std::shared_ptr<Page>>;
 
             // The device that was used to create this upload buffer.
             Device& m_device;
@@ -107,9 +106,9 @@ namespace cera
             PagePool m_page_pool;
             PagePool m_available_pages;
 
-            rsl::shared_ptr<Page> m_current_page;
+            std::shared_ptr<Page> m_current_page;
 
-            rsl::memory_size m_page_size;
+            std::memory_size m_page_size;
         };
     }
 }

@@ -12,16 +12,16 @@ namespace cera
     namespace directx
     {
       //-------------------------------------------------------------------------
-      rsl::big_stack_string report_hr_error(HRESULT hr, const rsl::string_view file, const rsl::string_view function, card32 lineNr)
+      std::big_stack_string report_hr_error(HRESULT hr, const std::string_view file, const std::string_view function, s32 lineNr)
       {
         const _com_error err(hr);
-        rsl::big_stack_string error_message(err.ErrorMessage());
+        std::big_stack_string error_message(err.ErrorMessage());
         CERA_ERROR(LogDirectX, "DirectX Error\nFile: {}\nFunction: {}\nOn line: {}\nDX error: {}", file, function, lineNr, error_message);
         return error_message;
       }
 
       //-------------------------------------------------------------------------
-      DXCall::DXCall(HResult error, rsl::string_view file, rsl::string_view function, card32 lineNr)
+      DXCall::DXCall(HResult error, std::string_view file, std::string_view function, s32 lineNr)
           : m_error(error)
       {
         if(FAILED(m_error))
@@ -43,7 +43,7 @@ namespace cera
       }
 
       //-------------------------------------------------------------------------
-      rsl::string_view DXCall::error_message() const
+      std::string_view DXCall::error_message() const
       {
         return m_error_message.to_view();
       }

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "rex_renderer_core/format.h"
-#include "rex_dxgi/dxgi_util.h"
+#include "rhi_format.h"
+#include "dxgi/dxgi_util.h"
 
-namespace rex
+namespace cera
 {
     namespace dxgi
     {

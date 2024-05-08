@@ -1,7 +1,7 @@
-#include "rex_dxgi/dxgi_adapter_manager.h"
-#include "rex_dxgi/objects/adapter.h" // IWYU pragma: keep
-#include "rex_dxgi/objects/factory.h"
-#include "rex_dxgi/dxgi_util.h"
+#include "dxgi/dxgi_adapter_manager.h"
+#include "dxgi/objects/adapter.h" // IWYU pragma: keep
+#include "dxgi/objects/factory.h"
+#include "dxgi/dxgi_util.h"
 #include "rex_engine/diagnostics/assert.h"
 #include "rex_engine/platform/win/win_com_ptr.h"
 #include "rex_renderer_core/gpu_description.h"
@@ -14,27 +14,27 @@
 namespace
 {
   //-------------------------------------------------------------------------
-  rsl::function<HRESULT(UINT, rex::wrl::ComPtr<IDXGIAdapter4>*)> get_enumaration_function(rex::dxgi::Factory* factory)
+  std::function<HRESULT(UINT, cera::wrl::ComPtr<IDXGIAdapter4>*)> get_enumaration_function(cera::dxgi::Factory* factory)
   {
-    rex::wrl::ComPtr<IDXGIFactory6> factory_6 = factory->as<IDXGIFactory6>(); // NOLINT(misc-const-correctness)
+    cera::wrl::ComPtr<IDXGIFactory6> factory_6 = factory->as<IDXGIFactory6>(); // NOLINT(misc-const-correctness)
 
     REX_ASSERT_X(factory_6, "IDXGIFactory6 does not exist!");
 
-    return [factory = factory_6.Get()](UINT index, rex::wrl::ComPtr<IDXGIAdapter4>* adapter) { return factory->EnumAdapterByGpuPreference(index, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS((*adapter).GetAddressOf())); };
+    return [factory = factory_6.Get()](UINT index, cera::wrl::ComPtr<IDXGIAdapter4>* adapter) { return factory->EnumAdapterByGpuPreference(index, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS((*adapter).GetAddressOf())); };
   }
 
   //-------------------------------------------------------------------------
-  rsl::vector<rsl::shared_ptr<rex::dxgi::Adapter>> get_adapters(const rsl::function<HRESULT(UINT, rex::wrl::ComPtr<IDXGIAdapter4>*)>& enumarationFnc)
+  std::vector<std::shared_ptr<cera::dxgi::Adapter>> get_adapters(const std::function<HRESULT(UINT, cera::wrl::ComPtr<IDXGIAdapter4>*)>& enumarationFnc)
   {
     uint32 i                                = 0;
-    rex::wrl::ComPtr<IDXGIAdapter4> adapter = nullptr;
+    cera::wrl::ComPtr<IDXGIAdapter4> adapter = nullptr;
 
-    rsl::vector<rsl::shared_ptr<rex::dxgi::Adapter>> adapters;
+    std::vector<std::shared_ptr<cera::dxgi::Adapter>> adapters;
     while(enumarationFnc(i, &adapter) != DXGI_ERROR_NOT_FOUND)
     {
       if(adapter)
       {
-        adapters.emplace_back(rsl::make_shared<rex::dxgi::Adapter>(rsl::move(adapter)));
+        adapters.emplace_back(std::make_shared<cera::dxgi::Adapter>(std::move(adapter)));
       }
 
       ++i;
@@ -44,7 +44,7 @@ namespace
   }
 } // namespace
 
-namespace rex
+namespace cera
 {
   namespace dxgi
   {
@@ -57,13 +57,13 @@ namespace rex
       REX_ASSERT_X(!m_adapters.empty(), "No adapters found");
 
       // this can be fixed once we have vector views/ranges
-      rsl::vector<renderer::GpuDescription> gpus;
+      std::vector<renderer::GpuDescription> gpus;
       gpus.reserve(m_adapters.size());
       for(const auto& adapter: m_adapters)
       {
         gpus.push_back(adapter->description());
       }
-      const count_t selected_adapter_idx = scorerFn(gpus);
+      const size_t selected_adapter_idx = scorerFn(gpus);
       if(selected_adapter_idx != -1)
       {
         m_selected_adapter = m_adapters[selected_adapter_idx];
@@ -79,25 +79,25 @@ namespace rex
     }
 
     //-------------------------------------------------------------------------
-    rsl::shared_ptr<Adapter> AdapterManager::selected() const
+    std::shared_ptr<Adapter> AdapterManager::selected() const
     {
       REX_ASSERT_X(m_selected_adapter, "No adapter selected. Call \" select(uint32 adapterID) \" first");
 
       return m_selected_adapter;
     }
     //-------------------------------------------------------------------------
-    rsl::shared_ptr<Adapter> AdapterManager::first() const
+    std::shared_ptr<Adapter> AdapterManager::first() const
     {
       REX_ASSERT_X(!m_adapters.empty(), "No adapters found");
 
       return m_adapters.front();
     }
     //-------------------------------------------------------------------------
-    const rsl::vector<rsl::shared_ptr<Adapter>>& AdapterManager::all() const
+    const std::vector<std::shared_ptr<Adapter>>& AdapterManager::all() const
     {
       REX_ASSERT_X(!m_adapters.empty(), "No adapters found");
 
       return m_adapters;
     }
   } // namespace dxgi
-} // namespace rex
+} // namespace cera

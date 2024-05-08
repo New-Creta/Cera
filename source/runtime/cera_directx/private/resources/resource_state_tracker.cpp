@@ -9,7 +9,7 @@ namespace cera
   namespace renderer
   {
     // Static definitions.
-    rsl::mutex                              ResourceStateTracker::s_global_mutex;
+    std::mutex                              ResourceStateTracker::s_global_mutex;
     bool                                    ResourceStateTracker::s_is_locked = false;
     ResourceStateTracker::ResourceStateMap  ResourceStateTracker::s_global_resource_state;
 
@@ -87,7 +87,7 @@ namespace cera
       transition_resource(resource.d3d_resource().Get(), stateAfter, subResource);
     }
 
-    void ResourceStateTracker::flush_resource_barriers(const rsl::shared_ptr<CommandList>& commandList)
+    void ResourceStateTracker::flush_resource_barriers(const std::shared_ptr<CommandList>& commandList)
     {
       u32 num_barriers = static_cast<u32>(m_resource_barriers.size());
       if(num_barriers > 0)
@@ -98,7 +98,7 @@ namespace cera
       }
     }
 
-    uint32_t ResourceStateTracker::flush_pending_resource_barriers(const rsl::shared_ptr<CommandList>& commandList)
+    uint32_t ResourceStateTracker::flush_pending_resource_barriers(const std::shared_ptr<CommandList>& commandList)
     {
       CERA_ASSERT_X(s_is_locked, "Resource State Tracker is not locked");
 
@@ -200,7 +200,7 @@ namespace cera
     {
       if(resource != nullptr)
       {
-        rsl::unique_lock<rsl::mutex> lock(s_global_mutex);
+        std::unique_lock<std::mutex> lock(s_global_mutex);
         s_global_resource_state[resource].set_subresource_state(D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, state);
       }
     }

@@ -20,7 +20,7 @@ namespace cera
 
       if(clearValue)
       {
-        m_d3d_clear_value = rsl::make_unique<D3D12_CLEAR_VALUE>(*clearValue);
+        m_d3d_clear_value = std::make_unique<D3D12_CLEAR_VALUE>(*clearValue);
       }
 
       auto default_heap_properties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
@@ -43,7 +43,7 @@ namespace cera
     {
       if(clearValue)
       {
-        m_d3d_clear_value = rsl::make_unique<D3D12_CLEAR_VALUE>(*clearValue);
+        m_d3d_clear_value = std::make_unique<D3D12_CLEAR_VALUE>(*clearValue);
       }
 
       auto result = check_feature_support();
@@ -79,7 +79,7 @@ namespace cera
     }
 
     //-------------------------------------------------------------------------
-    void Resource::set_resource_name(const rsl::wstring& name)
+    void Resource::set_resource_name(const std::wstring& name)
     {
       m_resource_name = name;
 
@@ -108,7 +108,7 @@ namespace cera
     }
 
     //-------------------------------------------------------------------------
-    const rsl::wstring& Resource::resource_name() const
+    const std::wstring& Resource::resource_name() const
     {
       return m_resource_name;
     }

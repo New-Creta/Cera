@@ -1,7 +1,7 @@
 #pragma once
 
-#include "cera_renderer_core/resource_descriptions/create_clear_state_desc.h"
-#include "cera_renderer_core/iresource.h"
+#include "resource_descriptions/create_clear_state_desc.h"
+#include "resources/iresource.h"
 
 namespace cera
 {
@@ -14,7 +14,7 @@ namespace cera
 
           virtual ~ClearState();
 
-          rsl::Color4f  rgba()  const;
+          std::Color4f  rgba()  const;
           f32           depth() const;
           u8            stencil() const;
           ClearBits     flags() const;
