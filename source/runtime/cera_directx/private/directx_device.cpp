@@ -1,9 +1,11 @@
 #include "command_list.h"
 #include "command_queue.h"
+
 #include "directx_call.h"
 #include "directx_util.h"
 #include "directx_device.h"
 #include "directx_swapchain.h"
+
 #include "resources/byte_address_buffer.h"
 #include "resources/constant_buffer.h"
 #include "resources/constant_buffer_view.h"
@@ -14,16 +16,16 @@
 #include "resources/texture.h"
 #include "resources/unordered_access_view.h"
 #include "resources/vertex_buffer.h"
+
 #include "descriptors/descriptor_allocator.h"
-#include "log.h"
+
+#include "util/log.h"
 
 #include "dxgi/objects/adapter.h"
 #include "dxgi/objects/factory.h"
 #include "dxgi/dxgi_adapter_manager.h"
 
 #include "gpu_description.h"
-
-#include "cera_engine/memory/pointer_math.h"
 
 #include <dxgi1_5.h>
 #include <dxgidebug.h>
@@ -465,7 +467,7 @@ namespace cera
       return constant_buffer;
     }
 
-    std::shared_ptr<ByteAddressBuffer> Device::create_byte_address_buffer(std::memory_size bufferSize)
+    std::shared_ptr<ByteAddressBuffer> Device::create_byte_address_buffer(memory_size bufferSize)
     {
       // Align-up to 4-bytes
       auto aligned_buffer_size = align_up(bufferSize.size_in_bytes(), 4);

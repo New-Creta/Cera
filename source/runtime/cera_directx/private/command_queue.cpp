@@ -1,14 +1,14 @@
 #include "command_queue.h"
 #include "command_list.h"
+
 #include "directx_call.h"
 #include "directx_device.h"
+
 #include "resources/resource_state_tracker.h"
-#include "log.h"
+
+#include "util/log.h"
 #include "util/thread_name.h"
-
-#include "cera_engine/diagnostics/assert.h"
-
-#include "cera_std/bonus/utility/enum_reflection.h"
+#include "util/assert.h"
 
 #include <mutex>
 

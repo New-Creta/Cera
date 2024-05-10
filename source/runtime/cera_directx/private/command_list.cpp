@@ -1,6 +1,8 @@
 #include "command_list.h"
+
 #include "directx_call.h"
 #include "directx_device.h"
+
 #include "resources/byte_address_buffer.h"
 #include "resources/constant_buffer.h"
 #include "resources/constant_buffer_view.h"
@@ -15,12 +17,11 @@
 #include "resources/unordered_access_view.h"
 #include "resources/upload_buffer.h"
 #include "resources/vertex_buffer.h"
+
 #include "descriptors/dynamic_descriptor_heap.h"
-#include "log.h"
 
-#include "cera_engine/diagnostics/assert.h"
-
-#include "cera_std/bonus/utility/enum_reflection.h"
+#include "util/log.h"
+#include "util/assert.h"
 
 namespace cera
 {
@@ -32,7 +33,7 @@ namespace cera
       class MakeUploadBuffer : public UploadBuffer
       {
       public:
-        MakeUploadBuffer(Device& device, std::memory_size pageSize = 2_mb)
+        MakeUploadBuffer(Device& device, memory_size pageSize = 2_mb)
             : UploadBuffer(device, pageSize)
         {
         }
@@ -146,7 +147,7 @@ namespace cera
       track_resource(dstRes);
     }
 
-    wrl::ComPtr<ID3D12Resource> CommandList::copy_buffer(std::memory_size bufferSize, const void* bufferData, D3D12_RESOURCE_FLAGS flags)
+    wrl::ComPtr<ID3D12Resource> CommandList::copy_buffer(memory_size bufferSize, const void* bufferData, D3D12_RESOURCE_FLAGS flags)
     {
       wrl::ComPtr<ID3D12Resource> d3d_resource;
 
@@ -205,7 +206,7 @@ namespace cera
 
     std::shared_ptr<VertexBuffer> CommandList::copy_vertex_buffer(size_t numVertices, size_t vertexStride, const void* vertexBufferData)
     {
-      auto d3d_resource = copy_buffer(std::memory_size(numVertices * vertexStride), vertexBufferData);
+      auto d3d_resource = copy_buffer(memory_size(numVertices * vertexStride), vertexBufferData);
 
       std::shared_ptr<VertexBuffer> vertex_buffer = m_device.create_vertex_buffer(d3d_resource, numVertices, vertexStride);
 
@@ -216,14 +217,14 @@ namespace cera
     {
       size_t elementSize = indexFormat == DXGI_FORMAT_R16_UINT ? 2 : 4;
 
-      auto d3d_resource = copy_buffer(std::memory_size(numIndices * elementSize), indexBufferData);
+      auto d3d_resource = copy_buffer(memory_size(numIndices * elementSize), indexBufferData);
 
       std::shared_ptr<IndexBuffer> index_buffer = m_device.create_index_buffer(d3d_resource, numIndices, indexFormat);
 
       return index_buffer;
     }
 
-    std::shared_ptr<ConstantBuffer> CommandList::copy_constant_buffer(std::memory_size bufferSize, const void* bufferData)
+    std::shared_ptr<ConstantBuffer> CommandList::copy_constant_buffer(memory_size bufferSize, const void* bufferData)
     {
       auto d3d_resource = copy_buffer(bufferSize, bufferData);
 
@@ -232,7 +233,7 @@ namespace cera
       return constant_buffer;
     }
 
-    std::shared_ptr<ByteAddressBuffer> CommandList::copy_byte_address_buffer(std::memory_size bufferSize, const void* bufferData)
+    std::shared_ptr<ByteAddressBuffer> CommandList::copy_byte_address_buffer(memory_size bufferSize, const void* bufferData)
     {
       auto d3d_resource = copy_buffer(bufferSize, bufferData, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 
@@ -301,7 +302,7 @@ namespace cera
       return true;
     }
 
-    void CommandList::set_graphics_dynamic_constant_buffer(u32 rootParameterIndex, std::memory_size sizeInBytes, const void* bufferData)
+    void CommandList::set_graphics_dynamic_constant_buffer(u32 rootParameterIndex, memory_size sizeInBytes, const void* bufferData)
     {
       // Constant buffers must be 256-byte aligned.
       auto heap_allocation = m_upload_buffer->allocate(sizeInBytes, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
@@ -339,9 +340,9 @@ namespace cera
       set_vertex_buffers(slot, {vertexBuffer});
     }
 
-    void CommandList::set_dynamic_vertex_buffer(u32 slot, size_t numVertices, std::memory_size vertexSize, const void* vertexBufferData)
+    void CommandList::set_dynamic_vertex_buffer(u32 slot, size_t numVertices, memory_size vertexSize, const void* vertexBufferData)
     {
-      std::memory_size bufferSize = std::memory_size(numVertices * vertexSize);
+      memory_size bufferSize = memory_size(numVertices * vertexSize);
 
       auto heap_allocation = m_upload_buffer->allocate(bufferSize, vertexSize);
       memcpy(heap_allocation.CPU, vertexBufferData, bufferSize);
@@ -370,7 +371,7 @@ namespace cera
     void CommandList::set_dynamic_index_buffer(size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData)
     {
       size_t index_size_in_bytes = indexFormat == DXGI_FORMAT_R16_UINT ? 2 : 4;
-      std::memory_size bufferSize = std::memory_size(numIndicies * index_size_in_bytes);
+      memory_size bufferSize = memory_size(numIndicies * index_size_in_bytes);
 
       auto heap_allocation = m_upload_buffer->allocate(bufferSize, index_size_in_bytes);
       memcpy(heap_allocation.CPU, indexBufferData, bufferSize);

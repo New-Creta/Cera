@@ -2,7 +2,7 @@
 #include "resources/resource.h"
 #include "command_list.h"
 
-#include "cera_engine/diagnostics/assert.h"
+#include "util/assert.h"
 
 namespace cera
 {

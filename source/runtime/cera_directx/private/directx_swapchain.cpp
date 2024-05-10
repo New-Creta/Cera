@@ -5,7 +5,7 @@
 #include "command_queue.h"
 #include "resources/resource_state_tracker.h"
 #include "resources/texture.h"
-#include "log.h"
+#include "util/log.h"
 
 namespace cera
 {

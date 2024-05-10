@@ -6,8 +6,7 @@
 #include "core_globals.h"
 
 #include "util/log.h"
-
-#include <assert.h>
+#include "util/assert.h"
 
 namespace cera
 {

@@ -3,7 +3,7 @@
 #include "directx_call.h"
 #include "directx_device.h"
 
-#include "cera_engine/diagnostics/assert.h"
+#include "util/assert.h"
 
 namespace cera
 {
@@ -96,7 +96,7 @@ namespace cera
       // Decrement free handles.
       m_num_free_handles -= numDescriptors;
 
-      return DescriptorAllocation(CD3DX12_CPU_DESCRIPTOR_HANDLE(m_base_descriptor, offset, m_descriptor_handle_increment_size), numDescriptors, std::memory_size(m_descriptor_handle_increment_size), shared_from_this());
+      return DescriptorAllocation(CD3DX12_CPU_DESCRIPTOR_HANDLE(m_base_descriptor, offset, m_descriptor_handle_increment_size), numDescriptors, memory_size(m_descriptor_handle_increment_size), shared_from_this());
     }
 
     void DescriptorAllocatorPage::free(DescriptorAllocation&& descriptorHandle)

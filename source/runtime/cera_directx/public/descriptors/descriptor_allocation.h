@@ -37,7 +37,7 @@
 
 #include "directx_util.h"
 
-#include "cera_std/bonus/memory/memory_size.h"
+#include "memory_size.h"
 
 #include <cstdint>
 
@@ -52,7 +52,7 @@ namespace cera
         public:
             // Creates a NULL descriptor
             DescriptorAllocation();
-            DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE descriptor, u32 numHandles, std::memory_size descriptorSize, std::shared_ptr<DescriptorAllocatorPage> page);
+            DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE descriptor, u32 numHandles, memory_size descriptorSize, std::shared_ptr<DescriptorAllocatorPage> page);
 
             // The destructor will automatically free the allocation.
             ~DescriptorAllocation();
@@ -88,7 +88,7 @@ namespace cera
             // The number of descriptors in this allocation.
             u32 m_num_handles;
             // The offset to the next descriptor.
-            std::memory_size m_descriptor_size;
+            memory_size m_descriptor_size;
 
             // A pointer back to the original page where this allocation came from.
             std::shared_ptr<DescriptorAllocatorPage> m_page;

@@ -1,4 +1,4 @@
-#include "rex_renderer_core/gpu_description.h"
+#include "gpu_description.h"
 
 namespace cera
 {

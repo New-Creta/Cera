@@ -112,7 +112,7 @@ namespace cera
              *
              * @param resDesc A description of the resource.
              */
-            std::shared_ptr<ByteAddressBuffer> create_byte_address_buffer(std::memory_size bufferSize);
+            std::shared_ptr<ByteAddressBuffer> create_byte_address_buffer(memory_size bufferSize);
             std::shared_ptr<ByteAddressBuffer> create_byte_address_buffer(wrl::ComPtr<ID3D12Resource> resource);
 
             /**

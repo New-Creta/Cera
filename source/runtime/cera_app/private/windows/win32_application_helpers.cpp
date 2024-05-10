@@ -31,14 +31,12 @@ namespace cera
 
             void pump_messages_outside_main_loop()
             {
-                guard_value<bool> pump_message_guard(g_pumping_messages_outside_of_main_loop, true);
+                const guard_value<bool> pump_message_guard(g_pumping_messages_outside_of_main_loop, true);
 
                 // Process pending windows messages, which is necessary to the rendering thread in some cases where D3D
                 // sends window messages (from IDXGISwapChain::Present) to the main thread owned viewport window.
                 MSG msg;
                 PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE | PM_QS_SENDMESSAGE);
-
-                return;
             }
         }
 

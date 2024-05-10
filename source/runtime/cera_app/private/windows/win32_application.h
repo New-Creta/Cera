@@ -116,7 +116,7 @@ namespace cera
         static const POINT s_minimized_window_position;
 
         /** Registers the Windows class for windows and assigns the application instance and icon */
-        static bool register_class(const HINSTANCE hinstance, const HICON hicon);
+        static bool register_class(HINSTANCE hinstance, HICON hicon);
 
 	    /**  @return  True if a windows message is related to user input from the keyboard */
 	    static bool is_keyboard_input_message( u32 msg );

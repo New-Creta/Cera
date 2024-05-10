@@ -1,5 +1,6 @@
 #include "dxgi/dxgi_format.h"
-#include "rex_engine/diagnostics/assert.h"
+
+#include "util/assert.h"
 
 namespace cera
 {

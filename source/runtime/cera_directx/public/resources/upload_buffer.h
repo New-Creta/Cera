@@ -40,7 +40,7 @@ namespace cera
              * buffer data to CPU pointer in the Allocation structure returned from
              * this function.
              */
-            Allocation allocate(std::memory_size sizeInBytes, s64 alignment);
+            Allocation allocate(memory_size sizeInBytes, s64 alignment);
 
             /**
              * Release all allocated pages. This should only be done when the command list
@@ -54,7 +54,7 @@ namespace cera
             /**
             * @param pageSize The size to use to allocate new pages in GPU memory.
             */
-            explicit UploadBuffer(Device& device, std::memory_size pageSize = 2_mb);
+            explicit UploadBuffer(Device& device, memory_size pageSize = 2_mb);
             virtual ~UploadBuffer();
 
         private:
@@ -62,18 +62,18 @@ namespace cera
             class Page
             {
             public:
-                Page(Device& device, std::memory_size sizeInBytes);
+                Page(Device& device, memory_size sizeInBytes);
                 ~Page();
 
                 // Check to see if the page has room to satisfy the requested
                 // allocation.
-                bool has_space(std::memory_size sizeInBytes, s64 alignment) const;
+                bool has_space(memory_size sizeInBytes, s64 alignment) const;
 
                 // Allocate memory from the page.
                 // Throws std::bad_alloc if the the allocation size is larger
                 // that the page size or the size of the allocation exceeds the 
                 // remaining space in the page.
-                Allocation allocate(std::memory_size sizeInBytes, s64 alignment);
+                Allocation allocate(memory_size sizeInBytes, s64 alignment);
 
                 // reset the page for reuse.
                 void reset();
@@ -86,7 +86,7 @@ namespace cera
                 D3D12_GPU_VIRTUAL_ADDRESS m_GPU_ptr;
 
                 // Allocated page size.
-                std::memory_size m_page_size;
+                memory_size m_page_size;
                 // Current allocation offset in bytes.
                 s64 m_offset;
             };
@@ -108,7 +108,7 @@ namespace cera
 
             std::shared_ptr<Page> m_current_page;
 
-            std::memory_size m_page_size;
+            memory_size m_page_size;
         };
     }
 }

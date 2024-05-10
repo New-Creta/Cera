@@ -1,7 +1,8 @@
 #include "directx_feature_level.h"
 
-#include "cera_engine/diagnostics/assert.h"
-#include "cera_std/array.h"
+#include "util/assert.h"
+
+#include <array>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>

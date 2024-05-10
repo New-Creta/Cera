@@ -66,7 +66,7 @@ namespace cera
 
         virtual bool on_raw_mouse_move(const s32 x, const s32 Y);
 
-        virtual bool on_size_changed(const std::shared_ptr<generic_window>& window, const s32 width, const s32 height, bool was_minimized = false);
+        virtual bool on_size_changed(const std::shared_ptr<generic_window>& window, const s32 width, const s32 height, bool was_minimized);
 
         virtual void on_os_paint(const std::shared_ptr<generic_window>& window);
 

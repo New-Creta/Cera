@@ -5,12 +5,14 @@ add_library(cera_core STATIC)
 target_sources(cera_core PRIVATE 
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/memory_size.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/log.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/assert.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/types.cpp)
 
 ## public sources
 target_sources(cera_core PUBLIC 
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/memory_size.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/log.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/assert.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/types.h)
 
 # Create the project filters

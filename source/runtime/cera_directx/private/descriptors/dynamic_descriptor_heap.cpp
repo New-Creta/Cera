@@ -5,8 +5,8 @@
 #include "directx_device.h"
 #include "resources/root_signature.h"
 
-#include "log.h"
-#include "cera_engine/diagnostics/assert.h"
+#include "util/log.h"
+#include "util/assert.h"
 
 namespace cera
 {

@@ -1,10 +1,13 @@
 #include "command_list.h"
 #include "command_queue.h"
+
 #include "directx_device.h"
 #include "directx_feature_level.h"
 #include "directx_feature_shader_model.h"
 #include "directx_swapchain.h"
+
 #include "imgui/gui_renderer.h"
+
 #include "resources/clear_state.h"
 #include "resources/index_buffer.h"
 #include "resources/pipeline_state_object.h"
@@ -13,11 +16,14 @@
 #include "resources/shader_library.h"
 #include "resources/texture.h"
 #include "resources/vertex_buffer.h"
+
 #include "scenegraph/camera_node.h"
 #include "scenegraph/camera_visitor.h"
 #include "scenegraph/mesh_node.h"
 #include "scenegraph/mesh_visitor.h"
+
 #include "dxgi/dxgi_format.h"
+
 #include "cera_engine/scenegraph/scene.h"
 #include "clear_bits.h"
 #include "gpu_description.h"
@@ -34,7 +40,8 @@
 #include "resource_pool.h"
 #include "scissor_rect.h"
 #include "viewport.h"
-#include "cera_std/memory.h"
+
+#include <memory>
 
 namespace cera
 {
@@ -850,7 +857,7 @@ namespace cera
       }
 
       //-------------------------------------------------------------------------
-      void set_graphics_dynamic_constant_buffer(u32 rootParameterIndex, std::memory_size sizeInBytes, const void* bufferData)
+      void set_graphics_dynamic_constant_buffer(u32 rootParameterIndex, memory_size sizeInBytes, const void* bufferData)
       {
         g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_DIRECT)->set_graphics_dynamic_constant_buffer(rootParameterIndex, sizeInBytes, bufferData);
       }
@@ -884,7 +891,7 @@ namespace cera
       }
 
       //-------------------------------------------------------------------------
-      void set_dynamic_vertex_buffer(u32 slot, size_t numVertices, std::memory_size vertexSize, const void* vertexBufferData)
+      void set_dynamic_vertex_buffer(u32 slot, size_t numVertices, memory_size vertexSize, const void* vertexBufferData)
       {
         g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_DIRECT)->set_dynamic_vertex_buffer(slot, numVertices, vertexSize, vertexBufferData);
       }

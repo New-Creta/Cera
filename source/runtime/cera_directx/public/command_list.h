@@ -104,7 +104,7 @@ namespace cera
             /**
              * Copy the contents to a constant buffer in GPU memory.
              */
-            std::shared_ptr<ConstantBuffer> copy_constant_buffer(std::memory_size bufferSize, const void* bufferData);
+            std::shared_ptr<ConstantBuffer> copy_constant_buffer(memory_size bufferSize, const void* bufferData);
             template<typename T>
             std::shared_ptr<ConstantBuffer> copy_constant_buffer(const T& data)
             {
@@ -114,7 +114,7 @@ namespace cera
             /**
              * Copy the contents to a byte address buffer in GPU memory.
              */
-            std::shared_ptr<ByteAddressBuffer> copy_byte_address_buffer(std::memory_size bufferSize, const void* bufferData);
+            std::shared_ptr<ByteAddressBuffer> copy_byte_address_buffer(memory_size bufferSize, const void* bufferData);
             template<typename T>
             std::shared_ptr<ByteAddressBuffer> copy_byte_address_buffer(const T& data)
             {
@@ -145,7 +145,7 @@ namespace cera
              * Set a dynamic constant buffer data to an inline descriptor in the root
              * signature.
              */
-            void set_graphics_dynamic_constant_buffer(u32 rootParameterIndex, std::memory_size sizeInBytes, const void* bufferData);
+            void set_graphics_dynamic_constant_buffer(u32 rootParameterIndex, memory_size sizeInBytes, const void* bufferData);
             template<typename T>
             void set_graphics_dynamic_constant_buffer(u32 rootParameterIndex, const T& data)
             {
@@ -172,11 +172,11 @@ namespace cera
             /**
              * Set dynamic vertex buffer data to the rendering pipeline.
              */
-            void set_dynamic_vertex_buffer(u32 slot, size_t numVertices, std::memory_size vertexSize, const void* vertexBufferData);
+            void set_dynamic_vertex_buffer(u32 slot, size_t numVertices, memory_size vertexSize, const void* vertexBufferData);
             template<typename T>
             void set_dynamic_vertex_buffer(u32 slot, const std::vector<T>& vertexBufferData)
             {
-                set_dynamic_vertex_buffer(slot, vertexBufferData.size(), std::memory_size(sizeof(T)), vertexBufferData.data());
+                set_dynamic_vertex_buffer(slot, vertexBufferData.size(), memory_size(sizeof(T)), vertexBufferData.data());
             }
 
             /**
@@ -322,7 +322,7 @@ namespace cera
             void track_resource(const std::shared_ptr<Resource>& res);
 
             // Copy the contents of a CPU buffer to a GPU buffer (possibly replacing the previous buffer contents).
-            wrl::ComPtr<ID3D12Resource> copy_buffer(std::memory_size bufferSize, const void* bufferData, D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE);
+            wrl::ComPtr<ID3D12Resource> copy_buffer(memory_size bufferSize, const void* bufferData, D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE);
 
             // Binds the current descriptor heaps to the command list.
             void bind_descriptor_heaps();

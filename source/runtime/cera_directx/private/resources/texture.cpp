@@ -4,9 +4,8 @@
 #include "directx_call.h"
 #include "directx_device.h"
 
-#include "log.h"
-
-#include "cera_engine/diagnostics/assert.h"
+#include "util/log.h"
+#include "util/assert.h"
 
 #include <DirectXTex/DirectXTex.h>
 

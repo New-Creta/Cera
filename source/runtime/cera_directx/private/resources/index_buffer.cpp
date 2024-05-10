@@ -1,6 +1,6 @@
 #include "resources/index_buffer.h"
 
-#include "cera_engine/diagnostics/assert.h"
+#include "util/assert.h"
 
 namespace cera
 {

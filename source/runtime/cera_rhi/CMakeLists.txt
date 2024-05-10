@@ -27,6 +27,7 @@ GROUPSOURCES(${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public public)
 target_include_directories(cera_rhi PRIVATE ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/private)
 
 # Public includes
+target_include_directories(cera_rhi PUBLIC ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public)
 target_include_directories(cera_rhi PUBLIC ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public)
 
 # Link libraries

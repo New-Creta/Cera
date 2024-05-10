@@ -6,7 +6,7 @@
 
 #include "mesh.h"
 
-#include "cera_std/vector.h"
+#include <vector>
 
 #include <DirectXMath.h>
 

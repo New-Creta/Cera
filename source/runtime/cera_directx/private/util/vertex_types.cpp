@@ -1,4 +1,4 @@
-#include "utility/vertex_types.h"
+#include "util/vertex_types.h"
 
 namespace cera
 {

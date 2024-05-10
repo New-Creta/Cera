@@ -2,7 +2,7 @@
 
 #include "descriptors/descriptor_allocator_page.h"
 
-#include "cera_engine/diagnostics/assert.h"
+#include "util/assert.h"
 
 namespace cera
 {
@@ -16,7 +16,7 @@ namespace cera
     {
     }
 
-    DescriptorAllocation::DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE descriptor, u32 numHandles, std::memory_size descriptorSize, std::shared_ptr<DescriptorAllocatorPage> page)
+    DescriptorAllocation::DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE descriptor, u32 numHandles, memory_size descriptorSize, std::shared_ptr<DescriptorAllocatorPage> page)
         : m_descriptor(descriptor)
         , m_num_handles(numHandles)
         , m_descriptor_size(descriptorSize)

@@ -1,7 +1,7 @@
 #include "directx_call.h"
-
 #include "directx_util.h"
-#include "log.h"
+
+#include "util/log.h"
 
 #include <comdef.h>
 

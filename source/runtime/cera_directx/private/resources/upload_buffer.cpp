@@ -1,15 +1,13 @@
 #include "resources/upload_buffer.h"
 #include "directx_call.h"
 #include "directx_device.h"
-
-#include "cera_engine/memory/pointer_math.h"
-#include "cera_engine/diagnostics/assert.h"
+#include "util/assert.h"
 
 namespace cera
 {
   namespace renderer
   {
-    UploadBuffer::UploadBuffer(Device& device, std::memory_size pageSize)
+    UploadBuffer::UploadBuffer(Device& device, memory_size pageSize)
         : m_device(device)
         , m_page_size(pageSize)
     {
@@ -22,7 +20,7 @@ namespace cera
       return m_page_size;
     }
 
-    UploadBuffer::Allocation UploadBuffer::allocate(std::memory_size sizeInBytes, s64 alignment)
+    UploadBuffer::Allocation UploadBuffer::allocate(memory_size sizeInBytes, s64 alignment)
     {
       CERA_ASSERT_X(sizeInBytes <= m_page_size, "bad allocation");
 
@@ -68,7 +66,7 @@ namespace cera
       return new_page;
     }
 
-    UploadBuffer::Page::Page(Device& device, std::memory_size sizeInBytes)
+    UploadBuffer::Page::Page(Device& device, memory_size sizeInBytes)
         : m_device(device)
         , m_page_size(sizeInBytes)
         , m_offset(0)
@@ -98,7 +96,7 @@ namespace cera
       m_GPU_ptr = D3D12_GPU_VIRTUAL_ADDRESS(0);
     }
 
-    bool UploadBuffer::Page::has_space(std::memory_size sizeInBytes, s64 alignment) const
+    bool UploadBuffer::Page::has_space(memory_size sizeInBytes, s64 alignment) const
     {
       auto aligned_size   = (s64)align_up((s64)sizeInBytes.size_in_bytes(), alignment);
       auto aligned_offset = (s64)align_up((s64)m_offset, alignment);
@@ -106,7 +104,7 @@ namespace cera
       return aligned_offset + aligned_size <= m_page_size.size_in_bytes();
     }
 
-    UploadBuffer::Allocation UploadBuffer::Page::allocate(std::memory_size sizeInBytes, s64 alignment)
+    UploadBuffer::Allocation UploadBuffer::Page::allocate(memory_size sizeInBytes, s64 alignment)
     {
       // function is not thread safe! insert a std::unique_lock if thread safety is a requirement.
       //
