@@ -93,12 +93,12 @@ namespace cera
         void* get_os_window_handle() const override;
         bool is_foreground_window() const override;
         bool is_fullscreen_supported() const override;
-        void set_text(const tchar* const Text) override;
+        void set_text(const tchar* const in_text) override;
 
     private:
         /** Creates an HRGN for the window's current region.  Remember to delete this when you're done with it using
            ::DeleteObject, unless you're passing it to SetWindowRgn(), which will absorb the reference itself. */
-        HRGN make_window_region_object(bool bIncludeBorderWhenMaximized) const;
+        HRGN make_window_region_object(bool include_border_when_maximized) const;
 
     private:
         /** The application that owns this window. */

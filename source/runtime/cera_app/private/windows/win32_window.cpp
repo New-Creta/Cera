@@ -145,7 +145,7 @@ namespace cera
             // x,y, width, height defines the top-left pixel of the client area on the screen
             // This adjusts a zero rect to give us the size of the border
             RECT border_rect = {0, 0, 0, 0};
-            ::AdjustWindowRectEx(&border_rect, window_style, false, window_ex_style);
+            ::AdjustWindowRectEx(&border_rect, window_style, FALSE, window_ex_style);
 
             // Border rect size is negative - see MoveWindowTo
             window_x += border_rect.left;
@@ -193,7 +193,7 @@ namespace cera
                 return;
             }
 
-            const BOOL enable_nc_paint = false;
+            const BOOL enable_nc_paint = FALSE;
             if(FAILED(::DwmSetWindowAttribute(m_hwnd, DWMWA_ALLOW_NCPAINT, &enable_nc_paint, sizeof(enable_nc_paint))))
             {
                 log::error("DwmSetWindowAttribute -> DWMWA_ALLOW_NCPAINT: failed");
@@ -218,7 +218,7 @@ namespace cera
                 window_style |= WS_THICKFRAME;
             }
 
-            if(!SetWindowLong(m_hwnd, GWL_STYLE, window_style))
+            if(!SetWindowLong(m_hwnd, GWL_STYLE, (LONG)window_style))
             {
                 log::error("Failed to set GWL_STYLE on window");
                 return;
@@ -235,7 +235,7 @@ namespace cera
 
             // For regular non-game windows delete the close menu from the default system menu. This prevents accidental closing of win32 apps by double clicking by accident on the application icon
             // The overwhelming majority of feedback is that is confusing behavior and we want to prevent this.
-            ::DeleteMenu(GetSystemMenu(m_hwnd, false), SC_CLOSE, MF_BYCOMMAND);
+            ::DeleteMenu(GetSystemMenu(m_hwnd, FALSE), SC_CLOSE, MF_BYCOMMAND);
 
             adjust_window_region(client_width, client_height);
         }
@@ -243,7 +243,7 @@ namespace cera
         {
             if (!get_definition().has_close_button)
             {
-                EnableMenuItem(GetSystemMenu(m_hwnd, false), SC_CLOSE, MF_GRAYED);
+                EnableMenuItem(GetSystemMenu(m_hwnd, FALSE), SC_CLOSE, MF_GRAYED);
             }
         }
     }
@@ -262,7 +262,7 @@ namespace cera
 
         // NOTE: We explicitly don't delete the region object, because the OS deletes the handle when it no longer needed after
         // a call to SetWindowRgn.
-        if(!::SetWindowRgn(m_hwnd, region, false))
+        if(!::SetWindowRgn(m_hwnd, region, FALSE))
         {
             log::error("Failed to adjust window region");
             return;
@@ -294,7 +294,7 @@ namespace cera
         {
             // This adjusts a zero rect to give us the size of the border
             RECT border_rect = {0, 0, 0, 0};
-            ::AdjustWindowRectEx(&border_rect, window_info.dwStyle, false, window_info.dwExStyle);
+            ::AdjustWindowRectEx(&border_rect, window_info.dwStyle, FALSE, window_info.dwExStyle);
 
             // Border rect size is negative - see MoveWindowTo
             new_x += border_rect.left;
@@ -355,7 +355,7 @@ namespace cera
 
             // This adjusts a zero rect to give us the size of the border
             RECT border_rect = {0, 0, 0, 0};
-            ::AdjustWindowRectEx(&border_rect, window_style, false, window_ex_style);
+            ::AdjustWindowRectEx(&border_rect, window_style, FALSE, window_ex_style);
 
             // Border rect size is negative
             x += border_rect.left;
@@ -613,7 +613,7 @@ namespace cera
                 SetWindowLong(m_hwnd, GWL_STYLE, window_style);
                 ::SetWindowPos(m_hwnd, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
 
-                if (m_pre_fullscreen_window_placement.length) // Was PreFullscreenWindowPlacement initialized?
+                if (m_pre_fullscreen_window_placement.length != 0) // Was PreFullscreenWindowPlacement initialized?
                 {
                     ::SetWindowPlacement(m_hwnd, &m_pre_fullscreen_window_placement);
                 }
@@ -684,10 +684,8 @@ namespace cera
 
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     /** Sets focus on the native window */
@@ -714,9 +712,9 @@ namespace cera
      *
      * @param bEnable	true to enable the window, false to disable it.
      */
-    void windows_window::enable(bool bEnable)
+    void windows_window::enable(bool enable)
     {
-        ::EnableWindow(m_hwnd, bEnable);
+        ::EnableWindow(m_hwnd, (BOOL)enable);
     }
 
     /** @return true if native window exists underneath the coordinates */
@@ -746,7 +744,7 @@ namespace cera
         window_info.cbSize = sizeof(window_info);
         ::GetWindowInfo(m_hwnd, &window_info);
 
-        return window_info.cxWindowBorders;
+        return (s32)window_info.cxWindowBorders;
     }
 
     s32 windows_window::get_window_title_bar_size() const
@@ -770,9 +768,9 @@ namespace cera
         return !::GetSystemMetrics(SM_REMOTESESSION);
     }
 
-    void windows_window::set_text(const tchar *const Text)
+    void windows_window::set_text(const tchar *const in_text)
     {
-        SetWindowText(m_hwnd, Text);
+        SetWindowText(m_hwnd, in_text);
     }
 
     HRGN windows_window::make_window_region_object(bool include_border_when_maximized) const
@@ -793,7 +791,7 @@ namespace cera
                     window_info.cbSize = sizeof(window_info);
                     ::GetWindowInfo(m_hwnd, &window_info);
 
-                    const s32 window_border_size = include_border_when_maximized ? window_info.cxWindowBorders : 0;
+                    const s32 window_border_size = include_border_when_maximized ? (s32)window_info.cxWindowBorders : 0;
                     region = CreateRectRgn(window_border_size, window_border_size, m_region_width + window_border_size, m_region_height + window_border_size);
                 }
                 else
