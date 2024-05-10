@@ -43,7 +43,7 @@ namespace cera
             if (renderer::post_initialize() == false) // NOLINT(readability-simplify-boolean-expr)
             {
                 log::error("Renderer post initialization failed.");
-                return false;
+                return 1;
             }
 
             renderer::flush();
@@ -52,7 +52,7 @@ namespace cera
             if (!g_engine->start())
             {
                 log::error("Renderer post initialization failed.");
-                return false;
+                return 1;
             }
 
             g_is_running = true;

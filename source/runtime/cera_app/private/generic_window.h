@@ -38,7 +38,7 @@ namespace cera
         virtual void move_window_to(s32 x, s32 y);
 
         /** Native windows should implement BringToFront by making this window the top-most window (i.e. focused). */
-        virtual void bring_to_front(bool force = false);
+        virtual void bring_to_front(bool force);
 
         /** Native windows should implement this function by asking the OS to destroy OS-specific resource associated with the window (e.g. Win32 window handle) */
         virtual void destroy();
