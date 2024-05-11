@@ -146,7 +146,7 @@ namespace cera
                     const auto iter = subresource_state_map.find(subresource);
                     if(iter != subresource_state_map.end())
                     {
-                        new_state = iter->value;
+                        new_state = iter->second;
                     }
                     return new_state;
                 }

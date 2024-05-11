@@ -35,12 +35,12 @@
 #include "directx_util.h"
 #include "descriptors/descriptor_allocation.h"
 
-#include "cera_std/map.h"
-#include "cera_std/memory.h"
-#include "cera_std/mutex.h"
-#include "cera_std/queue.h"
+#include "util/windows_types.h"
 
+#include <map>
+#include <memory>
 #include <mutex>
+#include <queue>
 
 namespace cera
 {

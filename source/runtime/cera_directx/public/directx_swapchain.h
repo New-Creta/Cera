@@ -1,12 +1,11 @@
 #pragma once
 
 #include "util/types.h"
+#include "util/windows_types.h"
 
 #include "directx_util.h"
 
 #include "resources/render_target.h"
-
-#include "wrl/windows_types.h"
 
 struct IDXGISwapChain4;
 

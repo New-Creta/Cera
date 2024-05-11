@@ -10,7 +10,7 @@ using s64 = signed long long;
 
 static_assert(sizeof(s8) == 1, "int8 must be 1 byte big");      // NOLINT
 static_assert(sizeof(s16) == 2, "int16 must be 2 bytes big");   // NOLINT
-static_assert(sizeof(s32) == 4, "int32 must be 4 bytes big");   // NOLINT
+static_assert(sizeof(s32) == 4, "s32 must be 4 bytes big");   // NOLINT
 static_assert(sizeof(s64) == 8, "int64 must be 8 bytes big");   // NOLINT
 
 using u8 = unsigned char;
@@ -21,13 +21,13 @@ using hash_id = s32;
 
 static_assert(sizeof(u8) == 1, "uint8 must be 1 byte big");    // NOLINT
 static_assert(sizeof(u16) == 2, "uint16 must be 2 bytes big"); // NOLINT
-static_assert(sizeof(u32) == 4, "uint32 must be 4 bytes big"); // NOLINT
+static_assert(sizeof(u32) == 4, "u32 must be 4 bytes big"); // NOLINT
 static_assert(sizeof(u64) == 8, "uint64 must be 8 bytes big"); // NOLINT
 
 using ulong = unsigned long;
 
-static_assert(sizeof(long) == sizeof(s32), "long should be the same size as int32");
-static_assert(sizeof(ulong) == sizeof(u32), "ulong should be the same size as uint32");
+static_assert(sizeof(long) == sizeof(s32), "long should be the same size as s32");
+static_assert(sizeof(ulong) == sizeof(u32), "ulong should be the same size as u32");
 
 using char8 = s8;
 using char16 = char16_t;

@@ -1,12 +1,12 @@
 #pragma once
 
 #include "util/types.h"
+#include "util/memory_size.h"
+#include "util/windows_types.h"
 
 #include "resources/buffer.h"
 
 #include "directx_util.h"
-
-#include "wrl/windows_types.h"
 
 #include <memory>
 #include <map>

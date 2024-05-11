@@ -15,23 +15,23 @@ namespace cera
       class DXCall
       {
       public:
-        DXCall(HResult error, std::string_view file, std::string_view function, s32 lineNr);
+        DXCall(HResult error, std::wstring_view file, std::wstring_view function, s32 lineNr);
 
         bool has_failed() const;
         bool has_succeeded() const;
 
-        std::string_view error_message() const;
+        const std::wstring& error_message() const;
 
       private:
         HResult m_error;
-        std::string m_error_message;
+        std::wstring m_error_message;
       };
 
       namespace internal
       {
         //-------------------------------------------------------------------------
         template <typename Func>
-        HResult call_to_dx_api(Func func, std::string_view file, std::string_view function, s32 lineNr)
+        HResult call_to_dx_api(Func func, std::wstring_view file, std::wstring_view function, s32 lineNr)
         {
           HResult hr = func();
           cera::renderer::directx::DXCall(hr, file, function, lineNr);
@@ -40,7 +40,7 @@ namespace cera
 
         //-------------------------------------------------------------------------
         template <typename Func>
-        bool call_to_dx_api_has_succeeded(Func func, std::string_view file, std::string_view function, s32 lineNr)
+        bool call_to_dx_api_has_succeeded(Func func, std::wstring_view file, std::wstring_view function, s32 lineNr)
         {
           HResult hr = func();
           return cera::renderer::directx::DXCall(hr, file, function, lineNr).has_succeeded();
@@ -48,7 +48,7 @@ namespace cera
 
         //-------------------------------------------------------------------------
         template <typename Func>
-        bool call_to_dx_api_has_failed(Func func, std::string_view file, std::string_view function, s32 lineNr)
+        bool call_to_dx_api_has_failed(Func func, std::wstring_view file, std::wstring_view function, s32 lineNr)
         {
           HResult hr = func();
           return cera::renderer::directx::DXCall(hr, file, function, lineNr).has_failed();

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "util/types.h"
+#include "util/windows_types.h"
+#include "util/memory_size.h"
 
 #include "directx_util.h"
 

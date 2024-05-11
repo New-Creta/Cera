@@ -20,15 +20,15 @@ namespace cera
         // Reset the clock.
         void reset();
 
-        double get_delta_nano_seconds() const;
-        double get_delta_micro_seconds() const;
-        double get_delta_milli_seconds() const;
-        double get_delta_seconds() const;
+        u64 get_delta_nano_seconds() const;
+        u64 get_delta_micro_seconds() const;
+        u64 get_delta_milli_seconds() const;
+        u64 get_delta_seconds() const;
 
-        double get_total_nano_seconds() const;
-        double get_total_micro_seconds() const;
-        double get_total_milli_seconds() const;
-        double get_total_seconds() const;
+        u64 get_total_nano_seconds() const;
+        u64 get_total_micro_seconds() const;
+        u64 get_total_milli_seconds() const;
+        u64 get_total_seconds() const;
 
     private:
         // Initial time point.

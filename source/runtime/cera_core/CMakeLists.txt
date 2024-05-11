@@ -3,6 +3,13 @@ add_library(cera_core STATIC)
 # Sources
 ## private sources
 target_sources(cera_core PRIVATE 
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/defines.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/blob.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/blob_view.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/blob_reader.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/blob_writer.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/pointer_math.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/color.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/memory_size.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/log.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/assert.cpp
@@ -10,6 +17,13 @@ target_sources(cera_core PRIVATE
 
 ## public sources
 target_sources(cera_core PUBLIC 
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/defines.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/blob.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/blob_view.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/blob_reader.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/blob_writer.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/pointer_math.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/color.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/memory_size.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/log.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/assert.h

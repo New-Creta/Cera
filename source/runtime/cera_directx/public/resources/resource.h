@@ -6,6 +6,7 @@
  */
 
 #include "util/types.h"
+#include "util/windows_types.h"
 
 #include "resources/iresource.h"
 

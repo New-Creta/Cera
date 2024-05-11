@@ -38,14 +38,15 @@
  */
 
 #include "util/types.h"
+#include "util/windows_types.h"
 
 #include "directx_util.h"
 
 #include <cstdint>
 
-#include "cera_std/memory.h"
-#include "cera_std/queue.h"
-#include "cera_std/functional.h"
+#include <memory>
+#include <queue>
+#include <functional>
 
 namespace cera
 {
@@ -204,7 +205,7 @@ namespace cera
       u32 m_descriptor_handle_increment_size;
 
       // The descriptor handle cache.
-      std::unique_array<D3D12_CPU_DESCRIPTOR_HANDLE> m_descriptor_handle_cache;
+      std::unique_ptr<D3D12_CPU_DESCRIPTOR_HANDLE[]> m_descriptor_handle_cache;
 
       // Descriptor handle cache per descriptor table.
       DescriptorTableCache m_descriptor_table_cache[s_max_descriptor_tables];

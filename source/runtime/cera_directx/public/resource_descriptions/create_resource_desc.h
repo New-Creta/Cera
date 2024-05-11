@@ -1,7 +1,8 @@
 #pragma once
 
-#include "rex_engine/engine/types.h"
-#include "rex_renderer_core/format.h"
+#include "util/types.h"
+
+#include "rhi_format.h"
 
 namespace cera
 {

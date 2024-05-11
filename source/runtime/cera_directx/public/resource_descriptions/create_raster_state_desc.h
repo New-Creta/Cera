@@ -1,8 +1,9 @@
 #pragma once
 
-#include "rex_engine/engine/types.h"
-#include "rex_renderer_core/cull_mode.h"
-#include "rex_renderer_core/fill_mode.h"
+#include "util/types.h"
+
+#include "rhi_cull_mode.h"
+#include "rhi_fill_mode.h"
 
 namespace cera
 {

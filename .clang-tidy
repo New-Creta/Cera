@@ -4,36 +4,20 @@ Checks: >
   -*,
   
   bugprone-*,
-  google-*,
-  misc-*,
-  modernize-*,
   performance-*,
   portability-*,
   readability-*,
 
-  -bugprone-easily-swappable-parameters
-  -bugprone-switch-missing-default-case
+  -bugprone-easily-swappable-parameters,
+  -bugprone-switch-missing-default-case,
   
-  -google-readability-namespace-comments,
-  -google-runtime-int,
-  -google-runtime-references,
-
-  -misc-non-private-member-variables-in-classes,
-  -misc-include-cleaner
-  -misc-use-anonymous-namespace
-
   -readability-named-parameter,
   -readability-braces-around-statements,
-  -readability-magic-numbers
-  -readability-identifier-length
-  -readability-uppercase-literal-suffix
-  -readability-function-cognitive-complexity
-
-  -modernize-use-trailing-return-type
-  -modernize-concat-nested-namespaces
-
-
-WarningsAsErrors: "*"
+  -readability-magic-numbers,
+  -readability-identifier-length,
+  -readability-uppercase-literal-suffix,
+  -readability-function-cognitive-complexity,
+  readability-implicit-bool-conversion,
 
 CheckOptions:
   - { key: readability-identifier-naming.AbstractClassCase,                                               value: lower_case }

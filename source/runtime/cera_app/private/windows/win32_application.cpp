@@ -611,16 +611,16 @@ namespace cera
         return DefWindowProc(hwnd, msg, wparam, lparam);
     }
 
-    std::shared_ptr<windows_application> windows_application::create_windows_application(const HINSTANCE hinstance, const HICON hicon)
+    std::shared_ptr<windows_application> windows_application::create_windows_application(const HINSTANCE instance_handle, const HICON icon_handle)
     {
-        g_windows_application = std::make_shared<windows_application>(hinstance, hicon);
+        g_windows_application = std::make_shared<windows_application>(instance_handle, icon_handle);
 
         return g_windows_application;
     }
 
-    windows_application::windows_application(const HINSTANCE hinstance, const HICON hicon)
+    windows_application::windows_application(const HINSTANCE instance_handle, const HICON icon_handle)
         : generic_application()
-        , m_instance_handle(hinstance)
+        , m_instance_handle(instance_handle)
         , m_consome_alt_space(false)
         , m_in_modal_size_loop(false)
         , m_allowed_to_defer_message_processing(true)
@@ -634,7 +634,7 @@ namespace cera
         ::DisableProcessWindowsGhosting();
 
         // Register the Win32 class for Slate windows and assign the application instance and icon
-        if (!register_class(hinstance, hicon))
+        if (!register_class(instance_handle, icon_handle))
         {
             log::error("Unable to execute RegisterClass");
             return;
@@ -709,7 +709,7 @@ namespace cera
 
     void windows_application::check_for_shift_up_events(const s32 key_code)
     {
-        assert(key_code == VK_LSHIFT || key_code == VK_RSHIFT);
+        CERA_ASSERT_X(key_code == VK_LSHIFT || key_code == VK_RSHIFT, "key_code has to be equal to Left or Right Shift");
 
         // Since VK_SHIFT doesn't get an up message if the other shift key is held we need to poll for it
         const modifier_key modifier_key_index = key_code == VK_LSHIFT ? modifier_key::left_shift : modifier_key::right_shift;
@@ -1004,7 +1004,7 @@ namespace cera
                     active_mouse_button = (HIWORD(wparam) & XBUTTON1) ? mouse_button::thumb01  : mouse_button::thumb02;
                     break;
                 default:
-                    assert(false);
+                    CERA_ASSERT("Unknown mouse button clicked.");
                 }
 
                 if (mouse_up)

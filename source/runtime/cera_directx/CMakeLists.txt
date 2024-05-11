@@ -39,6 +39,7 @@ target_sources(cera_directx PRIVATE
     ### util
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/util/thread_name.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/util/vertex_types.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/util/state_controller.h
 
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/gpu_description.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/command_list.cpp
@@ -68,7 +69,6 @@ target_sources(cera_directx PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/dxgi/dxgi_util.h
 
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/wrl/comobject.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/wrl/windows_types.h
 
     ### resources
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resources/buffer.h
@@ -95,6 +95,7 @@ target_sources(cera_directx PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/util/queue.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/util/thread_name.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/util/vertex_types.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/util/windows_types.h
 
     ### resource descriptions
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public/resource_descriptions/create_clear_state_desc.h

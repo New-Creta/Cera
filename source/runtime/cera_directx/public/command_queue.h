@@ -1,6 +1,7 @@
 #pragma once
 
 #include "util/types.h"
+#include "util/windows_types.h"
 #include "util/queue.h"
 
 #include "directx_util.h"

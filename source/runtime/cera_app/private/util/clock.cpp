@@ -24,41 +24,41 @@ namespace cera
         m_total_time = std::chrono::high_resolution_clock::duration();
     }
 
-    f64 clock::get_delta_nano_seconds() const
+    u64 clock::get_delta_nano_seconds() const
     {
         return m_delta_time.count() * 1.0;
     }
-    f64 clock::get_delta_micro_seconds() const
+    u64 clock::get_delta_micro_seconds() const
     {
         return m_delta_time.count() * 1e-3;
     }
 
-    f64 clock::get_delta_milli_seconds() const
+    u64 clock::get_delta_milli_seconds() const
     {
         return m_delta_time.count() * 1e-6;
     }
 
-    f64 clock::get_delta_seconds() const
+    u64 clock::get_delta_seconds() const
     {
         return m_delta_time.count() * 1e-9;
     }
 
-    f64 clock::get_total_nano_seconds() const
+    u64 clock::get_total_nano_seconds() const
     {
         return m_total_time.count() * 1.0;
     }
 
-    f64 clock::get_total_micro_seconds() const
+    u64 clock::get_total_micro_seconds() const
     {
         return m_total_time.count() * 1e-3;
     }
 
-    f64 clock::get_total_milli_seconds() const
+    u64 clock::get_total_milli_seconds() const
     {
         return m_total_time.count() * 1e-6;
     }
 
-    f64 clock::get_total_seconds() const
+    u64 clock::get_total_seconds() const
     {
         return m_total_time.count() * 1e-9;
     }

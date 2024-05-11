@@ -1,8 +1,8 @@
 #pragma once
 
-#include "rex_renderer_core/resource_descriptions/create_clear_state_desc.h"
-#include "rex_renderer_core/resource_descriptions/create_resource_desc.h"
-#include "rex_renderer_core/format.h"
+#include "resource_descriptions/create_clear_state_desc.h"
+#include "resource_descriptions/create_resource_desc.h"
+#include "rhi_format.h"
 
 namespace cera
 {

@@ -83,7 +83,7 @@ namespace cera
           wrl::ComPtr<ID3DBlob> vertex_shader_blob;
           if(DX_FAILED(D3DReadFileToBlob(L"unlit_vs.cso", &vertex_shader_blob)))
           {
-            CERA_ERROR(LogDirectX, "Failed to read compiled unlit vertex shader from file.");
+            log::error("Failed to read compiled unlit vertex shader from file.");
             return nullptr;
           }
 
@@ -121,7 +121,7 @@ namespace cera
           wrl::ComPtr<ID3DBlob> pixel_shader_blob;
           if(DX_FAILED(D3DReadFileToBlob(L"unlit_ps.cso", &pixel_shader_blob)))
           {
-            CERA_ERROR(LogDirectX, "Failed to read compiled unlit pixel shader from file.");
+            log::error("Failed to read compiled unlit pixel shader from file.");
             return nullptr;
           }
 
@@ -149,13 +149,13 @@ namespace cera
 
         if(errors != nullptr)
         {
-          CERA_ERROR(LogDirectX, "{}", (char*)errors->GetBufferPointer());
+          log::error("{}", (char*)errors->GetBufferPointer());
           return nullptr;
         }
 
         if(DX_FAILED(hr))
         {
-          CERA_ERROR(LogDirectX, "Failed to compile shader");
+          log::error("Failed to compile shader");
           return nullptr;
         }
 

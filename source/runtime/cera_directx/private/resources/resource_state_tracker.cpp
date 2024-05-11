@@ -29,18 +29,18 @@ namespace cera
         const auto iter = m_final_resource_state.find(transition_barrier.pResource);
         if(iter != m_final_resource_state.end())
         {
-          auto& resource_state = iter->value;
+          auto& resource_state = iter->second;
           // If the known final state of the resource is different...
           if(transition_barrier.Subresource == D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES && !resource_state.subresource_state_map.empty())
           {
             // First transition all of the subresources if they are different than the StateAfter.
             for(auto subresource_state: resource_state.subresource_state_map)
             {
-              if(transition_barrier.StateAfter != subresource_state.value)
+              if(transition_barrier.StateAfter != subresource_state.second)
               {
                 D3D12_RESOURCE_BARRIER new_barrier = barrier;
-                new_barrier.Transition.Subresource = subresource_state.key;
-                new_barrier.Transition.StateBefore = subresource_state.value;
+                new_barrier.Transition.Subresource = subresource_state.first;
+                new_barrier.Transition.StateBefore = subresource_state.second;
                 m_resource_barriers.push_back(new_barrier);
               }
             }
@@ -120,17 +120,17 @@ namespace cera
           {
             // If all subresources are being transitioned, and there are multiple
             // subresources of the resource that are in a different state...
-            auto& resource_state = iter->value;
+            auto& resource_state = iter->second;
             if(pending_transition.Subresource == D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES && !resource_state.subresource_state_map.empty())
             {
               // Transition all subresources
               for(auto subresource_state: resource_state.subresource_state_map)
               {
-                if(pending_transition.StateAfter != subresource_state.value)
+                if(pending_transition.StateAfter != subresource_state.second)
                 {
                   D3D12_RESOURCE_BARRIER new_barrier = pending_barrier;
-                  new_barrier.Transition.Subresource = subresource_state.key;
-                  new_barrier.Transition.StateBefore = subresource_state.value;
+                  new_barrier.Transition.Subresource = subresource_state.first;
+                  new_barrier.Transition.StateBefore = subresource_state.second;
                   resource_barriers.push_back(new_barrier);
                 }
               }
@@ -138,7 +138,7 @@ namespace cera
             else
             {
               // No (sub)resources need to be transitioned. Just add a single transition barrier (if needed).
-              auto global_state = (iter->value).subresource_state(pending_transition.Subresource);
+              auto global_state = (iter->second).subresource_state(pending_transition.Subresource);
 
               if(pending_transition.StateAfter != global_state)
               {
@@ -170,7 +170,7 @@ namespace cera
       // Commit final resource states to the global resource state array (map).
       for(const auto& resource_state: m_final_resource_state)
       {
-        s_global_resource_state[resource_state.key] = resource_state.value;
+        s_global_resource_state[resource_state.first] = resource_state.second;
       }
 
       m_final_resource_state.clear();

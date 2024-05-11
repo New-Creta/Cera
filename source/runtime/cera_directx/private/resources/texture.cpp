@@ -232,7 +232,7 @@ namespace cera
 
         if(DX_FAILED(d3d_device->CreateCommittedResource(&default_heap_properties, D3D12_HEAP_FLAG_NONE, &res_desc, D3D12_RESOURCE_STATE_COMMON, d3d_clear_value(), IID_PPV_ARGS(&d3d_resource()))))
         {
-          CERA_ERROR(LogDirectX, "Failed to CreateCommittedResource");
+          log::error("Failed to CreateCommittedResource");
           return false;
         }
 

@@ -4,9 +4,9 @@ namespace cera
 {
   namespace renderer
   {
-    ByteAddressBuffer::ByteAddressBuffer(Device& device, const D3D12_RESOURCE_DESC& resDesc)
-        : Buffer(device, resDesc)
-    {
+      ByteAddressBuffer::ByteAddressBuffer(Device& device, const D3D12_RESOURCE_DESC& res_desc)
+          : Buffer(device, res_desc)
+      {
     }
 
     ByteAddressBuffer::ByteAddressBuffer(Device& device, wrl::ComPtr<ID3D12Resource> resource)

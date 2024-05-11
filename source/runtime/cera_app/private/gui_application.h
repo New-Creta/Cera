@@ -39,7 +39,7 @@ namespace cera
 
     public:
         /** Add a new window to the application */
-        std::shared_ptr<generic_window> add_window( const generic_window_definition& window_definition, const bool show = true );
+        static std::shared_ptr<generic_window> add_window( const generic_window_definition& window_definition, const bool show = true );
 
     protected:
         /** Event when application is closing down */

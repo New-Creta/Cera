@@ -33,26 +33,26 @@ namespace cera
         class update_args : public args
         {
         public:
-            update_args(f64 fDeltaTime, f64 fTotalTime)
+            update_args(u64 fDeltaTime, u64 fTotalTime)
                 : elapsed_time(fDeltaTime)
                 , total_time(fTotalTime)
             {}
 
-            f64 elapsed_time;
-            f64 total_time;
+            u64 elapsed_time;
+            u64 total_time;
         };
 
         class render_args : public args
         {
         public:
-            render_args(f64 fDeltaTime, f64 fTotalTime, const std::shared_ptr<command_list>& commandList)
+            render_args(u64 fDeltaTime, u64 fTotalTime, const std::shared_ptr<command_list>& commandList)
                 : elapsed_time(fDeltaTime)
                 , total_time(fTotalTime)
                 , command_list(commandList)
             {}
 
-            f64 elapsed_time;
-            f64 total_time;
+            u64 elapsed_time;
+            u64 total_time;
 
             std::shared_ptr<command_list> command_list;
         };
@@ -60,13 +60,13 @@ namespace cera
         class render_gui_args : public args
         {
         public:
-            render_gui_args(f64 fDeltaTime, f64 fTotalTime)
+            render_gui_args(u64 fDeltaTime, u64 fTotalTime)
                 : elapsed_time(fDeltaTime)
                 , total_time(fTotalTime)
             {}
 
-            f64 elapsed_time;
-            f64 total_time;
+            u64 elapsed_time;
+            u64 total_time;
         };
 
         class key_args : public args

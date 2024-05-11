@@ -5,8 +5,7 @@ namespace cera
     namespace renderer
     {
         //-------------------------------------------------------------------------
-        Buffer::Buffer(Device& device, const D3D12_RESOURCE_DESC& resDesc)
-            : Resource(device, resDesc)
+        Buffer::Buffer(Device& device, const D3D12_RESOURCE_DESC& res_desc) : Resource(device, res_desc)
         {}
 
         //-------------------------------------------------------------------------

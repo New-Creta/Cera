@@ -45,11 +45,11 @@ namespace cera
         std::shared_ptr<rhi_index_buffer> create_index_buffer(size_t num_indices, rhi_format index_format);
         std::shared_ptr<rhi_vertex_buffer> create_vertex_buffer(size_t num_vertices, size_t vertex_stride);
 
-        template<class pipeline_state_stream>
-        std::shared_ptr<rhi_pipeline_state_object> create_pipeline_state_object(pipeline_state_stream& pipeline_state_stream);
+        template<class tpipeline_state_stream>
+        std::shared_ptr<rhi_pipeline_state_object> create_pipeline_state_object(tpipeline_state_stream& pipeline_state_stream);
 
         std::shared_ptr<rhi_shader_resource_view> create_shader_resource_view(const std::shared_ptr<rhi_resource>& in_resource, const rhi_shader_resource_view_desc& srv);
-        std::shared_ptr<rhi_unordered_address_view> create_unordered_access_view(const std::shared_ptr<rhi_resource>& in_resource, const std::shared_ptr<rhi_resource>& in_counter_resource = nullptr, const rhi_unordered_access_view_desc& uav);
+        std::shared_ptr<rhi_unordered_address_view> create_unordered_access_view(const std::shared_ptr<rhi_resource>& in_resource, const std::shared_ptr<rhi_resource>& in_counter_resource, const rhi_unordered_access_view_desc& uav);
 
     };
 }

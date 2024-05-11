@@ -10,5 +10,5 @@ namespace cera
         ~rhi_byte_address_buffer() override = default;
 
         virtual size_t get_buffer_size() const = 0;
-    }
+    };
 }

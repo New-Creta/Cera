@@ -12,21 +12,21 @@ namespace cera
     namespace directx
     {
       //-------------------------------------------------------------------------
-      std::big_stack_string report_hr_error(HRESULT hr, const std::string_view file, const std::string_view function, s32 lineNr)
+      std::wstring report_hr_error(HRESULT hr, const std::wstring_view file, const std::wstring_view function,
+                                            s32 line_nr)
       {
         const _com_error err(hr);
-        std::big_stack_string error_message(err.ErrorMessage());
-        CERA_ERROR(LogDirectX, "DirectX Error\nFile: {}\nFunction: {}\nOn line: {}\nDX error: {}", file, function, lineNr, error_message);
+        std::wstring error_message(err.ErrorMessage());
+        log::error(L"DirectX Error\nFile: {}\nFunction: {}\nOn line: {}\nDX error: {}", file, function, line_nr, error_message.c_str());
         return error_message;
       }
 
       //-------------------------------------------------------------------------
-      DXCall::DXCall(HResult error, std::string_view file, std::string_view function, s32 lineNr)
-          : m_error(error)
+      DXCall::DXCall(HResult error, std::wstring_view file, std::wstring_view function, s32 line_nr) : m_error(error)
       {
         if(FAILED(m_error))
         {
-          m_error_message  = report_hr_error(m_error, file, function, lineNr);
+          m_error_message  = report_hr_error(m_error, file, function, line_nr);
         }
       }
 
@@ -43,9 +43,9 @@ namespace cera
       }
 
       //-------------------------------------------------------------------------
-      std::string_view DXCall::error_message() const
+      const std::wstring& DXCall::error_message() const
       {
-        return m_error_message.to_view();
+        return m_error_message;
       }
     } // namespace directx
   }   // namespace renderer

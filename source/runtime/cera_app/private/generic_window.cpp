@@ -99,7 +99,7 @@ namespace cera
         // empty default functionality
     }
 
-    void generic_window::set_opacity(const float InOpacity)
+    void generic_window::set_opacity(const float in_opacity)
     {
         // empty default functionality
     }
@@ -144,7 +144,7 @@ namespace cera
         return true;
     }
 
-    void generic_window::set_text(const tchar *const Text)
+    void generic_window::set_text(const tchar* const text)
     {
         // empty default functionality
     }

@@ -123,7 +123,7 @@ namespace cera
 
       if(DX_FAILED(d3d_device->CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &m_format_support, sizeof(D3D12_FEATURE_DATA_FORMAT_SUPPORT))))
       {
-        CERA_ERROR(LogDirectX, "Feature not supported on D3D12 Resource");
+        log::error("Feature not supported on D3D12 Resource");
         return false;
       }
 

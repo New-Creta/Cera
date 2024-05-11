@@ -3,6 +3,7 @@
 #include "util/types.h"
 
 #include "directx_util.h"
+
 #include "resources/buffer.h"
 
 namespace cera

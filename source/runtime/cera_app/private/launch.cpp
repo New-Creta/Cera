@@ -22,14 +22,14 @@ namespace cera
             // Create the application
             gui_application::create();
 
-            // Initialize the renderer
-            if (!renderer::initialize(user_data))
-            {
-                log::error("Renderer initialization failed.");
-                return false;
-            }
-
-            display_renderer_info();
+            // // Initialize the renderer
+            // if (!renderer::initialize(user_data))
+            // {
+            //     log::error("Renderer initialization failed.");
+            //     return false;
+            // }
+            //
+            //display_renderer_info();
 
             // Create the engine
             g_engine = std::make_unique<game_engine>(gui_application::get(), game);
@@ -39,14 +39,14 @@ namespace cera
                 return 1;
             }
 
-            // Post initialize the renderer
-            if (renderer::post_initialize() == false) // NOLINT(readability-simplify-boolean-expr)
-            {
-                log::error("Renderer post initialization failed.");
-                return 1;
-            }
-
-            renderer::flush();
+            // // Post initialize the renderer
+            // if (renderer::post_initialize() == false) // NOLINT(readability-simplify-boolean-expr)
+            // {
+            //     log::error("Renderer post initialization failed.");
+            //     return 1;
+            // }
+            //
+            // renderer::flush();
 
             // Post initialize the engine
             if (!g_engine->start())

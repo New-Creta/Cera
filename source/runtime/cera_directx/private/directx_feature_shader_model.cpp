@@ -7,10 +7,10 @@
 namespace cera
 {
   //-------------------------------------------------------------------------
-  std::string_view shader_model_name(D3D_SHADER_MODEL shaderModel)
+  std::string_view shader_model_name(D3D_SHADER_MODEL shader_model)
   {
-    switch(shaderModel)
-    {
+      switch (shader_model)
+      {
       case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_6: return std::string_view("D3D_SHADER_MODEL_6_6");
       case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_5: return std::string_view("D3D_SHADER_MODEL_6_5");
       case D3D_SHADER_MODEL::D3D_SHADER_MODEL_6_4: return std::string_view("D3D_SHADER_MODEL_6_4");

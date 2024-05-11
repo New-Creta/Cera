@@ -1,9 +1,9 @@
 #pragma once
 
-#include "rex_engine/engine/state_controller.h"
-#include "rex_engine/engine/types.h"
-#include "rex_renderer_core/clear_bits.h"
-#include "rex_std/bonus/math/color.h"
+#include "util/state_controller.h"
+#include "util/types.h"
+#include "util/color.h"
+#include "rhi_clear_bits.h"
 
 namespace cera
 {

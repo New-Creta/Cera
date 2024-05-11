@@ -53,6 +53,8 @@ namespace cera
     bool game_engine::start()
     {
         m_game_window->show();
+
+        return true;
     }
     
     void game_engine::tick()
@@ -104,19 +106,17 @@ namespace cera
             center_behaviour = window_center_behaviour::none;
         }
 
-	    auto get_project_setting_bool = [](const std::string& paramName, bool default) -> bool
-	    	{
-	    		bool temp = default;
-	    		//GConfig->GetBool(TEXT("/Script/EngineSettings.GeneralProjectSettings"), *paramName, temp, GGameIni);
-	    		return temp;
-	    	};
-	    auto get_project_setting_int = [](const std::string& paramName, s32 default) -> s32
-	    {
-	    	s32 temp = default;
+        auto get_project_setting_bool = [](const std::string& param_name, bool d) -> bool {
+            bool temp = d;
+            // GConfig->GetBool(TEXT("/Script/EngineSettings.GeneralProjectSettings"), *paramName, temp, GGameIni);
+            return temp;
+        };
+        auto get_project_setting_int = [](const std::string& param_name, s32 d) -> s32 {
+	    	s32 temp = d;
 	    	//GConfig->GetInt(TEXT("/Script/EngineSettings.GeneralProjectSettings"), *paramName, temp, GGameIni);
 	    	return temp;
-	    };
-    
+        };
+
         const bool should_preserve_aspect_ratio = get_project_setting_bool("bShouldWindowPreserveAspectRatio", true);
 	    const bool use_borderless_window = get_project_setting_bool("bUseBorderlessWindow", false) && PLATFORM_SUPPORTS_BORDERLESS_WINDOW;
 	    const bool allow_window_resize = get_project_setting_bool("bAllowWindowResize", true);
@@ -131,8 +131,8 @@ namespace cera
             .set_type(window_type::normal)
             .set_x_position(win_x.has_value() ? win_x.value() : 0.0f)
             .set_y_position(win_y.has_value() ? win_y.value() : 0.0f)
-            .set_width(res_x)
-            .set_height(res_y)
+            .set_width((f32)res_x)
+            .set_height((f32)res_y)
             .set_has_os_window_border(!use_borderless_window)
             .set_appears_in_taskbar(true)
             .set_is_topmost_window(true)

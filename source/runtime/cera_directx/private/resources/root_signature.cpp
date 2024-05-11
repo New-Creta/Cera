@@ -97,7 +97,7 @@ namespace cera
 
       if(DX_FAILED(D3DX12SerializeVersionedRootSignature(&version_root_signature_desc, highest_version, &root_signature_blob, &error_blob)))
       {
-        CERA_ERROR(LogDirectX, "Failed to SerializeVersionedRootSignature");
+        log::error("Failed to SerializeVersionedRootSignature");
         return false;
       }
 
@@ -106,7 +106,7 @@ namespace cera
       // Create the root signature.
       if(DX_FAILED(d3d_device->CreateRootSignature(0, root_signature_blob->GetBufferPointer(), root_signature_blob->GetBufferSize(), IID_PPV_ARGS(&m_root_signature))))
       {
-        CERA_ERROR(LogDirectX, "Failed to CreateRootSignature");
+        log::error("Failed to CreateRootSignature");
         return false;
       }
 

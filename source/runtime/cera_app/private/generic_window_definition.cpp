@@ -32,20 +32,20 @@ namespace cera
          m_window_definiiton.height_desired_on_screen = height; 
          return *this; 
     }
-    generic_window_definition_builder& generic_window_definition_builder::set_has_os_window_border(bool hasBorder) 
+    generic_window_definition_builder& generic_window_definition_builder::set_has_os_window_border(bool has_border)
     {
-         m_window_definiiton.has_os_window_border = hasBorder; 
-         return *this; 
+        m_window_definiiton.has_os_window_border = has_border;
+        return *this; 
     }
     generic_window_definition_builder& generic_window_definition_builder::set_appears_in_taskbar(bool appears) 
     {
          m_window_definiiton.appears_in_taskbar = appears; 
          return *this; 
     }
-    generic_window_definition_builder& generic_window_definition_builder::set_is_topmost_window(bool isTopmost) 
+    generic_window_definition_builder& generic_window_definition_builder::set_is_topmost_window(bool is_topmost)
     {
-         m_window_definiiton.is_topmost_window = isTopmost; 
-         return *this; 
+        m_window_definiiton.is_topmost_window = is_topmost;
+        return *this; 
     }
     generic_window_definition_builder& generic_window_definition_builder::set_accepts_input(bool accepts) 
     {
@@ -67,10 +67,10 @@ namespace cera
          m_window_definiiton.focus_when_first_shown = focus; 
          return *this; 
     }
-    generic_window_definition_builder& generic_window_definition_builder::set_has_close_button(bool hasClose) 
+    generic_window_definition_builder& generic_window_definition_builder::set_has_close_button(bool has_close)
     {
-         m_window_definiiton.has_close_button = hasClose; 
-         return *this; 
+        m_window_definiiton.has_close_button = has_close;
+        return *this; 
     }
     generic_window_definition_builder& generic_window_definition_builder::set_supports_minimize(bool supports) 
     {
@@ -82,35 +82,35 @@ namespace cera
          m_window_definiiton.supports_maximize = supports; 
          return *this; 
     }
-    generic_window_definition_builder& generic_window_definition_builder::set_is_modal_window(bool isModal) 
+    generic_window_definition_builder& generic_window_definition_builder::set_is_modal_window(bool is_modal)
     {
-         m_window_definiiton.is_modal_window = isModal; 
-         return *this; 
+        m_window_definiiton.is_modal_window = is_modal;
+        return *this; 
     }
-    generic_window_definition_builder& generic_window_definition_builder::set_is_regular_window(bool isRegular) 
+    generic_window_definition_builder& generic_window_definition_builder::set_is_regular_window(bool is_regular)
     {
-         m_window_definiiton.is_regular_window = isRegular; 
-         return *this; 
+        m_window_definiiton.is_regular_window = is_regular;
+        return *this; 
     }
-    generic_window_definition_builder& generic_window_definition_builder::set_has_sizing_frame(bool hasSizingFrame) 
+    generic_window_definition_builder& generic_window_definition_builder::set_has_sizing_frame(bool has_sizing_frame)
     {
-         m_window_definiiton.has_sizing_frame = hasSizingFrame; 
-         return *this; 
+        m_window_definiiton.has_sizing_frame = has_sizing_frame;
+        return *this; 
     }
     generic_window_definition_builder& generic_window_definition_builder::set_preserve_aspect_ratio(bool preserve) 
     {
          m_window_definiiton.should_preserve_aspect_ratio = preserve; 
          return *this; 
     }
-    generic_window_definition_builder& generic_window_definition_builder::set_expected_max_width(s32 maxWidth) 
+    generic_window_definition_builder& generic_window_definition_builder::set_expected_max_width(s32 max_width)
     {
-         m_window_definiiton.expected_max_width = maxWidth; 
-         return *this; 
+        m_window_definiiton.expected_max_width = max_width;
+        return *this; 
     }
-    generic_window_definition_builder& generic_window_definition_builder::set_expected_max_height(s32 maxHeight) 
+    generic_window_definition_builder& generic_window_definition_builder::set_expected_max_height(s32 max_height)
     {
-         m_window_definiiton.expected_max_height = maxHeight; 
-         return *this; 
+        m_window_definiiton.expected_max_height = max_height;
+        return *this; 
     }
     generic_window_definition_builder& generic_window_definition_builder::set_title(const std::wstring& title) 
     {
@@ -122,10 +122,10 @@ namespace cera
          m_window_definiiton.opacity = opacity; 
          return *this; 
     }
-    generic_window_definition_builder& generic_window_definition_builder::set_corner_radius(s32 cornerRadius) 
+    generic_window_definition_builder& generic_window_definition_builder::set_corner_radius(s32 corner_radius)
     {
-         m_window_definiiton.corner_radius = cornerRadius; 
-         return *this; 
+        m_window_definiiton.corner_radius = corner_radius;
+        return *this; 
     }
     generic_window_definition_builder& generic_window_definition_builder::set_size_limits(const window_size_limits& limits) 
     {

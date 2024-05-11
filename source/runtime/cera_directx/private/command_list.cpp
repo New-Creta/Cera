@@ -164,7 +164,7 @@ namespace cera
 
         if(DX_FAILED(d3d_device->CreateCommittedResource(&default_heap_properties, D3D12_HEAP_FLAG_NONE, &default_resource_desc_buffer, D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(&d3d_resource))))
         {
-          CERA_ERROR(LogDirectX, "Failed to CreateCommittedResource");
+          log::error("Failed to CreateCommittedResource");
           return nullptr;
         }
 
@@ -181,7 +181,7 @@ namespace cera
 
           if(DX_FAILED(d3d_device->CreateCommittedResource(&upload_heap_properties, D3D12_HEAP_FLAG_NONE, &upload_resource_desc_buffer, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&upload_resource))))
           {
-            CERA_ERROR(LogDirectX, "Failed to CreateComittedResource");
+            log::error("Failed to CreateComittedResource");
             return nullptr;
           }
 
@@ -289,7 +289,7 @@ namespace cera
         wrl::ComPtr<ID3D12Resource> intermediate_resource;
         if(DX_FAILED(d3d_device->CreateCommittedResource(&upload_heap_properties, D3D12_HEAP_FLAG_NONE, &upload_resource_desc_buffer, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&intermediate_resource))))
         {
-          CERA_ERROR(LogDirectX, "Failed to CreateCommittedResource");
+          log::error("Failed to CreateCommittedResource");
           return false;
         }
 
@@ -668,13 +668,13 @@ namespace cera
     {
       if(DX_FAILED(m_d3d_command_allocator->Reset()))
       {
-        CERA_ERROR(LogDirectX, "Failed to reset ID3D12CommandAllocator");
+        log::error("Failed to reset ID3D12CommandAllocator");
         return false;
       }
 
       if(DX_FAILED(m_d3d_command_list->Reset(m_d3d_command_allocator.Get(), nullptr)))
       {
-        CERA_ERROR(LogDirectX, "Failed to reset ID3D12CommandList");
+        log::error("Failed to reset ID3D12CommandList");
         return false;
       }
 

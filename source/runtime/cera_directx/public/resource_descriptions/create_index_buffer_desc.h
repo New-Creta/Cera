@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rex_renderer_core/format.h"
+#include "rhi_format.h"
 
 namespace cera
 {

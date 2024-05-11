@@ -70,13 +70,13 @@ namespace cera
       }
 
       // The size of the smallest block that satisfies the request.
-      auto block_size = smallest_block_it->key;
+      auto block_size = smallest_block_it->first;
 
       // The pointer to the same entry in the FreeListByOffset map.
-      auto offset_it = smallest_block_it->value;
+      auto offset_it = smallest_block_it->second;
 
       // The offset in the descriptor heap.
-      auto offset = offset_it->key;
+      auto offset = offset_it->first;
 
       // Remove the existing free block from the free list.
       m_free_list_by_size.erase(smallest_block_it);
@@ -137,9 +137,9 @@ namespace cera
     void DescriptorAllocatorPage::add_new_block(u32 offset, u32 numDescriptors)
     {
       auto offset_it = m_free_list_by_offset.emplace(offset, numDescriptors);
-      auto size_it = m_free_list_by_size.emplace(numDescriptors, offset_it.inserted_element);
+      auto size_it = m_free_list_by_size.emplace(numDescriptors, offset_it.first);
 
-      offset_it.inserted_element->value.free_list_by_size_it = size_it.inserted_element;
+      offset_it.first->second.free_list_by_size_it = size_it;
     }
 
     void DescriptorAllocatorPage::free_block(u32 offset, u32 numDescriptors)
@@ -168,7 +168,7 @@ namespace cera
       // blocks modifies the numDescriptors variable.
       m_num_free_handles += numDescriptors;
 
-      if(prev_block_it != m_free_list_by_offset.end() && offset == prev_block_it->key + prev_block_it->value.size)
+      if(prev_block_it != m_free_list_by_offset.end() && offset == prev_block_it->first + prev_block_it->second.size)
       {
         // The previous block is exactly behind the block that is to be freed.
         //
@@ -178,15 +178,15 @@ namespace cera
         //
 
         // Increase the block size by the size of merging with the previous block.
-        offset = prev_block_it->key;
-        numDescriptors += prev_block_it->value.size;
+        offset = prev_block_it->first;
+        numDescriptors += prev_block_it->second.size;
 
         // Remove the previous block from the free list.
-        m_free_list_by_size.erase(prev_block_it->value.free_list_by_size_it);
+        m_free_list_by_size.erase(prev_block_it->second.free_list_by_size_it);
         m_free_list_by_offset.erase(prev_block_it);
       }
 
-      if(next_block_it != m_free_list_by_offset.end() && offset + numDescriptors == next_block_it->key)
+      if(next_block_it != m_free_list_by_offset.end() && offset + numDescriptors == next_block_it->first)
       {
         // The next block is exactly in front of the block that is to be freed.
         //
@@ -195,10 +195,10 @@ namespace cera
         // |<------Size-------->|<-----NextBlock.Size----->|
 
         // Increase the block size by the size of merging with the next block.
-        numDescriptors += next_block_it->value.size;
+        numDescriptors += next_block_it->second.size;
 
         // Remove the next block from the free list.
-        m_free_list_by_size.erase(next_block_it->value.free_list_by_size_it);
+        m_free_list_by_size.erase(next_block_it->second.free_list_by_size_it);
         m_free_list_by_offset.erase(next_block_it);
       }
 

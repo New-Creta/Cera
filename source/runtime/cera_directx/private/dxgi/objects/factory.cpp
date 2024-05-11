@@ -1,7 +1,9 @@
 #include "dxgi/objects/factory.h"
 #include "dxgi/dxgi_util.h"
-#include "rex_engine/diagnostics/assert.h"
-#include "rex_std/memory.h"
+
+#include "util/assert.h"
+
+#include <memory>
 
 namespace
 {
@@ -84,7 +86,7 @@ namespace cera
             if (wrl::ComPtr<IDXGIFactory> factory = create_dxgi_factory())
                 return std::make_unique<adaptors::MakeFactory>(std::move(factory));
 
-            REX_ASSERT("Couldn't create dxgi factory!");
+            CERA_ASSERT("Couldn't create dxgi factory!");
             return nullptr;
         }
 

@@ -6,7 +6,7 @@ namespace cera
   namespace renderer
   {
     RenderTarget::RenderTarget()
-        : m_textures(std::Size(AttachmentPoint::NumAttachmentPoints))
+        : m_textures(AttachmentPoint::NumAttachmentPoints)
         , m_size(0, 0)
     {
     }
@@ -148,7 +148,7 @@ namespace cera
 
     void RenderTarget::reset()
     {
-      m_textures = render_target_list(std::Size(AttachmentPoint::NumAttachmentPoints));
+      m_textures = render_target_list(AttachmentPoint::NumAttachmentPoints);
     }
   } // namespace renderer
 } // namespace cera

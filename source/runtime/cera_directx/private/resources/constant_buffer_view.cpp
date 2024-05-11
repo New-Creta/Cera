@@ -1,9 +1,10 @@
 #include "resources/constant_buffer_view.h"
 #include "resources/constant_buffer.h"
+
 #include "directx_device.h"
 
-#include "cera_engine/memory/pointer_math.h"
 #include "util/assert.h"
+#include "util/pointer_math.h"
 
 namespace cera
 {

@@ -3,11 +3,15 @@ add_library(cera_rhi STATIC)
 # Sources
 ## private sources
 target_sources(cera_rhi PRIVATE 
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/private/rhi_clear_bits.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/private/rhi.cpp)
 
 ## public sources
 target_sources(cera_rhi PUBLIC 
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_buffer.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_clear_bits.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_cull_mode.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_fill_mode.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_primitive_topology.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_byte_address_buffer.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_format.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_index_buffer.h

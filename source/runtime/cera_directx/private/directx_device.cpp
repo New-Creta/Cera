@@ -294,7 +294,7 @@ namespace cera
       wrl::ComPtr<ID3D12Debug> debug_interface;
       if(DX_FAILED(D3D12GetDebugInterface(IID_PPV_ARGS(&debug_interface))))
       {
-        CERA_ERROR(LogDirectX, "Unable to get D3D12DebugInterface");
+        log::error("Unable to get D3D12DebugInterface");
         return false;
       }
 
@@ -333,7 +333,7 @@ namespace cera
       std::unique_ptr<dxgi::Factory> factory = dxgi::Factory::create(create_factory_flags);
       if(!factory)
       {
-        CERA_ERROR(LogDirectX, "Failed to create DXGI Factory");
+        log::error("Failed to create DXGI Factory");
         return false;
       }
 
@@ -356,7 +356,7 @@ namespace cera
         }
       }
 
-      CERA_ERROR(LogDirectX, "Unable to create IDXGIAdapter4");
+      log::error("Unable to create IDXGIAdapter4");
       return nullptr;
     }
 

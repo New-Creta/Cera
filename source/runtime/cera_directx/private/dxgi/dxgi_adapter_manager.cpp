@@ -19,7 +19,7 @@ namespace
   {
     cera::wrl::ComPtr<IDXGIFactory6> factory_6 = factory->as<IDXGIFactory6>(); // NOLINT(misc-const-correctness)
 
-    REX_ASSERT_X(factory_6, "IDXGIFactory6 does not exist!");
+    CERA_ASSERT_X(factory_6, "IDXGIFactory6 does not exist!");
 
     return [factory = factory_6.Get()](UINT index, cera::wrl::ComPtr<IDXGIAdapter4>* adapter) { return factory->EnumAdapterByGpuPreference(index, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS((*adapter).GetAddressOf())); };
   }
@@ -27,7 +27,7 @@ namespace
   //-------------------------------------------------------------------------
   std::vector<std::shared_ptr<cera::dxgi::Adapter>> get_adapters(const std::function<HRESULT(UINT, cera::wrl::ComPtr<IDXGIAdapter4>*)>& enumarationFnc)
   {
-    uint32 i                                = 0;
+    u32 i                                = 0;
     cera::wrl::ComPtr<IDXGIAdapter4> adapter = nullptr;
 
     std::vector<std::shared_ptr<cera::dxgi::Adapter>> adapters;
@@ -55,7 +55,7 @@ namespace cera
     {
       load_adapters(factory);
 
-      REX_ASSERT_X(!m_adapters.empty(), "No adapters found");
+      CERA_ASSERT_X(!m_adapters.empty(), "No adapters found");
 
       // this can be fixed once we have vector views/ranges
       std::vector<renderer::GpuDescription> gpus;
@@ -82,21 +82,21 @@ namespace cera
     //-------------------------------------------------------------------------
     std::shared_ptr<Adapter> AdapterManager::selected() const
     {
-      REX_ASSERT_X(m_selected_adapter, "No adapter selected. Call \" select(uint32 adapterID) \" first");
+      CERA_ASSERT_X(m_selected_adapter, "No adapter selected. Call \" select(u32 adapterID) \" first");
 
       return m_selected_adapter;
     }
     //-------------------------------------------------------------------------
     std::shared_ptr<Adapter> AdapterManager::first() const
     {
-      REX_ASSERT_X(!m_adapters.empty(), "No adapters found");
+      CERA_ASSERT_X(!m_adapters.empty(), "No adapters found");
 
       return m_adapters.front();
     }
     //-------------------------------------------------------------------------
     const std::vector<std::shared_ptr<Adapter>>& AdapterManager::all() const
     {
-      REX_ASSERT_X(!m_adapters.empty(), "No adapters found");
+      CERA_ASSERT_X(!m_adapters.empty(), "No adapters found");
 
       return m_adapters;
     }

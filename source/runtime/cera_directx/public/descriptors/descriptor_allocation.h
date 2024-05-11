@@ -34,10 +34,9 @@
  */
 
 #include "util/types.h"
+#include "util/memory_size.h"
 
 #include "directx_util.h"
-
-#include "memory_size.h"
 
 #include <cstdint>
 

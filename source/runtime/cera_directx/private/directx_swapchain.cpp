@@ -165,13 +165,13 @@ namespace cera
         DXGI_SWAP_CHAIN_DESC swap_chain_desc = {};
         if(DX_FAILED(m_dxgi_swap_chain->GetDesc(&swap_chain_desc)))
         {
-          CERA_ERROR(LogDirectX, "Failed to retrieve Swapchain description");
+          log::error("Failed to retrieve Swapchain description");
           return false;
         }
 
         if(DX_FAILED(m_dxgi_swap_chain->ResizeBuffers(s_buffer_count, m_width, m_height, swap_chain_desc.BufferDesc.Format, swap_chain_desc.Flags)))
         {
-          CERA_ERROR(LogDirectX, "Failed to resize buffers");
+          log::error("Failed to resize buffers");
           return false;
         }
 
@@ -220,7 +220,7 @@ namespace cera
       u32 present_flags = m_tearing_supported && !m_fullscreen && !m_v_sync ? DXGI_PRESENT_ALLOW_TEARING : 0;
       if(DX_FAILED(m_dxgi_swap_chain->Present(sync_interval, present_flags)))
       {
-        CERA_ERROR(LogDirectX, "Unable to present!");
+        log::error("Unable to present!");
         return static_cast<u32>(-1);
       }
 
@@ -253,7 +253,7 @@ namespace cera
         wrl::ComPtr<ID3D12Resource> back_buffer;
         if(DX_FAILED(m_dxgi_swap_chain->GetBuffer(i, IID_PPV_ARGS(&back_buffer))))
         {
-          CERA_ERROR(LogDirectX, "Unable to retrieve Swapchain buffer");
+          log::error("Unable to retrieve Swapchain buffer");
           return false;
         }
 

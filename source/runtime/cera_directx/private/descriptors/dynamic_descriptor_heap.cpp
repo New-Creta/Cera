@@ -213,7 +213,7 @@ namespace cera
       wrl::ComPtr<ID3D12DescriptorHeap> descriptor_heap;
       if(DX_FAILED(d3d_device->CreateDescriptorHeap(&descriptor_heap_desc, IID_PPV_ARGS(&descriptor_heap))))
       {
-        CERA_ERROR(LogDirectX, "Failed to CreateDescriptorHeap");
+        log::error("Failed to CreateDescriptorHeap");
         return nullptr;
       }
 

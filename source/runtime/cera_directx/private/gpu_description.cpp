@@ -24,13 +24,7 @@ namespace cera
 
     //-------------------------------------------------------------------------
     GpuDescription::GpuDescription()
-        : name("")
-        , vendor_name("")
-        , vendor_id(0)
-        , device_id(0)
-        , dedicated_video_memory(0)
-        , dedicated_system_memory(0)
-        , shared_system_memory(0)
+        :vendor_id(0), device_id(0), dedicated_video_memory(0), dedicated_system_memory(0), shared_system_memory(0)
     {
     }
   } // namespace renderer

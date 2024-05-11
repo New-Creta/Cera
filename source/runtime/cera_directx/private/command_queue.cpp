@@ -30,7 +30,7 @@ namespace cera
 
         if(DX_FAILED(device->CreateCommandQueue(&desc, IID_PPV_ARGS(&d3d12_command_queue))))
         {
-          CERA_ERROR(LogDirectX, "Unable to create the ID3D12CommandQueue");
+          log::error("Unable to create the ID3D12CommandQueue");
           return nullptr;
         }
 
@@ -43,7 +43,7 @@ namespace cera
 
         if(DX_FAILED((device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)))))
         {
-          CERA_ERROR(LogDirectX, "Unable to create ID3D12Fence");
+          log::error("Unable to create ID3D12Fence");
           return nullptr;
         }
 
