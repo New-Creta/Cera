@@ -2,6 +2,11 @@
 
 namespace cera
 {
+    struct rhi_pipeline_state_object_desc
+    {
+
+    };
+
     class rhi_pipeline_state_object
     {
     public:

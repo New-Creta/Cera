@@ -4,7 +4,7 @@
 
 #include "directx_util.h"
 #include "descriptors/descriptor_allocation.h"
-#include "resources/iresource.h"
+#include "rhi_resource.h"
 
 #include <memory>
 
@@ -15,7 +15,7 @@ namespace cera
     class ConstantBuffer;
     class Device;
 
-    class ConstantBufferView : public IResource
+    class ConstantBufferView : public rhi_resource
     {
     public:
       RESOURCE_CLASS_TYPE(ConstantBufferView);

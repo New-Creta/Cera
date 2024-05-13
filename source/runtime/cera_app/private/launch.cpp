@@ -7,6 +7,9 @@
 
 #include "game_engine.h"
 
+#include "rhi.h"
+#include "rhi_factory.h"
+
 #include "generic_application_creation_params.h"
 
 #include "util/log.h"
@@ -16,20 +19,51 @@ namespace cera
     namespace internal
     {
         std::unique_ptr<game_engine> g_engine = nullptr;
+        std::unique_ptr<rhi> g_rhi = nullptr;
+
+        static bool init_null_rhi()
+        {
+            g_rhi = rhi_factory::create();
+
+#ifdef CERA_PLATFORM_WINDOWS
+            // display_renderer_info();
+#endif
+            g_rhi->initialize();
+            g_rhi->post_initialize();
+        }
+
+        static bool init_platform_rhi()
+        {
+            g_rhi = rhi_factory::create();
+
+#ifdef CERA_PLATFORM_WINDOWS
+            // display_renderer_info();
+#endif
+            g_rhi->initialize();
+            g_rhi->post_initialize();
+        }
         
         static s32 engine_init(const std::shared_ptr<abstract_game>& game, s32 game_window_width, s32 game_window_height)
         {
             // Create the application
             gui_application::create();
 
-            // // Initialize the renderer
-            // if (!renderer::initialize(user_data))
-            // {
-            //     log::error("Renderer initialization failed.");
-            //     return false;
-            // }
-            //
-            //display_renderer_info();
+            if (!g_can_ever_render)
+            {
+                if (!init_null_rhi())
+                {
+                    log::error("Renderer initialization failed.");
+                    return false;
+                }
+            }
+            else
+            {
+                if (!init_platform_rhi())
+                {
+                    log::error("Renderer initialization failed.");
+                    return false;
+                }
+            }
 
             // Create the engine
             g_engine = std::make_unique<game_engine>(gui_application::get(), game);

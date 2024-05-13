@@ -1,13 +1,13 @@
 #pragma once
 
-#include "resources/iresource.h"
+#include "rhi_resource.h"
 #include "resource_descriptions/create_raster_state_desc.h"
 
 namespace cera
 {
   namespace renderer
   {
-    class RasterState : public IResource
+    class RasterState : public rhi_resource
     {
     public:
       RESOURCE_CLASS_TYPE(RasterState);

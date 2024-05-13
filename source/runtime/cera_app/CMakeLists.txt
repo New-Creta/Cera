@@ -58,12 +58,11 @@ GROUPSOURCES(${SOURCE_RUNTIME_DIRECTORY}/cera_app/public public)
 target_include_directories(cera_app PRIVATE ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private)
 
 # Public includes
-target_include_directories(cera_app PUBLIC ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public)
 target_include_directories(cera_app PUBLIC ${SOURCE_RUNTIME_DIRECTORY}/cera_app/public)
 target_include_directories(cera_app PUBLIC ${SOURCE_THIRDPARTY_DIRECTORY}/fmt/include)
 
 # Link libraries
-target_link_libraries(cera_app PUBLIC cera_core)
+target_link_libraries(cera_app PUBLIC ${CERA_RHI_PLATFORM})
 
 if(WIN32)
     target_link_libraries(cera_app PUBLIC Shlwapi.lib)

@@ -4,7 +4,7 @@
 
 #include "directx_util.h"
 
-#include "resources/iresource.h"
+#include "rhi_resource.h"
 
 #include <vector>
 #include <memory>
@@ -35,7 +35,7 @@ namespace cera
 
         class Texture;
 
-        class RenderTarget : public IResource
+        class RenderTarget : public rhi_resource
         {
         public:
             RESOURCE_CLASS_TYPE(RenderTarget);

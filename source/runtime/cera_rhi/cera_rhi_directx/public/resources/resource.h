@@ -8,7 +8,7 @@
 #include "util/types.h"
 #include "util/windows_types.h"
 
-#include "resources/iresource.h"
+#include "rhi_resource.h"
 
 #include "directx_util.h"
 
@@ -18,7 +18,7 @@ namespace cera
     {
         class Device;
 
-        class Resource : public IResource
+        class Resource : public rhi_resource
         {
         public:
             // Get the Device that was used to create this resource

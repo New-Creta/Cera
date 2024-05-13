@@ -51,11 +51,6 @@ namespace cera
       void draw_gui();
 
       /**
-      * End drawing the active frame
-      */
-      void end_frame();
-
-      /**
        * Swap out for a new back buffer to draw to
        */
       void present();

@@ -13,7 +13,17 @@ MACRO(GROUPSOURCES curdir folder_name)
 ENDMACRO(GROUPSOURCES)
 
 add_subdirectory(cera_core)
-add_subdirectory(cera_rhi)
-add_subdirectory(cera_directx)
+add_subdirectory(cera_rhi/cera_rhi_core)
+
+if(CERA_RHI_NULL)
+   # disable rendering
+   add_subdirectory(cera_rhi/cera_rhi_null)
+   SET(CERA_RHI_PLATFORM cera_rhi_null)
+elseif(WIN32)
+   # use directx on windows
+   add_subdirectory(cera_rhi/cera_rhi_directx)
+   SET(CERA_RHI_PLATFORM cera_rhi_directx)
+endif()
+
 add_subdirectory(cera_app)
 

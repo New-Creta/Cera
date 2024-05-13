@@ -6,7 +6,7 @@
 
 #include "directx_util.h"
 
-#include "resources/iresource.h"
+#include "rhi_resource.h"
 
 #include <memory>
 #include <queue>
@@ -18,7 +18,7 @@ namespace cera
     {
         class Device;
 
-        class UploadBuffer : public IResource
+        class UploadBuffer : public rhi_resource
         {
         public:
             RESOURCE_CLASS_TYPE(UploadBuffer);

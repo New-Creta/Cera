@@ -12,3 +12,4 @@ NamespaceIndentation: All
 PointerAlignment: Left
 Standard: Auto
 UseTab: Never
+ColumnLimit: 250

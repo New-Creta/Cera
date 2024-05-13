@@ -5,7 +5,7 @@
 
 #include "directx_util.h"
 
-#include "resources/iresource.h"
+#include "rhi_resource.h"
 
 namespace cera
 {
@@ -13,7 +13,7 @@ namespace cera
   {
     class Device;
 
-    class PipelineStateObject : public IResource
+    class PipelineStateObject : public rhi_resource
     {
     public:
       RESOURCE_CLASS_TYPE(PipelineStateObject);

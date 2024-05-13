@@ -2,6 +2,10 @@
 
 #include "util/log.h"
 
+#ifndef CERA_CAN_EVER_RENDER
+#define CERA_CAN_EVER_RENDER 1
+#endif
+
 namespace cera
 {
     namespace internal
@@ -17,6 +21,8 @@ namespace cera
     bool g_pumping_messages_outside_of_main_loop = false;
     /** Whether or not messages are being pumped */
     bool g_pumping_messages = false;
+    /** Wheter the application can ever render. */
+    bool g_can_ever_render = CERA_CAN_EVER_RENDER;
 
     /** Request that the engine exit as soon as it can safely do so
      * The "reason" is not optional and should be a useful description of why the engine exit is requested
