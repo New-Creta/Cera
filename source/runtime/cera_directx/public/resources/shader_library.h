@@ -1,8 +1,11 @@
 #pragma once
 
 #include "util/windows_types.h"
+#include "util/blob.h"
 
 #include "directx_util.h"
+
+#include "rhi_shader_type.h"
 
 #include <memory>
 #include <string>
@@ -40,15 +43,17 @@ namespace cera
 
       namespace tags
       {
-        static const std::string_view unlit = "unlit";
+        static const std::string unlit = "unlit";
       }
 
       struct ShaderCompilationDesc
       {
-        ShaderType shader_type = ShaderType::None;
-        std::string_view shader_entry_point;
-        std::small_stack_string shader_name;
-        std::tiny_stack_string shader_feature_target;
+        ShaderType shader_type;
+
+        std::string shader_entry_point;
+        std::string shader_name;
+        std::string shader_feature_target;
+
         memory::Blob shader_code;
       };
 

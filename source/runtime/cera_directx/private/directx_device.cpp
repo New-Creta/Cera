@@ -20,6 +20,8 @@
 #include "descriptors/descriptor_allocator.h"
 
 #include "util/log.h"
+#include "util/assert.h"
+#include "util/pointer_math.h"
 
 #include "dxgi/objects/adapter.h"
 #include "dxgi/objects/factory.h"
@@ -56,7 +58,7 @@ namespace cera
         wrl::ComPtr<ID3D12Device2> d3d12_device;
         if(DX_FAILED((D3D12CreateDevice(const_cast<IDXGIAdapter4*>(adaptor->com_ptr()), D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&d3d12_device)))))
         {
-          CERA_ERROR(LogDirectX,"Unable to create D3D12Device");
+          log::error("Unable to create D3D12Device");
           return nullptr;
         }
 
@@ -87,7 +89,7 @@ namespace cera
 
           if(DX_FAILED(info_queue->PushStorageFilter(&new_filter)))
           {
-            CERA_ERROR(LogDirectX,"Unable to push StorageFilter");
+            log::error("Unable to push StorageFilter");
             return nullptr;
           }
         }
@@ -321,7 +323,7 @@ namespace cera
     {
       if(!enable_debug_layer())
       {
-        CERA_ERROR(LogDirectX,"Unable to create ID3D12Debug");
+        log::error("Unable to create ID3D12Debug");
         return false;
       }
 
@@ -351,7 +353,7 @@ namespace cera
         }
         else
         {
-          CERA_ERROR(LogDirectX,"Unable to create ID3D12Device2");
+          log::error("Unable to create ID3D12Device2");
           return nullptr;
         }
       }

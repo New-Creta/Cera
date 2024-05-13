@@ -6,8 +6,6 @@
 #include "directx_feature_shader_model.h"
 #include "directx_swapchain.h"
 
-#include "imgui/gui_renderer.h"
-
 #include "resources/clear_state.h"
 #include "resources/index_buffer.h"
 #include "resources/pipeline_state_object.h"
@@ -17,31 +15,32 @@
 #include "resources/texture.h"
 #include "resources/vertex_buffer.h"
 
-#include "scenegraph/camera_node.h"
-#include "scenegraph/camera_visitor.h"
-#include "scenegraph/mesh_node.h"
-#include "scenegraph/mesh_visitor.h"
-
 #include "dxgi/dxgi_format.h"
 
-#include "cera_engine/scenegraph/scene.h"
-#include "clear_bits.h"
+#include "rhi_clear_bits.h"
+#include "rhi_primitive_topology.h"
+#include "rhi_scissor_rect.h"
+#include "rhi_viewport.h"
+#include "rhi_format.h"
+#include "rhi_renderer_backend.h"
+#include "rhi_renderer_info.h"
+#include "rhi_renderer_output_window_user_data.h"
+#include "rhi_resource_pool.h"
+
 #include "gpu_description.h"
-#include "primitive_topology.h"
-#include "renderer_backend.h"
-#include "renderer_info.h"
-#include "renderer_output_window_user_data.h"
+
 #include "resource_descriptions/create_clear_state_desc.h"
 #include "resource_descriptions/create_index_buffer_desc.h"
 #include "resource_descriptions/create_pipeline_state_desc.h"
 #include "resource_descriptions/create_raster_state_desc.h"
 #include "resource_descriptions/create_texture_desc.h"
 #include "resource_descriptions/create_vertex_buffer_desc.h"
-#include "resource_pool.h"
-#include "scissor_rect.h"
-#include "viewport.h"
+
+#include "util/log.h"
+#include "util/assert.h"
 
 #include <memory>
+#include <unordered_map>
 
 namespace cera
 {
@@ -398,8 +397,8 @@ namespace cera
           m_render_target->attach_texture(AttachmentPoint::Color0, color_texture);
           m_render_target->attach_texture(AttachmentPoint::DepthStencil, depth_texture);
 
-          // Creat imgui renderer
-          m_gui_renderer = std::make_unique<adaptors::MakeImGUIRenderer>(m_device.get(), userData.primary_display_handle, m_swapchain->render_target());
+          //// Creat imgui renderer
+          //m_gui_renderer = std::make_unique<adaptors::MakeImGUIRenderer>(m_device.get(), userData.primary_display_handle, m_swapchain->render_target());
 
           // Setup sccene visitors
           Viewport viewport        = {0.0f, 0.0f, static_cast<float>(userData.window_width), static_cast<float>(userData.window_height), 0.0f, 1.0f};

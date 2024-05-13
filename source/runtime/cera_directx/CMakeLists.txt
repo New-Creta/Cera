@@ -48,7 +48,6 @@ target_sources(cera_directx PRIVATE
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/directx_device.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/directx_feature_level.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/directx_feature_shader_model.cpp
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/directx_mesh_factory.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/directx_renderer.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/directx_swapchain.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/private/directx_util.cpp)
@@ -126,6 +125,8 @@ target_include_directories(cera_directx PRIVATE ${SOURCE_RUNTIME_DIRECTORY}/cera
 
 # Public includes
 target_include_directories(cera_directx PUBLIC ${SOURCE_RUNTIME_DIRECTORY}/cera_directx/public)
+target_include_directories(cera_directx PUBLIC ${SOURCE_THIRDPARTY_DIRECTORY}/directxextra/include)
+target_include_directories(cera_directx PUBLIC ${SOURCE_THIRDPARTY_DIRECTORY}/directxtex)
 
 # Link libraries
 target_link_libraries(cera_directx PUBLIC cera_rhi)

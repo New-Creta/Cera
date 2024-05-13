@@ -5,11 +5,8 @@
 #include <array>
 #include <ostream>
 
-namespace rsl
+namespace cera
 {
-  inline namespace v1
-  {
-
     template <typename T>
     struct Color3
     {
@@ -554,6 +551,4 @@ namespace rsl
       constexpr Rgba Yellow               = color4f_to_rgba(colors::Yellow);
       constexpr Rgba YellowGreen          = color4f_to_rgba(colors::YellowGreen);
     } // namespace rgba_colors
-
-  } // namespace v1
-} // namespace rsl
+} // namespace cera

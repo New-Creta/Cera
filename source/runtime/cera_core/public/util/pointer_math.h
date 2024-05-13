@@ -5,13 +5,13 @@
 
 namespace cera
 {
-  constexpr void* jump_forward(void* mem, count_t count)
+  constexpr void* jump_forward(void* mem, size_t count)
   {
     std::byte* mem_as_bytes = static_cast<std::byte*>(mem);
     mem_as_bytes += count;
     return mem_as_bytes;
   }
-  constexpr void* jump_backward(void* mem, count_t count)
+  constexpr void* jump_backward(void* mem, size_t count)
   {
     std::byte* mem_as_bytes = static_cast<std::byte*>(mem);
     mem_as_bytes -= count;

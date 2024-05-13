@@ -27,7 +27,7 @@ namespace cera
 
     //-------------------------------------------------------------------------
     template <typename T>
-    T rex::memory::BlobReader::read()
+    T memory::BlobReader::read()
     {
       T value = m_blob->read<T>(m_read_offset);
       m_read_offset += sizeof(T);

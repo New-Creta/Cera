@@ -1,5 +1,7 @@
 #pragma once
 
+#include <typeinfo>
+
 #define RESOURCE_CLASS_TYPE(resourceType)                                                                                                                                                                                                                \
   static size_t static_type()                                                                                                                                                                                                                            \
   {                                                                                                                                                                                                                                                      \

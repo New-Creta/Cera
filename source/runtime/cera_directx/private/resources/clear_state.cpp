@@ -15,7 +15,7 @@ namespace cera
 
     ClearState::~ClearState() = default;
 
-    std::Color4f ClearState::rgba() const
+    Color4f ClearState::rgba() const
     {
       return m_desc.rgba;
     }

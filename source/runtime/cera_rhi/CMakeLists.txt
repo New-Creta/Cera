@@ -3,11 +3,20 @@ add_library(cera_rhi STATIC)
 # Sources
 ## private sources
 target_sources(cera_rhi PRIVATE 
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/private/rhi_resource_pool.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/private/rhi_resource_slot.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/private/rhi_resource_slots.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/private/rhi_renderer.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/private/rhi_clear_bits.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/private/rhi.cpp)
 
 ## public sources
 target_sources(cera_rhi PUBLIC 
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_resource_pool.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_resource_slot.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_resource_slots.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_viewport.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_scissor_rect.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_clear_bits.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_cull_mode.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_fill_mode.h
@@ -17,10 +26,15 @@ target_sources(cera_rhi PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_index_buffer.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_pipeline_state_object.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_resource.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_shader_type.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_shader_resource_view.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_texture.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_unordered_access_view.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_vertex_buffer.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_renderer.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_renderer_backend.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_renderer_info.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi_renderer_output_window_user_data.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/public/rhi.h)
 
 # Create the project filters

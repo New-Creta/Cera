@@ -182,7 +182,7 @@ namespace cera
         g_shader_info.clear();
       }
 
-      ShaderInfo find_shader_info(std::string_view name)
+      ShaderInfo find_shader_info(const std::string& name)
       {
         auto it = g_shader_info.find(name);
         if(it == g_shader_info.cend())
@@ -190,7 +190,7 @@ namespace cera
           return {};
         }
 
-        return it->value;
+        return it->second;
       }
     } // namespace shader_library
   }   // namespace renderer

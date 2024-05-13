@@ -3,6 +3,8 @@ add_library(cera_core STATIC)
 # Sources
 ## private sources
 target_sources(cera_core PRIVATE 
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/hash.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/string_op.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/defines.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/blob.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/blob_view.cpp
@@ -17,6 +19,8 @@ target_sources(cera_core PRIVATE
 
 ## public sources
 target_sources(cera_core PUBLIC 
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/hash.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/string_op.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/defines.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/blob.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/blob_view.h

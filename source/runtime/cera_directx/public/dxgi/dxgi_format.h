@@ -9,7 +9,7 @@ namespace cera
     {
         namespace conversions
         {
-            DXGI_FORMAT to_DXGI(Format format);
+            DXGI_FORMAT to_DXGI(renderer::Format format);
         }
     }
 }

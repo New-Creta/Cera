@@ -14,7 +14,7 @@ namespace cera
 
           virtual ~ClearState();
 
-          std::Color4f  rgba()  const;
+          Color4f  rgba()  const;
           f32           depth() const;
           u8            stencil() const;
           ClearBits     flags() const;

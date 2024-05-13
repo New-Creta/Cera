@@ -1,5 +1,4 @@
 #include "util/blob_view.h"
-
 #include "util/blob.h"
 
 namespace cera

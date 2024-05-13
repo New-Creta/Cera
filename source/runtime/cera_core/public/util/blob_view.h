@@ -1,5 +1,7 @@
 #pragma once
 
+#include "util/memory_size.h"
+
 #include <memory>
 
 namespace cera

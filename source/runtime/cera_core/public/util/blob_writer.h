@@ -1,6 +1,6 @@
 #pragma once
 
-#include "util/blob.h" // IWYU pragma: keep
+#include "util/blob.h"
 #include "util/memory_size.h"
 #include "util/types.h"
 
@@ -27,7 +27,7 @@ namespace cera
 
     //-------------------------------------------------------------------------
     template <typename T>
-    void rex::memory::BlobWriter::write(const T& data)
+    void memory::BlobWriter::write(const T& data)
     {
       m_blob->write(&data, sizeof(T), m_write_offset);
       m_write_offset += sizeof(T);

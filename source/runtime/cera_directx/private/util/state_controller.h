@@ -1,12 +1,12 @@
 #pragma once
 
-#include "rex_engine/engine/types.h"
+#include "util/types.h"
 
-#include "rex_std/type_traits.h"
+#include <type_traits>
 
 namespace cera
 {
-  template <typename TState, rsl::enable_if_t<rsl::is_enum_v<TState>, bool> = true>
+  template <typename TState, std::enable_if_t<std::is_enum_v<TState>, bool> = true>
   class StateController
   {
   public:

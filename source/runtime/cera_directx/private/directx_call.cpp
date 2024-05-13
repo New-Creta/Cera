@@ -2,6 +2,7 @@
 #include "directx_util.h"
 
 #include "util/log.h"
+#include "util/string_op.h"
 
 #include <comdef.h>
 
@@ -12,17 +13,20 @@ namespace cera
     namespace directx
     {
       //-------------------------------------------------------------------------
-      std::wstring report_hr_error(HRESULT hr, const std::wstring_view file, const std::wstring_view function,
-                                            s32 line_nr)
+      std::string report_hr_error(HRESULT hr, const std::string_view file, const std::string_view function, s32 line_nr)
       {
         const _com_error err(hr);
-        std::wstring error_message(err.ErrorMessage());
-        log::error(L"DirectX Error\nFile: {}\nFunction: {}\nOn line: {}\nDX error: {}", file, function, line_nr, error_message.c_str());
-        return error_message;
+        
+        std::wstring unicode_error_message(err.ErrorMessage());
+        std::string multibyte_error_message = string_operations::to_multibyte(unicode_error_message.c_str(), unicode_error_message.size());
+        
+        log::error("DirectX Error\nFile: {}\nFunction: {}\nOn line: {}\nDX error: {}", file, function, line_nr, multibyte_error_message.c_str());
+        
+        return multibyte_error_message;
       }
 
       //-------------------------------------------------------------------------
-      DXCall::DXCall(HResult error, std::wstring_view file, std::wstring_view function, s32 line_nr) : m_error(error)
+      DXCall::DXCall(HResult error, std::string_view file, std::string_view function, s32 line_nr) : m_error(error)
       {
         if(FAILED(m_error))
         {
@@ -43,7 +47,7 @@ namespace cera
       }
 
       //-------------------------------------------------------------------------
-      const std::wstring& DXCall::error_message() const
+      const std::string& DXCall::error_message() const
       {
         return m_error_message;
       }

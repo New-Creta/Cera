@@ -54,6 +54,24 @@ static_assert(sizeof(f64) == 8, "float64 must be 8 bytes big"); // NOLINT
 #define CERA_SINGLE_THREADED 0
 #endif
 
+#if defined(CERA_PLATFORM_X86)
+// unsigned integer type returned by the sizeof operator
+using size_t = u32;
+// signed integer type returned when subtracting two pointers
+using ptrdiff = s32;
+// trivial type with alignment requirement as great as any other scalar type
+using max_align = f32;
+#elif defined(CERA_PLATFORM_X64)
+// unsigned integer type returned by the sizeof operator
+using size_t = u64;
+// signed integer type returned when subtracting two pointers
+using ptrdiff = s64;
+// trivial type with alignment requirement as great as any other scalar type
+using max_align = f64;
+#else
+#error "No platform defined"
+#endif
+
 #if CERA_SINGLE_THREADED
 using a_u8 = u8;
 using a_u32 = u32;

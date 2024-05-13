@@ -21,7 +21,7 @@ namespace cera
         flags.add_state(renderer::ClearBits::ClearDepthBuffer);
       }
 
-      std::Color4f rgba;
+      Color4f rgba;
       f32 depth;
       u8 stencil;
       StateController<ClearBits> flags {};
