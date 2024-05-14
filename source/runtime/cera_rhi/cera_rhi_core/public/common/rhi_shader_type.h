@@ -6,7 +6,7 @@ namespace cera
   {
     enum class ShaderType
     {
-      None = 0,
+      NONE = 0,
       VERTEX,
       PIXEL,
       GEOMETRY,

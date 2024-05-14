@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 
 project(cera)
 
-option(CERA_RHI_NULL "Disable renderer initialization" ON)
+option(CERA_RHI_NULL "Disable renderer initialization" OFF)
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     add_definitions(-DCERA_PLATFORM_X64)

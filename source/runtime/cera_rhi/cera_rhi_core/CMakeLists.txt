@@ -15,6 +15,7 @@ target_sources(cera_rhi_core PRIVATE
     ### renderer
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/renderer/rhi_renderer.cpp
 
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/rhi_globals.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/rhi.cpp)
 
 ## public sources
@@ -41,6 +42,8 @@ target_sources(cera_rhi_core PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/common/rhi_primitive_topology.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/common/rhi_format.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/common/rhi_shader_type.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/common/rhi_shader_platform.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/common/rhi_feature_level.h
 
     ### renderer
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/renderer/rhi_renderer.h
@@ -48,6 +51,8 @@ target_sources(cera_rhi_core PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/renderer/rhi_renderer_info.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/renderer/rhi_renderer_output_window_user_data.h
 
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/rhi_factory.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/rhi_globals.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/rhi.h)
 
 # Create the project filters

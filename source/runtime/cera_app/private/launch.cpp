@@ -19,28 +19,34 @@ namespace cera
     namespace internal
     {
         std::unique_ptr<game_engine> g_engine = nullptr;
-        std::unique_ptr<rhi> g_rhi = nullptr;
+        std::unique_ptr<renderer::rhi> g_rhi = nullptr;
 
         static bool init_null_rhi()
         {
-            g_rhi = rhi_factory::create();
+            if (renderer::rhi_factory::is_supported())
+            {
+                g_rhi = renderer::rhi_factory::create();
 
 #ifdef CERA_PLATFORM_WINDOWS
-            // display_renderer_info();
+                // display_renderer_info();
 #endif
-            g_rhi->initialize();
-            g_rhi->post_initialize();
+                g_rhi->initialize();
+                g_rhi->post_initialize();
+            }
         }
 
         static bool init_platform_rhi()
         {
-            g_rhi = rhi_factory::create();
+            if (renderer::rhi_factory::is_supported())
+            {
+                g_rhi = renderer::rhi_factory::create();
 
 #ifdef CERA_PLATFORM_WINDOWS
-            // display_renderer_info();
+                // display_renderer_info();
 #endif
-            g_rhi->initialize();
-            g_rhi->post_initialize();
+                g_rhi->initialize();
+                g_rhi->post_initialize();
+            }
         }
         
         static s32 engine_init(const std::shared_ptr<abstract_game>& game, s32 game_window_width, s32 game_window_height)

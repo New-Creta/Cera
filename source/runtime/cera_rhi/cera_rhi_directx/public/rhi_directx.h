@@ -1,4 +1,4 @@
-#pragma once
+#pragma once 
 
 #include "rhi.h"
 
@@ -6,7 +6,7 @@ namespace cera
 {
     namespace renderer
     {
-        class rhi_null : public rhi
+        class rhi_directx : public rhi
         {
             void initialize() override;
 
@@ -28,5 +28,5 @@ namespace cera
 
             std::shared_ptr<rhi_unordered_address_view> create_unordered_access_view(const std::shared_ptr<rhi_resource>& in_resource, const std::shared_ptr<rhi_resource>& in_counter_resource, const rhi_unordered_access_view_desc& uav) override;
         };
-    } // namespace renderer
-} // namespace cera
+    }
+}

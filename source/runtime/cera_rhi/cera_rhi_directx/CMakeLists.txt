@@ -50,7 +50,12 @@ target_sources(cera_rhi_directx PRIVATE
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_feature_shader_model.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_renderer.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_swapchain.cpp
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_util.cpp)
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_util.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_windows_target_settings.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_windows_target_settings.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_windows_config.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_windows_config.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_directx.cpp)
 
 ## public sources
 target_sources(cera_rhi_directx PUBLIC 
@@ -113,17 +118,18 @@ target_sources(cera_rhi_directx PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/directx_feature_level.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/directx_feature_shader_model.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/directx_swapchain.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/directx_util.h)
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/directx_util.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/rhi_directx.h)
 
 # Create the project filters
 GROUPSOURCES(${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private private)
 GROUPSOURCES(${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public public)
 
 # Private includes
-target_include_directories(cera_rhi_directx PRIVATE ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi_directx/private)
+target_include_directories(cera_rhi_directx PRIVATE ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private)
 
 # Public includes
-target_include_directories(cera_rhi_directx PUBLIC ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi_directx/public)
+target_include_directories(cera_rhi_directx PUBLIC ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public)
 target_include_directories(cera_rhi_directx PUBLIC ${SOURCE_THIRDPARTY_DIRECTORY}/directxextra/include)
 target_include_directories(cera_rhi_directx PUBLIC ${SOURCE_THIRDPARTY_DIRECTORY}/directxtex)
 
