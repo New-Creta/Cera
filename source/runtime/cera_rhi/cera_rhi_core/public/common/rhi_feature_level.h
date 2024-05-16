@@ -14,10 +14,11 @@ namespace cera
          */
         enum class feature_level
         {
-            /** 
-             * Feature level defined by the core capabilities of OpenGL ES3.1 & Metal/Vulkan. 
+            /**
+             * Unspecified feature level
+             * This can be the case when we have no use for rendering capabilities within our program.
              */
-            ES3_1,
+            UNSPECIFIED,
 
             /**
              * Feature level defined by the capabilities of DX11 Shader Model 5.
@@ -28,7 +29,7 @@ namespace cera
              *   Read-only depth or stencil views (eg read depth buffer as SRV while depth test and stencil write)
              * Tessellation is not considered part of Feature Level SM5 and has a separate capability flag.
              */
-            SM5,
+            D3D_SM5,
 
             /**
              * Feature level defined by the capabilities of DirectX 12 hardware feature level 12_2 with Shader Model 6.5
@@ -38,13 +39,13 @@ namespace cera
              *   Sampler feedback
              *   Resource binding tier 3
              */
-            SM6,
+            D3D_SM6,
 
-             /**
-              * Unspecified feature level
-              * This can be the case when we have no use for rendering capabilities within our program.
-              */
-            UNSPECIFIED,
+            /** 
+             * Feature level defined by the core capabilities of OpenGL 4.3
+             * OpenGL shader model 4.3 is equal to DirectX shader model 5
+             */
+            OGL_SM5,
 
             /**
              * Number of feature levels available

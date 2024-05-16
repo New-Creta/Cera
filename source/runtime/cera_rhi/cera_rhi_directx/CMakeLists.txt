@@ -41,6 +41,8 @@ target_sources(cera_rhi_directx PRIVATE
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/util/vertex_types.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/util/state_controller.h
 
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/gpu_helper.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/gpu_helper.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/gpu_description.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/command_list.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/command_queue.cpp

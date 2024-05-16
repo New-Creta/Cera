@@ -8,13 +8,15 @@ namespace cera
         {
             NONE,
             // Supported Direct3D shader models
-            D3D_SM5,
-            D3D_SM6,
+            D3D_SM5,    // Direct 3D shader model 5 mostly used on DX11
+            D3D_SM6,    // Direct 3D shader model 6 mostly used on DX12
             // Supported OpenGL shader models
-            GL_SM4_3,
-            // Supported OpenGL ES shader models
-            GLES_3_1,
-            GLES_3_2
+            OGL_SM5,     // OpenGL shader model 4.3 is equal to DirectX shader model 5
+            
+            // Number of supported platforms
+            NUM
         };
+
+        static constexpr s32 g_num_supported_shader_platform = static_cast<s32>(shader_platform::NUM);
     } // namespace renderer
 }

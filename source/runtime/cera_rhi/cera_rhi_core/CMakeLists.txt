@@ -11,6 +11,11 @@ target_sources(cera_rhi_core PRIVATE
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/common/rhi_resource_slot.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/common/rhi_resource_slots.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/common/rhi_clear_bits.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/common/rhi_data_driven_shader_platform_info.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/common/rhi_data_driven_shader_platform_registry.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/common/rhi_data_driven_shader_platform_registry.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/common/rhi_shader_format_names.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/common/rhi_shader_language_names.cpp
 
     ### renderer
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/renderer/rhi_renderer.cpp
@@ -44,6 +49,9 @@ target_sources(cera_rhi_core PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/common/rhi_shader_type.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/common/rhi_shader_platform.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/common/rhi_feature_level.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/common/rhi_data_driven_shader_platform_info.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/common/rhi_shader_format_names.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/common/rhi_shader_language_names.h
 
     ### renderer
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/renderer/rhi_renderer.h

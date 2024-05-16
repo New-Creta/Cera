@@ -1,4 +1,4 @@
-#include "rhi_directx_config.h"
+#include "rhi_windows_config.h"
 
 #include "common/rhi_shader_platform.h"
 #include "common/rhi_feature_level.h"
@@ -7,7 +7,13 @@ namespace cera
 {
     namespace renderer
     {
-        bool windows_rhi_config::is_empty()
+        const std::array<windows_rhi_type, 3> g_search_order = {
+            windows_rhi_type::D3D12,
+            windows_rhi_type::D3D11,
+            windows_rhi_type::OPENGL,
+        };
+
+        bool windows_rhi_config::is_empty() const
         {
             for (const windows_rhi& rhi : rhi_configs)
             {
@@ -20,12 +26,12 @@ namespace cera
             return true;
         }
 
-        bool windows_rhi_config::is_rhi_supported(windows_rhi_type type)
+        bool windows_rhi_config::is_rhi_supported(windows_rhi_type type) const
         {
             return !rhi_configs[(s32)type].shader_platforms.empty();
         }
 
-        bool windows_rhi_config::is_feature_level_targted(windows_rhi_type type, feature_level in_feature_level)
+        bool windows_rhi_config::is_feature_level_targted(windows_rhi_type type, feature_level in_feature_level) const
         {
             for (feature_level supported_feature_level : rhi_configs[(s32)type].feature_levels)
             {
@@ -37,7 +43,7 @@ namespace cera
             return false;
         }
 
-        std::optional<feature_level> windows_rhi_config::get_highest_supported_feature_level(windows_rhi_type in_windows_rhi)
+        std::optional<feature_level> windows_rhi_config::get_highest_supported_feature_level(windows_rhi_type in_windows_rhi) const
         {
             const std::vector<feature_level>& feature_levels = rhi_configs[(s32)in_windows_rhi].feature_levels;
             if (feature_levels.empty())
@@ -54,7 +60,7 @@ namespace cera
             return max_feature_level;
         }
 
-        std::optional<feature_level> windows_rhi_config::get_next_highest_supported_feature_level(windows_rhi_type in_windows_rhi, feature_level in_feature_level)
+        std::optional<feature_level> windows_rhi_config::get_next_highest_supported_feature_level(windows_rhi_type in_windows_rhi, feature_level in_feature_level) const
         {
             std::vector<feature_level> lower_feature_levels(rhi_configs[(s32)in_windows_rhi].feature_levels);
 
@@ -78,15 +84,9 @@ namespace cera
             return {};
         }
 
-        std::optional<windows_rhi_type> windows_rhi_config::get_first_rhi_with_feature_level_support(feature_level in_feature_level)
+        std::optional<windows_rhi_type> windows_rhi_config::get_first_rhi_with_feature_level_support(feature_level in_feature_level) const
         {
-            static const const windows_rhi_type search_order[] = {
-                windows_rhi_type::D3D12,
-                windows_rhi_type::D3D11,
-                windows_rhi_type::OPENGL,
-            };
-
-            for (windows_rhi_type windows_rhi_type : search_order)
+            for (windows_rhi_type windows_rhi_type : g_search_order)
             {
                 if (is_feature_level_targted(windows_rhi_type, in_feature_level))
                 {

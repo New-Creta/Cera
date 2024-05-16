@@ -34,14 +34,16 @@ namespace cera
 
             std::array<windows_rhi, g_num_windows_rhi_types> rhi_configs;
 
-            bool is_empty();
-            bool is_rhi_supported(windows_rhi_type type);
-            bool is_feature_level_targted(windows_rhi_type type, feature_level in_feature_level);
+            bool is_empty() const;
+            bool is_rhi_supported(windows_rhi_type type) const;
+            bool is_feature_level_targted(windows_rhi_type type, feature_level in_feature_level) const;
 
-            std::optional<feature_level> get_highest_supported_feature_level(windows_rhi_type in_windows_rhi);
-            std::optional<feature_level> get_next_highest_supported_feature_level(windows_rhi_type in_windows_rhi, feature_level in_feature_level);
+            std::optional<feature_level> get_highest_supported_feature_level(windows_rhi_type in_windows_rhi) const;
+            std::optional<feature_level> get_next_highest_supported_feature_level(windows_rhi_type in_windows_rhi, feature_level in_feature_level) const;
 
-            std::optional<windows_rhi_type> get_first_rhi_with_feature_level_support(feature_level in_feature_level);
+            std::optional<windows_rhi_type> get_first_rhi_with_feature_level_support(feature_level in_feature_level) const;
         };
+
+        extern std::array<windows_rhi_type, 3> g_search_order;
     }
 }
