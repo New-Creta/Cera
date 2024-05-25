@@ -2,8 +2,8 @@
 
 #include "util/types.h"
 
-#include "rhi_cull_mode.h"
-#include "rhi_fill_mode.h"
+#include "common/rhi_cull_mode.h"
+#include "common/rhi_fill_mode.h"
 
 namespace cera
 {

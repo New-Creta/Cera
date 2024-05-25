@@ -1,4 +1,4 @@
-#include "rhi_resource_slot.h"
+#include "common/rhi_resource_slot.h"
 
 namespace cera
 {

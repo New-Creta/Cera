@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rhi_resource.h"
+#include "resources/rhi_resource.h"
 
 #include <memory>
 

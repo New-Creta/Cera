@@ -2,7 +2,7 @@
 
 #include "util/types.h"
 
-#include "rhi_format.h"
+#include "common/rhi_format.h"
 
 namespace cera
 {

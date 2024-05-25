@@ -8,12 +8,14 @@ namespace cera
     {
         class rhi;
 
+        enum class feature_level;
+
         namespace rhi_factory
         {
             /**
             * Check if the requested feature level set is supported on this device
             */
-            bool is_supported();
+            bool is_supported(feature_level in_feature_level);
 
             /**
              *	Each platform that utilizes dynamic RHIs should implement this function

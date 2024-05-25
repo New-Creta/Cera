@@ -1,7 +1,10 @@
 #pragma once
 
-#include "rhi_resource.h"
+#include "resources/rhi_resource.h"
 #include "resource_descriptions/create_raster_state_desc.h"
+
+#include "common/rhi_fill_mode.h"
+#include "common/rhi_cull_mode.h"
 
 namespace cera
 {

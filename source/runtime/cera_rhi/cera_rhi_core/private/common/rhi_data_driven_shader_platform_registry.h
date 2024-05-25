@@ -1,5 +1,9 @@
 #pragma once
 
+#include "common/rhi_shader_platform.h"
+#include "common/rhi_feature_level.h"
+
+#include <string>
 #include <vector>
 
 namespace cera

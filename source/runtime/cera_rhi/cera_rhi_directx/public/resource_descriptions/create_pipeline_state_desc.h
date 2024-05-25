@@ -1,6 +1,7 @@
 #pragma once
 
-#include "rhi_resource_slot.h"
+#include "common/rhi_resource_slot.h"
+
 #include "util/hash.h"
 
 namespace cera

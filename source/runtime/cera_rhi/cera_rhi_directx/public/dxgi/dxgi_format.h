@@ -1,6 +1,7 @@
 #pragma once
 
-#include "rhi_format.h"
+#include "common/rhi_format.h"
+
 #include "dxgi/dxgi_util.h"
 
 namespace cera

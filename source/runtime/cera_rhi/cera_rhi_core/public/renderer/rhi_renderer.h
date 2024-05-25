@@ -3,7 +3,7 @@
 #include "util/types.h"
 #include "util/memory_size.h"
 
-#include "rhi_format.h"
+#include "common/rhi_format.h"
 
 namespace cera
 { 

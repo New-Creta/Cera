@@ -5,7 +5,7 @@
 #include "generic_window.h"
 #include "generic_window_definition.h"
 
-#include "core_platform.h"
+#include "core_application.h"
 #include "core_globals.h"
 
 #include "gui_application.h"
@@ -118,7 +118,7 @@ namespace cera
         };
 
         const bool should_preserve_aspect_ratio = get_project_setting_bool("bShouldWindowPreserveAspectRatio", true);
-	    const bool use_borderless_window = get_project_setting_bool("bUseBorderlessWindow", false) && PLATFORM_SUPPORTS_BORDERLESS_WINDOW;
+	    const bool use_borderless_window = get_project_setting_bool("bUseBorderlessWindow", false) && platform::g_platform_supports_borderless_window;
 	    const bool allow_window_resize = get_project_setting_bool("bAllowWindowResize", true);
 	    const bool allow_close = get_project_setting_bool("bAllowClose", true);
 	    const bool allow_maximize = get_project_setting_bool("bAllowMaximize", true);

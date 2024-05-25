@@ -3,7 +3,7 @@
 #include "util/assert.h"
 #include "util/types.h"
 
-#include "rhi_resource.h"
+#include "resources/rhi_resource.h"
 #include "rhi_resource_slot.h"
 #include "rhi_resource_slots.h"
 

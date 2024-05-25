@@ -4,6 +4,7 @@
 
 #include "core_globals.h"
 #include "core_platform.h"
+#include "core_application.h"
 
 #include "game_engine.h"
 
@@ -130,7 +131,7 @@ namespace cera
         }
 
         // run the engine
-        while(!is_engine_exit_requested())
+        while(!platform::is_engine_exit_requested())
         {
             internal::engine_run(params.game);
         }

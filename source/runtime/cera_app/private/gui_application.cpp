@@ -3,6 +3,7 @@
 #include "generic_application.h"
 
 #include "core_platform.h"
+#include "core_application.h"
 
 namespace cera
 {

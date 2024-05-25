@@ -1,5 +1,7 @@
 #pragma once
 
+#include "util/types.h"
+
 namespace cera
 {
     namespace renderer

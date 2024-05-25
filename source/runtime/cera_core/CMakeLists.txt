@@ -2,7 +2,14 @@ add_library(cera_core STATIC)
 
 # Sources
 ## private sources
+if(WIN32)
+target_sources(cera_core PUBLIC
+        ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/windows/win32_platform_helpers.h)
+    target_sources(cera_core PRIVATE 
+        ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/windows/win32_platform_helpers.cpp)
+endif()
 target_sources(cera_core PRIVATE 
+    ### util
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/hash.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/string_op.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/util/defines.cpp
@@ -19,6 +26,7 @@ target_sources(cera_core PRIVATE
 
 ## public sources
 target_sources(cera_core PUBLIC 
+    ### util
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/hash.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/string_op.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/defines.h
@@ -31,7 +39,9 @@ target_sources(cera_core PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/memory_size.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/log.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/assert.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/types.h)
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/util/types.h
+    
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/core_platform.h)
 
 # Create the project filters
 GROUPSOURCES(${SOURCE_RUNTIME_DIRECTORY}/cera_core/private private)

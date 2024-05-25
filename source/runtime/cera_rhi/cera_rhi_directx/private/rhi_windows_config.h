@@ -4,6 +4,7 @@
 
 #include <array>
 #include <optional>
+#include <string>
 
 namespace cera
 {
@@ -19,6 +20,25 @@ namespace cera
             OPENGL,
             NUM
         };
+
+        namespace conversions
+        {
+            inline const std::string to_string(windows_rhi_type in_windows_rhi)
+            {
+                switch (in_windows_rhi)
+                {
+                case windows_rhi_type::D3D11:
+                    return "D3D11";
+                case windows_rhi_type::D3D12:
+                    return "D3D12";
+                case windows_rhi_type::OPENGL:
+                    return "OpenGL";
+
+                default:
+                    return "<unknown>";
+                }
+            }
+        }
 
         static constexpr s32 g_num_windows_rhi_types = static_cast<s32>(windows_rhi_type::NUM);
 

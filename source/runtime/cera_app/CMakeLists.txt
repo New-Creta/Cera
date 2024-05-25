@@ -1,18 +1,16 @@
 add_library(cera_app STATIC)
 
 # Sources
-## private sources
 if(WIN32)
+    ## private sources
     target_sources(cera_app PRIVATE 
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_application_helpers.cpp
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_application.cpp
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_entrypoint.cpp
-        ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_platform.cpp
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_window.cpp
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_application_helpers.h
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_application.h
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_min.h
-        ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_platform.h
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_system_includes.h
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_system_includes.cpp
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_window.h)
@@ -23,10 +21,10 @@ target_sources(cera_app PRIVATE
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/util/clock.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/util/guard_value.h
     
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/abstract_game.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/core_application.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/core_globals.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/core_globals.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/core_platform.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/abstract_game.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/events.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/game_engine.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/game_engine.h
@@ -66,6 +64,7 @@ target_link_libraries(cera_app PUBLIC ${CERA_RHI_PLATFORM})
 
 if(WIN32)
     target_link_libraries(cera_app PUBLIC Shlwapi.lib)
+    target_link_libraries(cera_app PUBLIC shcore.lib)
     target_link_libraries(cera_app PUBLIC dwmapi.lib)
 endif()
 

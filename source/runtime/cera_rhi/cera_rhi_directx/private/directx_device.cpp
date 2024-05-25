@@ -107,7 +107,7 @@ namespace cera
         wrl::ComPtr<IDXGIFactory5> dxgi_factory5;
         if(DX_SUCCESS(adapter->com_ptr()->GetParent(IID_PPV_ARGS(&dxgi_factory))))
         {
-          // Now get the DXGIFactory5 so I can use the IDXGIFactory5::CheckFeatureSupport method.
+            // Now get the DXGIFactory5 so I can use the IDXGIFactory5::CheckFeatureSupport method.
             if (DX_SUCCESS(dxgi_factory.As(&dxgi_factory5)))
             {
                 BOOL dxgi_allow_tearing = FALSE;

@@ -39,7 +39,6 @@ target_sources(cera_rhi_directx PRIVATE
     ### util
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/util/thread_name.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/util/vertex_types.cpp
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/util/state_controller.h
 
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/gpu_helper.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/gpu_helper.h
@@ -87,6 +86,7 @@ target_sources(cera_rhi_directx PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/resources/raster_state.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/resources/render_target.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/resources/resource_state_tracker.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/resources/resource_state_tracker.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/resources/resource.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/resources/root_signature.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/resources/shader_library.h
@@ -101,6 +101,7 @@ target_sources(cera_rhi_directx PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/util/thread_name.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/util/vertex_types.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/util/windows_types.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/util/state_controller.h
 
     ### resource descriptions
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/resource_descriptions/create_clear_state_desc.h

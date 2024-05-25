@@ -2,6 +2,8 @@
 
 #include "util/types.h"
 
+#include <string>
+
 namespace cera
 {
     namespace renderer
@@ -54,5 +56,23 @@ namespace cera
         };
 
         static constexpr s32 g_num_feature_levels = static_cast<s32>(feature_level::NUM);
+
+        namespace conversions
+        {
+            inline const std::string to_string(feature_level in_feature_level)
+            {
+                switch (in_feature_level)
+                {
+                case feature_level::OGL_SM5:
+                    return "OpenGL Shader Model 4.3";
+                case feature_level::D3D_SM5:
+                    return "Direct 3D Shader Model 5";
+                case feature_level::D3D_SM6:
+                    return "Direct 3D Shader Model 6";
+                default:
+                    return "<unknown>";
+                }
+            }
+        }
     } // namespace renderer
 }

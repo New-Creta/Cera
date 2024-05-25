@@ -8,7 +8,7 @@
 #include "util/types.h"
 #include "util/windows_types.h"
 
-#include "rhi_resource.h"
+#include "resources/rhi_resource.h"
 
 #include "directx_util.h"
 

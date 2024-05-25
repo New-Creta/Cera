@@ -1,6 +1,5 @@
 #include "windows/win32_application_helpers.h"
 #include "windows/win32_min.h"
-#include "windows/win32_platform.h"
 #include "windows/win32_application.h"
 #include "windows/win32_system_includes.h"
 
@@ -10,8 +9,6 @@
 #include "util/types.h"
 
 #include <shcore.h>
-
-#pragma comment(lib, "shcore.lib")
 
 namespace cera
 {

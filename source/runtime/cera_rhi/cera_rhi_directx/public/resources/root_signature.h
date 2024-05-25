@@ -5,7 +5,7 @@
 
 #include "directx_util.h"
 
-#include "rhi_resource.h"
+#include "resources/rhi_resource.h"
 
 namespace cera
 {

@@ -1,4 +1,4 @@
-#include "rhi_resource_slots.h"
+#include "common/rhi_resource_slots.h"
 
 #include "util/assert.h"
 #include "util/log.h"

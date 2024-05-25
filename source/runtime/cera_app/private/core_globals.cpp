@@ -1,18 +1,11 @@
 #include "core_globals.h"
 
-#include "util/log.h"
-
 #ifndef CERA_CAN_EVER_RENDER
 #define CERA_CAN_EVER_RENDER 1
 #endif
 
 namespace cera
 {
-    namespace internal
-    {
-        bool g_is_requesting_exit = false;	/* Indicates that MainLoop() should be exited at the end of the current iteration */
-    }
-
     /** Whether the main loop is still running. */
     bool g_is_running = false;
     /** When enabled the user is able to specify command line arguments to modify the game window setup*/
@@ -23,19 +16,4 @@ namespace cera
     bool g_pumping_messages = false;
     /** Wheter the application can ever render. */
     bool g_can_ever_render = CERA_CAN_EVER_RENDER;
-
-    /** Request that the engine exit as soon as it can safely do so
-     * The "reason" is not optional and should be a useful description of why the engine exit is requested
-     */
-    void request_engine_exit(const std::string& reason)
-    {
-        log::info("Engine exit was requested with reason: {}", reason);
-        
-        internal::g_is_requesting_exit = true;
-    }
-    /** Check if an engine exit was requested */
-    bool is_engine_exit_requested()
-    {
-        return internal::g_is_requesting_exit;
-    }
 }

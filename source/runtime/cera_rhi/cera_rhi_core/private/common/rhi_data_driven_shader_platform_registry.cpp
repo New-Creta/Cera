@@ -1,5 +1,4 @@
 #include "common/rhi_data_driven_shader_platform_registry.h"
-#include "common/rhi_data_driven_shader_platform_settings.h"
 
 #include "common/rhi_feature_level.h"
 #include "common/rhi_shader_format_names.h"

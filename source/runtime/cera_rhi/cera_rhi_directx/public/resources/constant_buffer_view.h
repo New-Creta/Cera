@@ -2,9 +2,11 @@
 
 #include "util/types.h"
 
-#include "directx_util.h"
 #include "descriptors/descriptor_allocation.h"
-#include "rhi_resource.h"
+
+#include "resources/rhi_resource.h"
+
+#include "directx_util.h"
 
 #include <memory>
 

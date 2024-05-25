@@ -1,6 +1,5 @@
 #include "common/rhi_data_driven_shader_platform_info.h"
 #include "common/rhi_data_driven_shader_platform_registry.h"
-#include "common/rhi_data_driven_shader_platform_settings.h"
 #include "common/rhi_shader_language_names.h"
 
 #include "util/assert.h"
@@ -9,7 +8,7 @@ namespace cera
 {
     namespace renderer
     {
-        std::array<data_driven_shader_platform_info, g_num_supported_shader_platform> data_driven_shader_platform_info::s_infos;
+        std::array<data_driven_shader_platform_info, g_num_supported_shader_platform> data_driven_shader_platform_info::s_infos = {};
 
         data_driven_shader_platform_info::data_driven_shader_platform_info()
         {
@@ -82,7 +81,7 @@ namespace cera
 
         void data_driven_shader_platform_info::parse_data_driven_shader_platform_settings(const data_driven_shader_platform_settings& settings)
         {
-            data_driven_shader_platform_info& info = s_infos[settings.shader_platform];
+            data_driven_shader_platform_info& info = s_infos[(s32)settings.shader_platform];
 
             info.m_name                 = settings.name;
             info.m_language             = settings.language;

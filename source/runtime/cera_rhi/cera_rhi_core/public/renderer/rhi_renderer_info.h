@@ -2,6 +2,8 @@
 
 #include "util/types.h"
 
+#include <string>
+
 namespace cera
 {
   namespace renderer

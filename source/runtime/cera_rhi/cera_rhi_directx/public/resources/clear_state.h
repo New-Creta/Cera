@@ -1,7 +1,7 @@
 #pragma once
 
 #include "resource_descriptions/create_clear_state_desc.h"
-#include "rhi_resource.h"
+#include "resources/rhi_resource.h"
 
 namespace cera
 {

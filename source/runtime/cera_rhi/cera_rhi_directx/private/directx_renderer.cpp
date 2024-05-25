@@ -17,15 +17,15 @@
 
 #include "dxgi/dxgi_format.h"
 
-#include "rhi_clear_bits.h"
-#include "rhi_format.h"
-#include "rhi_primitive_topology.h"
-#include "rhi_renderer_backend.h"
-#include "rhi_renderer_info.h"
-#include "rhi_renderer_output_window_user_data.h"
-#include "rhi_resource_pool.h"
-#include "rhi_scissor_rect.h"
-#include "rhi_viewport.h"
+#include "common/rhi_clear_bits.h"
+#include "common/rhi_format.h"
+#include "common/rhi_primitive_topology.h"
+#include "common/rhi_resource_pool.h"
+#include "common/rhi_scissor_rect.h"
+#include "common/rhi_viewport.h"
+#include "renderer/rhi_renderer_backend.h"
+#include "renderer/rhi_renderer_info.h"
+#include "renderer/rhi_renderer_output_window_user_data.h"
 
 #include "gpu_description.h"
 

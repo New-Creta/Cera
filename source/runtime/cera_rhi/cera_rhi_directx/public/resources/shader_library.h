@@ -5,7 +5,7 @@
 
 #include "directx_util.h"
 
-#include "rhi_shader_type.h"
+#include "common/rhi_shader_type.h"
 
 #include <memory>
 #include <string>

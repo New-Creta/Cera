@@ -1,7 +1,8 @@
-#include "rhi_renderer.h"
-#include "rhi_renderer_backend.h"
-#include "rhi_resource_slot.h"
-#include "rhi_renderer_info.h"
+#include "renderer/rhi_renderer.h"
+#include "renderer/rhi_renderer_backend.h"
+#include "renderer/rhi_renderer_info.h"
+
+#include "common/rhi_resource_slot.h"
 
 namespace cera
 {

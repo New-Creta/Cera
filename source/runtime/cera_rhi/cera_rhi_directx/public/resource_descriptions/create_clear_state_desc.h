@@ -3,7 +3,8 @@
 #include "util/state_controller.h"
 #include "util/types.h"
 #include "util/color.h"
-#include "rhi_clear_bits.h"
+
+#include "common/rhi_clear_bits.h"
 
 namespace cera
 {
