@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gpu_description.h"
+#include "dxgi/objects/adapter.h"
 
 #include <functional>
 #include <memory>
@@ -10,6 +10,6 @@ namespace cera
 {
   namespace renderer
   {
-    using GpuScorerFn = std::function<size_t(const std::vector<GpuDescription>&)>;
+    using adapter_scorer_fn = std::function<size_t(const std::vector<dxgi::adapter_description>&)>;
   }
 } // namespace cera

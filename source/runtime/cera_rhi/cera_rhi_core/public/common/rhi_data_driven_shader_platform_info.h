@@ -25,6 +25,7 @@ namespace cera
             static const bool           is_language_d3d(shader_platform platform);
             static const bool           is_language_ogl(shader_platform platform);
             static const bool           is_supports_msaa(shader_platform platform);
+            static const bool           is_supports_bindless(shader_platform platform);
             
             static const feature_level  get_max_feature_level(shader_platform platform);
 
@@ -43,6 +44,7 @@ namespace cera
             feature_level m_max_feature_level;
 
             s32 m_supports_msaa;
+            s32 m_supports_bindless;
         };
     } // namespace renderer
 } // namespace cera

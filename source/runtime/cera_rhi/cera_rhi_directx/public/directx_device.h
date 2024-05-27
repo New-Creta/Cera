@@ -16,7 +16,9 @@ namespace cera
 {
     namespace dxgi
     {
-      class Adapter;
+        class adapter;
+
+        struct adapter_description;
     }
 
     namespace renderer
@@ -36,42 +38,34 @@ namespace cera
         class Resource;
         class Swapchain;
 
-        struct GpuDescription;
-
-        class Device : public wrl::ComObject<ID3D12Device2>
+        class device : public wrl::ComObject<ID3D12Device2>
         {
-        public:
-            /**
-             * Always enable the debug layer before doing anything DX12 related so all possible errors generated while creating
-             * DX12 objects are caught by the debug layer.
-             */
-            static bool enable_debug_layer();
-
+          public:
             /**
              * Reports info about the lifetime of an object or objects.
-            */
+             */
             static void report_live_objects();
 
             /**
              * Create a new device
-            */
-            static std::shared_ptr<Device> create();
+             */
+            static std::shared_ptr<device> create(const std::shared_ptr<dxgi::adapter>& in_adapter, bool in_enable_debug_layer);
 
-        public:
+          public:
             /**
-            * Get information about the selected adapter
-            */
-            const GpuDescription& adapter_description() const;
+             * Get information about the selected adapter
+             */
+            const dxgi::adapter_description& adapter_description() const;
 
             /**
              * Get the adapter that was used to create this device.
              */
-            IDXGIAdapter4* dxgi_adapter();
+            IDXGIAdapter* dxgi_adapter();
 
             /**
-            * Get the adapter that was used to create this device.
-            */
-            const IDXGIAdapter4* dxgi_adapter() const;
+             * Get the adapter that was used to create this device.
+             */
+            const IDXGIAdapter* dxgi_adapter() const;
 
             /**
              * Get the d3d device.
@@ -79,8 +73,8 @@ namespace cera
             ID3D12Device2* d3d_device();
 
             /**
-            * Get the d3d device.
-            */
+             * Get the d3d device.
+             */
             const ID3D12Device2* d3d_device() const;
 
             /**
@@ -135,49 +129,48 @@ namespace cera
 
             std::shared_ptr<RootSignature> create_root_signature(const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc);
 
-            template<class TPipelineStateStream>
-            std::shared_ptr<PipelineStateObject> create_pipeline_state_object(TPipelineStateStream& pipelineStateStream);
+            template <class TPipelineStateStream> std::shared_ptr<PipelineStateObject> create_pipeline_state_object(TPipelineStateStream& pipelineStateStream);
 
             std::shared_ptr<ConstantBufferView> create_constant_buffer_view(const std::shared_ptr<ConstantBuffer>& constantBuffer, size_t offset = 0);
             std::shared_ptr<ShaderResourceView> create_shader_resource_view(const std::shared_ptr<Resource>& resource, const D3D12_SHADER_RESOURCE_VIEW_DESC* srv = nullptr);
             std::shared_ptr<UnorderedAccessView> create_unordered_access_view(const std::shared_ptr<Resource>& inResource, const std::shared_ptr<Resource>& inCounterResource = nullptr, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav = nullptr);
 
             /**
-            * Flush all command queues.
-            */
+             * Flush all command queues.
+             */
             void flush();
 
             /**
-            * Get the highest root signature version
-            */
+             * Get the highest root signature version
+             */
             D3D_ROOT_SIGNATURE_VERSION highest_root_signature_version() const;
 
             /**
              * Check if the requested multisample quality is supported for the given format.
              */
             DXGI_SAMPLE_DESC multisample_quality_levels(DXGI_FORMAT format, u32 numSamples = D3D12_MAX_MULTISAMPLE_SAMPLE_COUNT, D3D12_MULTISAMPLE_QUALITY_LEVEL_FLAGS flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE) const;
-            
+
             /**
-            * Check if tearing is supported
-            */
+             * Check if tearing is supported
+             */
             bool is_tearing_supported() const;
 
-        protected:
+          protected:
             /**
-            * The device's constructor should always be private to prevent direct construction calls
-            */
-          Device(std::shared_ptr<dxgi::Adapter> adaptor, wrl::ComPtr<ID3D12Device2> device);
+             * The device's constructor should always be private to prevent direct construction calls
+             */
+            device(std::shared_ptr<dxgi::adapter> adaptor, wrl::ComPtr<ID3D12Device2> device, bool is_debug);
 
-            virtual ~Device();
+            virtual ~device();
 
-        private:
+          private:
             /**
              * Execute logic to create the pipeline state object
-            */
-            std::shared_ptr<PipelineStateObject> do_create_pipeline_state_object( const D3D12_PIPELINE_STATE_STREAM_DESC& pipelineStateStreamDesc );
+             */
+            std::shared_ptr<PipelineStateObject> do_create_pipeline_state_object(const D3D12_PIPELINE_STATE_STREAM_DESC& pipelineStateStreamDesc);
 
-        private:
-            std::shared_ptr<dxgi::Adapter> m_adapter;
+          private:
+            std::shared_ptr<dxgi::adapter> m_adapter;
 
             std::unique_ptr<CommandQueue> m_direct_command_queue;
             std::unique_ptr<CommandQueue> m_compute_command_queue;
@@ -186,16 +179,16 @@ namespace cera
             D3D_ROOT_SIGNATURE_VERSION m_highest_root_signature_version;
 
             bool m_tearing_supported;
+            bool m_is_debug;
 
             std::unique_ptr<DescriptorAllocator> m_descriptor_allocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
         };
 
-        template<class TPipelineStateStream>
-        std::shared_ptr<PipelineStateObject> Device::create_pipeline_state_object(TPipelineStateStream& pipelineStateStream)
+        template <class TPipelineStateStream> std::shared_ptr<PipelineStateObject> Device::create_pipeline_state_object(TPipelineStateStream& pipelineStateStream)
         {
-            D3D12_PIPELINE_STATE_STREAM_DESC pipeline_state_stream_desc = { sizeof(TPipelineStateStream), &pipelineStateStream };
+            D3D12_PIPELINE_STATE_STREAM_DESC pipeline_state_stream_desc = {sizeof(TPipelineStateStream), &pipelineStateStream};
 
             return do_create_pipeline_state_object(pipeline_state_stream_desc);
         }
-    }
-}
+    } // namespace renderer
+} // namespace cera

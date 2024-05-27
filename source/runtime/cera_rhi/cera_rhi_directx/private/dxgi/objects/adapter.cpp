@@ -1,7 +1,9 @@
 #include "dxgi/objects/adapter.h"
 #include "dxgi/dxgi_util.h"
 
-#include "gpu_description.h"
+#include "directx_call.h"
+
+#include "rhi_globals.h"
 
 #include "util/log.h"
 #include "util/types.h"
@@ -14,86 +16,138 @@
 #include <dxgi.h>
 #include <string>
 
-namespace
-{
-    const u32 g_adapter_description_size = 64u;
-
-    //-------------------------------------------------------------------------
-    /**
-     * The VendorId is a unique identifier assigned by the PCI-SIG (Peripheral Component Interconnect Special Interest
-     * Group) to identify the manufacturer of a PCI device, including graphics adapters. The VendorId is a 16-bit
-     * unsigned integer that is typically included in the PCI Configuration space of the device.
-     */
-    enum class vendor
-    {
-        UNKNOWN = 0,
-        AMD = 0x1002,
-        NVIDIA = 0x10DE,
-        INTEL = 0x163C
-    };
-
-    //-------------------------------------------------------------------------
-    std::string vendor_to_string(s32 v)
-    {
-        // Enum reflection is not possible here as the integer values are
-        // outside the valid range of values [0, 127] for this enumeration type
-        switch (static_cast<vendor>(v))
-        {
-        case vendor::AMD:
-            return std::string("AMD");
-        case vendor::NVIDIA:
-            return std::string("NVIDIA");
-        case vendor::INTEL:
-            return std::string("INTEL");
-        default:
-            return std::string("Unknown Vendor");
-        }
-    }
-
-    //-------------------------------------------------------------------------
-    template <typename dxgi_adapter_desc>
-    cera::renderer::GpuDescription convert_description(const dxgi_adapter_desc& dxgi_desc)
-    {
-        cera::renderer::GpuDescription desc;
-
-        desc.name = cera::string_operations::to_multibyte(dxgi_desc.Description, g_adapter_description_size);
-        desc.vendor_name = vendor_to_string(dxgi_desc.VendorId);
-
-        desc.vendor_id = dxgi_desc.VendorId;
-        desc.device_id = dxgi_desc.DeviceId;
-
-        desc.dedicated_video_memory = cera::memory_size(dxgi_desc.DedicatedVideoMemory);
-        desc.dedicated_system_memory = cera::memory_size(dxgi_desc.DedicatedSystemMemory);
-        desc.shared_system_memory = cera::memory_size(dxgi_desc.SharedSystemMemory);
-
-        return desc;
-    }
-
-    //-------------------------------------------------------------------------
-    cera::renderer::GpuDescription get_description(const cera::wrl::ComPtr<IDXGIAdapter4>& adapter)
-    {
-        cera::renderer::GpuDescription desc;
-
-        DXGI_ADAPTER_DESC1 dxgi_desc;
-        adapter->GetDesc1(&dxgi_desc);
-        desc = convert_description(dxgi_desc);
-
-        return desc;
-    }
-} // namespace
-
 namespace cera
 {
     namespace dxgi
     {
         //-------------------------------------------------------------------------
-        Adapter::Adapter(wrl::ComPtr<IDXGIAdapter4>&& adapter)
-            : ComObject(std::move(adapter)), m_description(::get_description(com_ptr()))
+        const TCHAR* get_feature_level_string(D3D_FEATURE_LEVEL FeatureLevel)
         {
+            switch (FeatureLevel)
+            {
+            case D3D_FEATURE_LEVEL_9_1:
+                return TEXT("9_1");
+            case D3D_FEATURE_LEVEL_9_2:
+                return TEXT("9_2");
+            case D3D_FEATURE_LEVEL_9_3:
+                return TEXT("9_3");
+            case D3D_FEATURE_LEVEL_10_0:
+                return TEXT("10_0");
+            case D3D_FEATURE_LEVEL_10_1:
+                return TEXT("10_1");
+            case D3D_FEATURE_LEVEL_11_0:
+                return TEXT("11_0");
+            case D3D_FEATURE_LEVEL_11_1:
+                return TEXT("11_1");
+            case D3D_FEATURE_LEVEL_12_0:
+                return TEXT("12_0");
+            case D3D_FEATURE_LEVEL_12_1:
+                return TEXT("12_1");
+#if CERA_D3D12_CORE_ENABLED
+            case D3D_FEATURE_LEVEL_12_2:
+                return TEXT("12_2");
+#endif
+            }
+            return TEXT("X_X");
         }
 
         //-------------------------------------------------------------------------
-        const renderer::GpuDescription& Adapter::description() const
+        u32 count_adapter_outputs(cera::wrl::ComPtr<IDXGIAdapter> adapter)
+        {
+            u32 output_count = 0;
+            for (;;)
+            {
+                cera::wrl::ComPtr<IDXGIOutput> output;
+                HRESULT hr = adapter->EnumOutputs(output_count, output.GetAddressOf());
+                if (FAILED(hr))
+                {
+                    break;
+                }
+
+                ++output_count;
+            }
+
+            return output_count;
+        }
+
+        //-------------------------------------------------------------------------
+        bool is_adapter_integrated(wrl::ComPtr<IDXGIAdapter> in_adapter)
+        {
+            wrl::ComPtr<IDXGIAdapter3> adapter3;
+            in_adapter->QueryInterface(IID_PPV_ARGS(adapter3.GetAddressOf()));
+
+            // Simple heuristic but without profiling it's hard to do better
+            DXGI_QUERY_VIDEO_MEMORY_INFO non_ocal_video_memory_info {};
+            if (adapter3 && DX_SUCCESS(adapter3->QueryVideoMemoryInfo(0, DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, &non_ocal_video_memory_info)))
+            {
+                return non_ocal_video_memory_info.Budget == 0;
+            }
+
+            return true;
+        }
+
+        //-------------------------------------------------------------------------
+        adapter_description::adapter_description() = default;
+        //-------------------------------------------------------------------------
+        adapter_description::adapter_description(const DXGI_ADAPTER_DESC& in_desc, s32 in_index, const adapter_device_info& in_device_info, bool in_is_integrated)
+            : desc(in_desc)
+	        , adapter_index(in_index)
+	        , max_supported_feature_level(in_device_info.max_feature_level)
+	        , max_supported_shader_model(in_device_info.max_shader_model)
+	        , resource_binding_tier(in_device_info.feature_data_options.resource_binding_tier)
+            , resource_heap_tier(in_device_info.feature_data_options.resource_heap_tier)
+	        , max_rhi_feature_level(in_device_info.max_rhi_feature_level)
+	        , supports_wave_ops(in_device_info.supports_wave_ops)
+	        , supports_atomic64(in_device_info.supports_atomic64)
+            , num_device_nodes(in_device_info.num_device_nodes)
+            , is_integrated(in_is_integrated)
+        {
+
+        }
+
+        //-------------------------------------------------------------------------
+        bool adapter_description::is_valid() const
+        {
+            return max_supported_feature_level != (D3D_FEATURE_LEVEL)0 && adapter_index >= 0;
+        }
+
+        //-------------------------------------------------------------------------
+        adapter::adapter(s32 in_adapter_index, const adapter_device_info& in_device_info, wrl::ComPtr<IDXGIAdapter> adapter, const DXGI_ADAPTER_DESC& in_adapter_desc)
+            : ComObject(adapter)
+        {
+            const s32 output_count = count_adapter_outputs(adapter);
+
+            cera::log::info("Found D3D12 adapter {0}: {1} (VendorId: {2}, DeviceId: {3}, SubSysId: {4}, Revision: {5}"
+                , in_adapter_index
+                , in_adapter_desc.Description
+                , in_adapter_desc.VendorId
+                , in_adapter_desc.DeviceId
+                , in_adapter_desc.SubSysId
+                , in_adapter_desc.Revision);
+
+            cera::log::info("  Max supported Feature Level {0}, shader model {1}.{2}, binding tier {3}, wave ops {4}, atomic64 {5}"
+                , get_feature_level_string(in_device_info.max_feature_level)
+                , (in_device_info.max_shader_model >> 4)
+                , (in_device_info.max_shader_model & 0xF)
+                , in_device_info.feature_data_options.resource_binding_tier
+                , in_device_info.supports_wave_ops 
+                    ? TEXT("supported") 
+                    : TEXT("unsupported")
+                , in_device_info.supports_atomic64 
+                    ? TEXT("supported") 
+                    : TEXT("unsupported"));
+
+            cera::log::info("  Adapter has {0}MB of dedicated video memory, {1}MB of dedicated system memory, and {2}MB of shared system memory, {3} output[s]"
+                , (u32)(in_adapter_desc.DedicatedVideoMemory / (1024 * 1024))
+                , (u32)(in_adapter_desc.DedicatedSystemMemory / (1024 * 1024))
+                , (u32)(in_adapter_desc.SharedSystemMemory / (1024 * 1024))
+                , output_count);
+
+            m_description = cera::dxgi::adapter_description(in_adapter_desc, in_adapter_index, in_device_info, is_adapter_integrated(adapter));
+        }
+
+        //-------------------------------------------------------------------------
+        const adapter_description& adapter::description() const
         {
             return m_description;
         }

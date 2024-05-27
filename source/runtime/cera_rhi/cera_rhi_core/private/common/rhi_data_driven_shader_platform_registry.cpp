@@ -23,6 +23,7 @@ namespace cera
                 info.max_feature_level  = feature_level::D3D_SM5;
 
                 info.supports_msaa      = 1;
+                info.supports_bindless  = 0;
 
                 return info;
             }
@@ -40,6 +41,7 @@ namespace cera
                 info.max_feature_level  = feature_level::D3D_SM6;
 
                 info.supports_msaa      = 1;
+                info.supports_bindless  = 1;
 
                 return info;
             }
@@ -58,6 +60,7 @@ namespace cera
                 info.max_feature_level  = feature_level::OGL_SM5;
 
                 info.supports_msaa      = 1;
+                info.supports_bindless  = 0;
 
                 return info;
             }

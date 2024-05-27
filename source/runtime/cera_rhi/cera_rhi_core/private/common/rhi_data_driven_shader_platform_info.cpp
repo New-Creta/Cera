@@ -17,6 +17,7 @@ namespace cera
             m_max_feature_level = feature_level::NUM;
 
             m_supports_msaa = 1;
+            m_supports_bindless = 0;
         }
 
         void data_driven_shader_platform_info::initialize()
@@ -70,6 +71,13 @@ namespace cera
             CERA_ASSERT(s_infos.find(platform) != s_infos.cend());
 
             return s_infos[(s32)platform].m_supports_msaa != 0;
+        }
+
+        const bool data_driven_shader_platform_info::is_supports_bindless(shader_platform platform)
+        {
+            CERA_ASSERT(s_infos.find(platform) != s_infos.cend());
+
+            return s_infos[(s32)platform].m_supports_bindless != 0;
         }
 
         const feature_level data_driven_shader_platform_info::get_max_feature_level(shader_platform platform)

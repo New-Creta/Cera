@@ -4,6 +4,7 @@ add_library(cera_core STATIC)
 ## private sources
 if(WIN32)
 target_sources(cera_core PUBLIC
+        ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/windows/win32_min.h
         ${SOURCE_RUNTIME_DIRECTORY}/cera_core/public/windows/win32_platform_helpers.h)
     target_sources(cera_core PRIVATE 
         ${SOURCE_RUNTIME_DIRECTORY}/cera_core/private/windows/win32_platform_helpers.cpp)

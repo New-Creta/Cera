@@ -1,13 +1,21 @@
-#pragma once 
+#pragma once
 
 #include "rhi.h"
 
 namespace cera
 {
+    namespace dxgi
+    {
+        class adapter;
+    }
+
     namespace renderer
     {
         class rhi_directx : public rhi
         {
+          public:
+            rhi_directx(const std::shared_ptr<dxgi::adapter>& adapter);
+
             void initialize() override;
 
             void post_initialize() override;
@@ -27,6 +35,10 @@ namespace cera
             std::shared_ptr<rhi_shader_resource_view> create_shader_resource_view(const std::shared_ptr<rhi_resource>& in_resource, const rhi_shader_resource_view_desc& srv) override;
 
             std::shared_ptr<rhi_unordered_address_view> create_unordered_access_view(const std::shared_ptr<rhi_resource>& in_resource, const std::shared_ptr<rhi_resource>& in_counter_resource, const rhi_unordered_access_view_desc& uav) override;
+
+          private:
+            const std::shared_ptr<dxgi::adapter> m_adapter;
+
         };
-    }
-}
+    } // namespace renderer
+} // namespace cera

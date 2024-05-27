@@ -15,6 +15,11 @@ target_sources(cera_rhi_directx PRIVATE
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/dxgi/dxgi_adapter_manager.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/dxgi/dxgi_format.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/dxgi/dxgi_util.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/dxgi/objects/adapter.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/dxgi/objects/factory.h 
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/dxgi/dxgi_adapter_manager.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/dxgi/dxgi_format.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/dxgi/dxgi_util.h
 
     ### resources
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/resources/buffer.cpp
@@ -40,9 +45,7 @@ target_sources(cera_rhi_directx PRIVATE
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/util/thread_name.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/util/vertex_types.cpp
 
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/gpu_helper.cpp
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/gpu_helper.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/gpu_description.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/gpu_scorer.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/command_list.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/command_queue.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_call.cpp
@@ -65,13 +68,6 @@ target_sources(cera_rhi_directx PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/descriptors/descriptor_allocator_page.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/descriptors/descriptor_allocator.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/descriptors/dynamic_descriptor_heap.h
-
-    ### dxgi
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/dxgi/objects/adapter.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/dxgi/objects/factory.h 
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/dxgi/dxgi_adapter_manager.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/dxgi/dxgi_format.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/dxgi/dxgi_util.h
 
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/wrl/comobject.h
 
@@ -112,8 +108,6 @@ target_sources(cera_rhi_directx PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/resource_descriptions/create_texture_desc.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/resource_descriptions/create_vertex_buffer_desc.h
 
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/gpu_description.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/gpu_scorer.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/command_list.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/command_queue.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/public/directx_call.h
@@ -148,4 +142,5 @@ set_target_properties(cera_rhi_directx PROPERTIES FOLDER "runtime")
 if(WIN32)
     target_compile_definitions(cera_rhi_directx PUBLIC CERA_PLATFORM_WINDOWS)
 endif()
-                      
+                    
+target_compile_definitions(cera_rhi_directx PUBLIC CERA_D3D12_CORE_ENABLED=1)

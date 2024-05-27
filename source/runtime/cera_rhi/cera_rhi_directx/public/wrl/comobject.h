@@ -22,7 +22,7 @@ namespace cera
     {
     public:
       ComObject();
-      explicit ComObject(wrl::ComPtr<T>&& object);
+      explicit ComObject(wrl::ComPtr<T> object);
 
       /**
        * Retrieve the underlying com ptr
@@ -74,8 +74,8 @@ namespace cera
     }
     //-------------------------------------------------------------------------
     template <typename T>
-    ComObject<T>::ComObject(cera::wrl::ComPtr<T>&& object)
-        : m_pointer(std::move(object))
+    ComObject<T>::ComObject(cera::wrl::ComPtr<T> object)
+        : m_pointer(object)
     {
     }
 

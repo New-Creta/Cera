@@ -10,7 +10,6 @@ if(WIN32)
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_window.cpp
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_application_helpers.h
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_application.h
-        ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_min.h
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_system_includes.h
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_system_includes.cpp
         ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/windows/win32_window.h)

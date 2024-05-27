@@ -23,6 +23,7 @@ namespace cera
             feature_level max_feature_level;
 
             s32 supports_msaa;
+            s32 supports_bindless;
         };
 
         namespace data_driven_shader_platform_registry

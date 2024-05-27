@@ -1,4 +1,5 @@
 #include "windows/win32_platform_helpers.h"
+#include "windows/win32_min.h"
 
 #include "util/log.h"
 
@@ -9,6 +10,30 @@ namespace cera
         namespace internal
         {
             bool g_is_requesting_exit = false; /* Indicates that MainLoop() should be exited at the end of the current iteration */
+        }
+
+        /** 
+         * Determines if we are running on the Windows version or newer
+         *
+         * See the 'Remarks' section of https://msdn.microsoft.com/en-us/library/windows/desktop/ms724833(v=vs.85).aspx
+         * for a list of MajorVersion/MinorVersion version combinations for Microsoft Windows.
+         *
+         * @return	Returns true if the current Windows version if equal or newer than MajorVersion
+         */
+        bool verify_windows_version(u32 major, u32 minor, u32 build_version)
+        {
+            OSVERSIONINFOEX version;
+            version.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+            version.dwMajorVersion = major;
+            version.dwMinorVersion = minor;
+            version.dwBuildNumber = build_version;
+
+            ULONGLONG condition_mask = 0;
+            condition_mask = VerSetConditionMask(condition_mask, VER_MAJORVERSION, VER_GREATER_EQUAL);
+            condition_mask = VerSetConditionMask(condition_mask, VER_MINORVERSION, VER_GREATER_EQUAL);
+            condition_mask = VerSetConditionMask(condition_mask, VER_BUILDNUMBER,  VER_GREATER_EQUAL);
+
+            return !!VerifyVersionInfo(&version, VER_MAJORVERSION | VER_MINORVERSION | VER_BUILDNUMBER, condition_mask);
         }
 
         /** Request that the engine exit as soon as it can safely do so
