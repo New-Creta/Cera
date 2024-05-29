@@ -1,5 +1,5 @@
-#include "directx_call.h"
-#include "directx_util.h"
+#include "rhi_directx_call.h"
+#include "rhi_directx_util.h"
 
 #include "util/log.h"
 #include "util/string_op.h"

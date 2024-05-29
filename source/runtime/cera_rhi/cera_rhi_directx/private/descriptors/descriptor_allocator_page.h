@@ -32,7 +32,7 @@
  *  http://diligentgraphics.com/diligent-engine/architecture/d3d12/variable-size-memory-allocations-manager/
  */
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 #include "descriptors/descriptor_allocation.h"
 
 #include "util/windows_types.h"

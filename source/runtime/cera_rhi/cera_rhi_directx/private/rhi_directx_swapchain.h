@@ -3,7 +3,7 @@
 #include "util/types.h"
 #include "util/windows_types.h"
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 
 #include "resources/render_target.h"
 
@@ -17,7 +17,7 @@ namespace cera
     class Texture;
     class CommandQueue;
 
-    class Swapchain
+    class d3d12_swapchain
     {
     public:
       static constexpr u32 num_back_buffers()
@@ -96,12 +96,20 @@ namespace cera
        */
       DXGI_FORMAT render_target_format() const;
 
+      /**
+      * Retrieve native swapchain
+      */
       wrl::com_ptr<IDXGISwapChain4> dxgi_swap_chain() const;
+
+      /**
+       * Retrieve native swapchain
+       */
+      HWND hwnd() const;
 
     protected:
       // Swap chains can only be created through the d3d12_device.
-      Swapchain(d3d12_device& device, HWND hWnd, s32 clientWidth, s32 clientHeight, DXGI_FORMAT renderTargetFormat = DXGI_FORMAT_R10G10B10A2_UNORM);
-      virtual ~Swapchain();
+      d3d12_swapchain(d3d12_device& device, HWND hWnd, s32 clientWidth, s32 clientHeight, DXGI_FORMAT renderTargetFormat = DXGI_FORMAT_R8G8B8A8_UNORM);
+      virtual ~d3d12_swapchain();
 
       bool update_render_target_views();
 

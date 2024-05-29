@@ -6,7 +6,7 @@
 
 #include "common/rhi_feature_level.h"
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 
 #include "dxgi/dxgi_util.h"
 

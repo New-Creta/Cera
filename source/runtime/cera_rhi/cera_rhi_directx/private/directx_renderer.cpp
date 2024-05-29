@@ -1,7 +1,7 @@
 #include "command_list.h"
 #include "command_queue.h"
 
-#include "directx_device.h"
+#include "rhi_directx_device.h"
 #include "directx_feature_level.h"
 #include "directx_feature_shader_model.h"
 #include "directx_swapchain.h"

@@ -40,7 +40,7 @@
 #include "util/types.h"
 #include "util/windows_types.h"
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 
 #include <cstdint>
 

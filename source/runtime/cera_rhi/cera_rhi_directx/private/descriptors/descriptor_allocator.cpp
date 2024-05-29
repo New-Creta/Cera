@@ -1,6 +1,6 @@
 #include "descriptors/descriptor_allocator.h"
 #include "descriptors/descriptor_allocator_page.h"
-#include "directx_device.h"
+#include "rhi_directx_device.h"
 
 namespace cera
 {

@@ -94,6 +94,8 @@ namespace cera
         bool is_foreground_window() const override;
         bool is_fullscreen_supported() const override;
         void set_text(const tchar* const in_text) override;
+        s32 get_window_width() const override;
+        s32 get_window_height() const override;
 
     private:
         /** Creates an HRGN for the window's current region.  Remember to delete this when you're done with it using

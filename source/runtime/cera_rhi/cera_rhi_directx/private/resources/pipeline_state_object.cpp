@@ -1,6 +1,6 @@
 #include "resources/pipeline_state_object.h"
 
-#include "directx_device.h"
+#include "rhi_directx_device.h"
 
 #include "util/assert.h"
 

@@ -1,7 +1,7 @@
 #include "resources/shader_resource_view.h"
 #include "resources/resource.h"
 
-#include "directx_device.h"
+#include "rhi_directx_device.h"
 
 #include "util/assert.h"
 

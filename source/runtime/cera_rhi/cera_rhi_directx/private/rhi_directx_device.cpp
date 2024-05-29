@@ -1,10 +1,10 @@
 #include "command_list.h"
 #include "command_queue.h"
 
-#include "directx_call.h"
-#include "directx_device.h"
+#include "rhi_directx_call.h"
+#include "rhi_directx_device.h"
 #include "directx_swapchain.h"
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 
 #include "resources/byte_address_buffer.h"
 #include "resources/constant_buffer.h"

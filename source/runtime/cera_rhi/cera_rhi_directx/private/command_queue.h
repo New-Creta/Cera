@@ -4,7 +4,7 @@
 #include "util/windows_types.h"
 #include "util/queue.h"
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 
 #include <memory>
 #include <queue>

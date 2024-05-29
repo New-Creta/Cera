@@ -2,6 +2,8 @@
 #include "windows/win32_application.h"
 #include "windows/win32_application_helpers.h"
 
+#include "core_globals.h"
+
 #include "util/log.h"
 
 #include <dwmapi.h>
@@ -771,6 +773,18 @@ namespace cera
     void windows_window::set_text(const tchar *const in_text)
     {
         SetWindowText(m_hwnd, in_text);
+    }
+
+    s32 windows_window::get_window_width() const
+    {
+        // Clamp the window size to a reasonable default anything below 8 is a d3d warning and 8 is used anyway.
+        return (std::max)(m_region_width, g_minimum_window_width);
+    }
+
+    s32 windows_window::get_window_height() const
+    {
+        // Clamp the window size to a reasonable default anything below 8 is a d3d warning and 8 is used anyway.
+        return (std::max)(m_region_height, g_minimum_window_height);
     }
 
     HRGN windows_window::make_window_region_object(bool include_border_when_maximized) const

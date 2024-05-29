@@ -6,6 +6,8 @@ namespace cera
 {
     namespace renderer
     {
+        class rhi_viewport;
+
         /**
          * Interface for a rendering hardware interface (RHI), defining methods for creating various types of resources.
          */

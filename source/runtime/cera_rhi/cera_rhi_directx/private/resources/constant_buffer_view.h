@@ -6,7 +6,7 @@
 
 #include "resources/rhi_resource.h"
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 
 #include <memory>
 

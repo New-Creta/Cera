@@ -3,7 +3,7 @@
 #include "util/windows_types.h"
 #include "util/blob.h"
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 
 #include "common/rhi_shader_type.h"
 

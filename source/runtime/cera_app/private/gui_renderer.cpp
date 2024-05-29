@@ -2,70 +2,41 @@
 
 #include "generic_window.h"
 
+#include "core_globals.h"
+#include "core_platform.h"
+
+#include "rhi_factory.h"
+
+#include "util/assert.h"
+
 namespace cera
 {
     void gui_renderer::create_viewport(std::shared_ptr<generic_window> window)
     {
         if (m_window_viewport_map.find(window.get()) == std::cend(m_window_viewport_map))
         {
-            s32 window_width = window->get_definition().
-
             // Clamp the window size to a reasonable default anything below 8 is a d3d warning and 8 is used anyway.
-            // @todo Slate: This is a hack to work around menus being summoned with 0,0 for window size until they are ticked.
-            int32 Width = FMath::Max(MIN_VIEWPORT_SIZE, FMath::CeilToInt(WindowSize.X));
-            int32 Height = FMath::Max(MIN_VIEWPORT_SIZE, FMath::CeilToInt(WindowSize.Y));
+            s32 window_width = window->get_window_width();
+            s32 window_height = window->get_window_height();
 
             // Sanity check dimensions
-            if (!ensureMsgf(Width <= MAX_VIEWPORT_SIZE && Height <= MAX_VIEWPORT_SIZE, TEXT("Invalid window with Width=%u and Height=%u"), Width, Height))
-            {
-                Width = FMath::Clamp(Width, MIN_VIEWPORT_SIZE, MAX_VIEWPORT_SIZE);
-                Height = FMath::Clamp(Height, MIN_VIEWPORT_SIZE, MAX_VIEWPORT_SIZE);
-            }
+            CERA_ASSERT_X(window_width >= g_minimum_window_width, "Invalid window width={0}", window_width);
+            CERA_ASSERT_X(window_height >= g_minimum_window_height, "Invalid window height={0}", window_height);
 
-            FViewportInfo* NewInfo = new FViewportInfo();
-            // Create Viewport RHI if it doesn't exist (this must be done on the game thread)
-            TSharedRef<FGenericWindow> NativeWindow = Window->GetNativeWindow().ToSharedRef();
-            NewInfo->OSWindow = NativeWindow->GetOSWindowHandle();
-            NewInfo->Width = Width;
-            NewInfo->Height = Height;
-            NewInfo->DesiredWidth = Width;
-            NewInfo->DesiredHeight = Height;
-            NewInfo->ProjectionMatrix = CreateProjectionMatrix(Width, Height);
-            // In MobileLDR case backbuffer format should match or be compatible with a SceneColor format in FSceneRenderTargets::GetDesiredMobileSceneColorFormat()
-            if (bIsStandaloneStereoOnlyDevice || (GMaxRHIFeatureLevel == ERHIFeatureLevel::ES3_1 && !IsMobileHDR()))
-            {
-                NewInfo->PixelFormat = GetSlateRecommendedColorFormat();
-            }
-#if ALPHA_BLENDED_WINDOWS
-            if (Window->GetTransparencySupport() == EWindowTransparency::PerPixel)
-            {
-                NewInfo->PixelFormat = GetSlateRecommendedColorFormat();
-            }
-#endif
+            std::unique_ptr<viewport_info> new_info = std::make_unique<viewport_info>();
+            
+            new_info->os_window = window->get_os_window_handle();
+            new_info->width = window_width;
+            new_info->height = window_height;
+            new_info->desired_width = window_width;
+            new_info->desired_height = window_height;
 
-            // SDR format holds the requested format in non HDR mode
-            NewInfo->SDRPixelFormat = NewInfo->PixelFormat;
-            HDRGetMetaData(NewInfo->HDRDisplayOutputFormat, NewInfo->HDRDisplayColorGamut, NewInfo->bSceneHDREnabled, Window->GetPositionInScreen(), Window->GetPositionInScreen() + Window->GetSizeInScreen(), NewInfo->OSWindow);
+            bool is_fullscreen = is_viewport_fullscreen(window);
 
-            if (NewInfo->bSceneHDREnabled)
-            {
-                NewInfo->PixelFormat = GRHIHDRDisplayOutputFormat;
-            }
+            new_info->viewport_rhi = renderer::rhi_factory::create_viewport(new_info->os_window, window_width, window_height, is_fullscreen);
+            new_info->fullscreen = is_fullscreen;
 
-            // Sanity check dimensions
-            checkf(Width <= MAX_VIEWPORT_SIZE && Height <= MAX_VIEWPORT_SIZE, TEXT("Invalid window with Width=%u and Height=%u"), Width, Height);
-
-            bool bFullscreen = IsViewportFullscreen(*Window);
-            NewInfo->ViewportRHI = RHICreateViewport(NewInfo->OSWindow, Width, Height, bFullscreen, NewInfo->PixelFormat);
-            NewInfo->bFullscreen = bFullscreen;
-
-            // Was the window created on a HDR compatible display?
-            NewInfo->bHDREnabled = RHIGetColorSpace(NewInfo->ViewportRHI) != EColorSpaceAndEOTF::ERec709_sRGB;
-            Window->SetIsHDR(NewInfo->bHDREnabled);
-
-            WindowToViewportInfo.Add(&Window.Get(), NewInfo);
-
-            BeginInitResource(NewInfo);
+            m_window_viewport_map.emplace(window.get(), new_info);
         }
     }
 
@@ -77,5 +48,28 @@ namespace cera
     void gui_renderer::on_window_resized(std::shared_ptr<generic_window> window)
     {
 
+    }
+
+    bool gui_renderer::is_viewport_fullscreen(std::shared_ptr<generic_window> window)
+    {
+        bool fullscreen = false;
+
+        if (platform::supports_window_mode())
+        {
+            fullscreen = window->is_fullscreen_supported() && window->get_window_mode() == window_mode::fullscreen;
+
+#if CERA_PLATFORM_WINDOWS
+            // When we are in fullscreen mode but the user alt-tabs out we need to temporarily drop out of fullscreen while the window has lost focus, otherwise DXGI will eventually
+            // forcibly throw us out of fullscreen mode with device loss and crash as typical result. By returning false here we'll trigger a mode switch to windowed when the user
+            // alt-tabs, and back to fullscreen again once the window comes back in focus, through the regular path. DXGI will never need to intervene and everyone is happy.
+            fullscreen = fullscreen && window->is_foreground_window();
+#endif
+        }
+        else
+        {
+            fullscreen = true;
+        }
+
+        return fullscreen;
     }
 }

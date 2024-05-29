@@ -1,6 +1,6 @@
 #pragma once
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 #include "resources/buffer.h"
 
 namespace cera

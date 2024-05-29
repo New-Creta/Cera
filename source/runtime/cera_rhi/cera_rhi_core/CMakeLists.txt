@@ -57,6 +57,7 @@ target_sources(cera_rhi_core PUBLIC
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/renderer/rhi_renderer_backend.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/renderer/rhi_renderer_output_window_user_data.h
 
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/rhi_viewport.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/rhi_factory.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/rhi_globals.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/rhi.h)

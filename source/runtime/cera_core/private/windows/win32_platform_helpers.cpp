@@ -12,6 +12,12 @@ namespace cera
             bool g_is_requesting_exit = false; /* Indicates that MainLoop() should be exited at the end of the current iteration */
         }
 
+        /** Determine if this platform supports windowed mode */
+        bool supports_window_mode()
+        {
+            return true;
+        }
+
         /** 
          * Determines if we are running on the Windows version or newer
          *

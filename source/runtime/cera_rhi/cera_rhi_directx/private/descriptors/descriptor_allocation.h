@@ -36,7 +36,7 @@
 #include "util/types.h"
 #include "util/memory_size.h"
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 
 #include <cstdint>
 

@@ -4,7 +4,7 @@
 #include "util/windows_types.h"
 #include "util/memory_size.h"
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 
 #include "resources/rhi_resource.h"
 

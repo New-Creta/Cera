@@ -20,7 +20,7 @@
 
 #include "util/types.h"
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 
 #include <mutex>
 #include <map>

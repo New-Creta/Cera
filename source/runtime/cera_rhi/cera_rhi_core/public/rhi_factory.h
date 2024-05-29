@@ -22,6 +22,16 @@ namespace cera
              *	Called to create the instance of the dynamic RHI.
              */
             std::unique_ptr<rhi> create();
+
+            /**
+             * Construct a new viewport for the active RHI
+             */
+            std::shared_ptr<rhi_viewport> create_viewport(void* in_window_handle, s32 size_x, s32 size_y, bool is_fullscreen);
+
+            /**
+             * Resize a viewport for the active RHI
+             */
+            void resize_viewport(std::shared_ptr<rhi_viewport> in_viewport, s32 size_x, s32 size_y, bool is_fullscreen);
         } // namespace rhi_factory
     }     // namespace renderer
 }

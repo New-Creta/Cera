@@ -37,7 +37,7 @@
 
 #include "util/types.h"
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 #include "descriptors/descriptor_allocation.h"
 
 #include <cstdint>

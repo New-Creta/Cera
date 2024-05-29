@@ -1,5 +1,7 @@
 #include "generic_window.h"
 
+#include "core_globals.h"
+
 namespace cera
 {
 
@@ -155,14 +157,14 @@ namespace cera
     }
 
     
-    s32 get_window_width() const
+    s32 generic_window::get_window_width() const
     {
-        return 
+        return g_minimum_window_width;
     }
 
-    s32 get_window_height() const
+    s32 generic_window::get_window_height() const
     {
-
+        return g_minimum_window_height;
     }
 
     void generic_window::set_definition(const generic_window_definition& definition)

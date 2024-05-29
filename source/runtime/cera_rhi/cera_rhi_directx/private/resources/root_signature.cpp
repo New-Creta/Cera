@@ -1,7 +1,7 @@
 #include "resources/root_signature.h"
 
-#include "directx_call.h"
-#include "directx_device.h"
+#include "rhi_directx_call.h"
+#include "rhi_directx_device.h"
 
 #include "util/assert.h"
 #include "util/log.h"

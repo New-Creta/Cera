@@ -15,8 +15,9 @@
 #include "util/assert.h"
 #include "util/defines.h"
 
-#include "directx_device.h"
-#include "directx_call.h"
+#include "rhi_directx_device.h"
+#include "rhi_directx_call.h"
+#include "rhi_directx_viewport.h"
 
 #include "core_platform.h"
 
@@ -471,6 +472,19 @@ namespace cera
                 log::error("Unreachable code ...");
                 return nullptr;
             }
+
+            //-------------------------------------------------------------------------
+            std::shared_ptr<rhi_viewport> create_viewport(void* in_window_handle, s32 size_x, s32 size_y, bool is_fullscreen)
+            {
+                return std::make_shared<d3d12_rhi_viewport>(in_window_handle, size_x, size_y, in_fullscreen);
+            }
+
+            //-------------------------------------------------------------------------
+            void resize_viewport(std::shared_ptr<rhi_viewport> in_viewport, s32 size_x, s32 size_y, bool is_fullscreen)
+            {
+
+            }
+
         } // namespace rhi_factory
 
         //-------------------------------------------------------------------------
@@ -513,12 +527,12 @@ namespace cera
         //-------------------------------------------------------------------------
         d3d12_device* rhi_directx::get_device()
         {
-            return m_device.get();
+            return m_root_device.get();
         }
         //-------------------------------------------------------------------------
         const d3d12_device* rhi_directx::get_device() const
         {
-            return m_device.get();
+            return m_root_device.get();
         }
 
     } // namespace renderer

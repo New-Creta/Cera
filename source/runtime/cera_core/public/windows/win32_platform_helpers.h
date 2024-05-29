@@ -8,6 +8,9 @@ namespace cera
 {
     namespace windows
     {
+        /** Determine if this platform supports windowed mode */
+        bool supports_window_mode();
+
         /** 
          * Determines if we are running on the Windows version or newer
          *

@@ -32,14 +32,7 @@ namespace cera
         /** Whether or not the viewport is in fullscreen */
         bool fullscreen;
 
-        viewport_info() 
-            : viewport_rhi(nullptr)
-            , os_window(NULL)
-            , width(0)
-            , height(0)
-            , desired_width(0)
-            , desired_height(0)
-            , fullscreen(false)
+        viewport_info() : viewport_rhi(nullptr), os_window(NULL), width(0), height(0), desired_width(0), desired_height(0), fullscreen(false)
         {
         }
     };
@@ -52,7 +45,9 @@ namespace cera
         void on_window_destroyed(std::shared_ptr<generic_window> window);
         void on_window_resized(std::shared_ptr<generic_window> window);
 
-    private:
+        bool is_viewport_fullscreen(std::shared_ptr<generic_window> window);
+
+      private:
         /** A mapping of SWindows to their RHI implementation */
         std::unordered_map<const generic_window*, viewport_info*> m_window_viewport_map;
     };

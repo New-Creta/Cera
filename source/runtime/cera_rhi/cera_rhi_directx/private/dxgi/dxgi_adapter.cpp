@@ -1,7 +1,7 @@
 #include "dxgi/dxgi_adapter.h"
 #include "dxgi/dxgi_util.h"
 
-#include "directx_call.h"
+#include "rhi_directx_call.h"
 
 #include "rhi_globals.h"
 

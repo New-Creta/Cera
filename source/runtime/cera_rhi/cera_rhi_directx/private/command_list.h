@@ -6,7 +6,7 @@
 
 #include "resources/buffer.h"
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 
 #include <memory>
 #include <map>

@@ -1,8 +1,8 @@
 #include "resources/shader_library.h"
 #include "resources/root_signature.h"
 
-#include "directx_call.h"
-#include "directx_device.h"
+#include "rhi_directx_call.h"
+#include "rhi_directx_device.h"
 #include "util/log.h"
 #include "util/vertex_types.h"
 

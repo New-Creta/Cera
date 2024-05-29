@@ -4,8 +4,8 @@
 
 #include "util/assert.h"
 
-#include "directx_call.h"
-#include "directx_util.h"
+#include "rhi_directx_call.h"
+#include "rhi_directx_util.h"
 
 #include "rhi_globals.h"
 

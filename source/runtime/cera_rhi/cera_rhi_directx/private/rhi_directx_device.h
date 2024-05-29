@@ -6,7 +6,7 @@
 
 #include "dxgi/dxgi_util.h"
 
-#include "directx_util.h"
+#include "rhi_directx_util.h"
 
 #include "descriptors/descriptor_allocation.h"
 

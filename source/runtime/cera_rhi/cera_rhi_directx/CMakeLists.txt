@@ -78,14 +78,16 @@ target_sources(cera_rhi_directx PRIVATE
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/command_list.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/command_queue.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/command_queue.cpp
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_call.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_call.cpp
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_device.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_device.cpp
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_swapchain.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_swapchain.cpp
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_util.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/directx_renderer.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_directx_call.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_directx_call.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_directx_device.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_directx_device.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_directx_swapchain.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_directx_swapchain.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_directx_util.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_directx_viewport.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_directx_viewport.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_adapter_child.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_device_child.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_directx/private/rhi_windows_target_settings.h
