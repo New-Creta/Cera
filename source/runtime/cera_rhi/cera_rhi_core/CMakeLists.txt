@@ -20,8 +20,7 @@ target_sources(cera_rhi_core PRIVATE
     ### renderer
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/renderer/rhi_renderer.cpp
 
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/rhi_globals.cpp
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/rhi.cpp)
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/private/rhi_globals.cpp)
 
 ## public sources
 target_sources(cera_rhi_core PUBLIC 
@@ -56,7 +55,6 @@ target_sources(cera_rhi_core PUBLIC
     ### renderer
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/renderer/rhi_renderer.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/renderer/rhi_renderer_backend.h
-    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/renderer/rhi_renderer_info.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/renderer/rhi_renderer_output_window_user_data.h
 
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_core/public/rhi_factory.h

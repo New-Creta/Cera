@@ -11,7 +11,7 @@ namespace cera
       struct MakeAllocatorPage : public DescriptorAllocatorPage
       {
       public:
-        MakeAllocatorPage(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, u32 numDescriptors)
+        MakeAllocatorPage(d3d12_device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, u32 numDescriptors)
             : DescriptorAllocatorPage(device, type, numDescriptors)
         {
         }
@@ -20,7 +20,7 @@ namespace cera
       };
     } // namespace internal
 
-    DescriptorAllocator::DescriptorAllocator(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, u32 numDescriptorsPerHeap)
+    DescriptorAllocator::DescriptorAllocator(d3d12_device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, u32 numDescriptorsPerHeap)
         : m_device(device)
         , m_heap_type(type)
         , m_num_descriptors_per_heap(numDescriptorsPerHeap)

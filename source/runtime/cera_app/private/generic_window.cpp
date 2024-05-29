@@ -154,6 +154,17 @@ namespace cera
         return m_definition;
     }
 
+    
+    s32 get_window_width() const
+    {
+        return 
+    }
+
+    s32 get_window_height() const
+    {
+
+    }
+
     void generic_window::set_definition(const generic_window_definition& definition)
     {
         m_definition = definition;

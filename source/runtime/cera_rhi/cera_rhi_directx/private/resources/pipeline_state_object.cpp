@@ -8,7 +8,7 @@ namespace cera
 {
   namespace renderer
   {
-    PipelineStateObject::PipelineStateObject(Device& device, const D3D12_PIPELINE_STATE_STREAM_DESC& desc)
+    PipelineStateObject::PipelineStateObject(d3d12_device& device, const D3D12_PIPELINE_STATE_STREAM_DESC& desc)
         : m_device(device)
     {
       auto d3d_device = device.d3d_device();
@@ -20,7 +20,7 @@ namespace cera
 
     PipelineStateObject::~PipelineStateObject() = default;
 
-    wrl::ComPtr<ID3D12PipelineState> PipelineStateObject::d3d_pipeline_state_object() const
+    wrl::com_ptr<ID3D12PipelineState> PipelineStateObject::d3d_pipeline_state_object() const
     {
       return m_d3d_pipeline_state_object;
     }

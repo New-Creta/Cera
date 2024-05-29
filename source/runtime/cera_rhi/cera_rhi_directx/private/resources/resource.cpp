@@ -12,7 +12,7 @@ namespace cera
   namespace renderer
   {
     //-------------------------------------------------------------------------
-    Resource::Resource(Device& device, const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue)
+    resource::resource(d3d12_device& device, const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue)
         : m_device_ref(device)
     {
       auto d3d_device = m_device_ref.d3d_device();
@@ -32,13 +32,13 @@ namespace cera
 
       auto result = check_feature_support();
 
-      CERA_ASSERT_X(result, "Resource format is not supported");
+      CERA_ASSERT_X(result, "resource format is not supported");
     }
 
     //-------------------------------------------------------------------------
-    Resource::Resource(Device& device, wrl::ComPtr<ID3D12Resource> Resource, const D3D12_CLEAR_VALUE* clearValue)
+    resource::resource(d3d12_device& device, wrl::com_ptr<ID3D12Resource> resource, const D3D12_CLEAR_VALUE* clearValue)
         : m_device_ref(device)
-        , m_d3d_resource(Resource)
+        , m_d3d_resource(resource)
     {
       if(clearValue)
       {
@@ -47,26 +47,26 @@ namespace cera
 
       auto result = check_feature_support();
 
-      CERA_ASSERT_X(result, "Resource format is not supported");
+      CERA_ASSERT_X(result, "resource format is not supported");
     }
 
     //-------------------------------------------------------------------------
-    Resource::~Resource() = default;
+    resource::~resource() = default;
 
     //-------------------------------------------------------------------------
-    Device* Resource::device() const
+    d3d12_device* resource::device() const
     {
       return &m_device_ref;
     }
 
     //-------------------------------------------------------------------------
-    wrl::ComPtr<ID3D12Resource> Resource::d3d_resource() const
+    wrl::com_ptr<ID3D12Resource> resource::d3d_resource() const
     {
       return m_d3d_resource;
     }
 
     //-------------------------------------------------------------------------
-    D3D12_RESOURCE_DESC Resource::d3d_resource_desc() const
+    D3D12_RESOURCE_DESC resource::d3d_resource_desc() const
     {
       D3D12_RESOURCE_DESC res_desc = {};
       if(m_d3d_resource)
@@ -78,7 +78,7 @@ namespace cera
     }
 
     //-------------------------------------------------------------------------
-    void Resource::set_resource_name(const std::wstring& name)
+    void resource::set_resource_name(const std::wstring& name)
     {
       m_resource_name = name;
 
@@ -89,31 +89,31 @@ namespace cera
     }
 
     //-------------------------------------------------------------------------
-    bool Resource::check_format_support(D3D12_FORMAT_SUPPORT1 formatSupport) const
+    bool resource::check_format_support(D3D12_FORMAT_SUPPORT1 formatSupport) const
     {
       return (m_format_support.Support1 & formatSupport) != 0;
     }
 
     //-------------------------------------------------------------------------
-    bool Resource::check_format_support(D3D12_FORMAT_SUPPORT2 formatSupport) const
+    bool resource::check_format_support(D3D12_FORMAT_SUPPORT2 formatSupport) const
     {
       return (m_format_support.Support2 & formatSupport) != 0;
     }
 
     //-------------------------------------------------------------------------
-    const D3D12_CLEAR_VALUE* Resource::d3d_clear_value() const
+    const D3D12_CLEAR_VALUE* resource::d3d_clear_value() const
     {
       return m_d3d_clear_value.get();
     }
 
     //-------------------------------------------------------------------------
-    const std::wstring& Resource::resource_name() const
+    const std::wstring& resource::resource_name() const
     {
       return m_resource_name;
     }
 
     //-------------------------------------------------------------------------
-    bool Resource::check_feature_support()
+    bool resource::check_feature_support()
     {
       auto d3d_device = m_device_ref.d3d_device();
 
@@ -123,7 +123,7 @@ namespace cera
 
       if(DX_FAILED(d3d_device->CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &m_format_support, sizeof(D3D12_FEATURE_DATA_FORMAT_SUPPORT))))
       {
-        log::error("Feature not supported on D3D12 Resource");
+        log::error("Feature not supported on D3D12 resource");
         return false;
       }
 

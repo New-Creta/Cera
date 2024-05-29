@@ -39,7 +39,7 @@ namespace cera
              *   Mesh and Amplification shaders
              *   Variable rate shading
              *   Sampler feedback
-             *   Resource binding tier 3
+             *   resource binding tier 3
              */
             D3D_SM6,
 

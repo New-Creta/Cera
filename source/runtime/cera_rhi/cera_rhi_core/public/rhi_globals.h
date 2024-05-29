@@ -18,7 +18,7 @@ namespace cera
          */
         enum class vendor
         {
-            UNKNOWN = 0xffffffff,
+            UNKNOWN = -1,
             NOTQUERIED = 0,
 
             AMD = 0x1002,

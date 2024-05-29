@@ -35,6 +35,8 @@ target_sources(cera_app PRIVATE
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/generic_window_definition.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/generic_window.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/generic_window.h
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/gui_renderer.cpp
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/gui_renderer.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/gui_application.cpp
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/gui_application.h
     ${SOURCE_RUNTIME_DIRECTORY}/cera_app/private/launch.cpp

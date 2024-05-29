@@ -4,11 +4,11 @@
 
 namespace cera
 {
-  namespace dxgi
+  namespace renderer
   {
     namespace conversions
     {
-      DXGI_FORMAT to_DXGI(renderer::Format format)
+      DXGI_FORMAT to_dxgi_format(renderer::Format format)
       {
         switch(format)
         {

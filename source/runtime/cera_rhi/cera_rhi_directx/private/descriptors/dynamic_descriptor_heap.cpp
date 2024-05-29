@@ -12,7 +12,7 @@ namespace cera
 {
   namespace renderer
   {
-    DynamicDescriptorHeap::DynamicDescriptorHeap(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, u32 numDescriptorsPerHeap)
+    DynamicDescriptorHeap::DynamicDescriptorHeap(d3d12_device& device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, u32 numDescriptorsPerHeap)
         : m_device(device)
         , m_descriptor_heap_type(heapType)
         , m_num_descriptors_per_heap(numDescriptorsPerHeap)
@@ -184,9 +184,9 @@ namespace cera
       }
     }
 
-    wrl::ComPtr<ID3D12DescriptorHeap> DynamicDescriptorHeap::request_descriptor_heap()
+    wrl::com_ptr<ID3D12DescriptorHeap> DynamicDescriptorHeap::request_descriptor_heap()
     {
-      wrl::ComPtr<ID3D12DescriptorHeap> descriptor_heap;
+      wrl::com_ptr<ID3D12DescriptorHeap> descriptor_heap;
       if(!m_available_descriptor_heaps.empty())
       {
         descriptor_heap = m_available_descriptor_heaps.front();
@@ -201,7 +201,7 @@ namespace cera
       return descriptor_heap;
     }
 
-    wrl::ComPtr<ID3D12DescriptorHeap> DynamicDescriptorHeap::create_descriptor_heap()
+    wrl::com_ptr<ID3D12DescriptorHeap> DynamicDescriptorHeap::create_descriptor_heap()
     {
       auto d3d_device = m_device.d3d_device();
 
@@ -210,7 +210,7 @@ namespace cera
       descriptor_heap_desc.NumDescriptors             = m_num_descriptors_per_heap;
       descriptor_heap_desc.Flags                      = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-      wrl::ComPtr<ID3D12DescriptorHeap> descriptor_heap;
+      wrl::com_ptr<ID3D12DescriptorHeap> descriptor_heap;
       if(DX_FAILED(d3d_device->CreateDescriptorHeap(&descriptor_heap_desc, IID_PPV_ARGS(&descriptor_heap))))
       {
         log::error("Failed to CreateDescriptorHeap");

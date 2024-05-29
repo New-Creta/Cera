@@ -71,7 +71,7 @@ namespace cera
       ResourceSlot copy_index_buffer(size_t numIndices, Format indexFormat, const void* indexBufferData);
 
       /**
-       * Resource creation functions
+       * resource creation functions
        */
       ResourceSlot create_clear_state(CreateClearStateDesc&& clearStateParams);
       ResourceSlot create_raster_state(CreateRasterStateDesc&& rasterStateParams);

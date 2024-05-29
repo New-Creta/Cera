@@ -27,8 +27,6 @@
 #include "renderer/rhi_renderer_info.h"
 #include "renderer/rhi_renderer_output_window_user_data.h"
 
-#include "gpu_description.h"
-
 #include "resource_descriptions/create_clear_state_desc.h"
 #include "resource_descriptions/create_index_buffer_desc.h"
 #include "resource_descriptions/create_pipeline_state_desc.h"
@@ -89,7 +87,7 @@ namespace cera
                 clear_value.DepthStencil.Depth = desc.depth;
                 clear_value.DepthStencil.Stencil = desc.stencil;
 
-                clear_value.Format = dxgi::conversions::to_DXGI(format);
+                clear_value.Format = conversions::to_dxgi_format(format);
 
                 return clear_value;
             }
@@ -167,7 +165,7 @@ namespace cera
                 resource_desc.Height = desc.height;
                 resource_desc.DepthOrArraySize = desc.depth_or_array_size;
                 resource_desc.MipLevels = desc.mip_levels;
-                resource_desc.Format = dxgi::conversions::to_DXGI(desc.format);
+                resource_desc.Format = conversions::to_dxgi_format(desc.format);
                 resource_desc.SampleDesc.Count = desc.sample_desc_count;
                 resource_desc.SampleDesc.Quality = desc.sample_desc_quality;
                 resource_desc.Layout = to_TEXTURE_LAYOUT(desc.layout);
@@ -278,7 +276,7 @@ namespace cera
                 class MakeSwapchain : public Swapchain
                 {
                   public:
-                    MakeSwapchain(Device* device, void* windowHandle, s32 clientWidth, s32 clientHeight, DXGI_FORMAT backBufferFormat = DXGI_FORMAT_R10G10B10A2_UNORM)
+                    MakeSwapchain(d3d12_device* device, void* windowHandle, s32 clientWidth, s32 clientHeight, DXGI_FORMAT backBufferFormat = DXGI_FORMAT_R10G10B10A2_UNORM)
                         : Swapchain(*device, (HWND)windowHandle, clientWidth, clientHeight, backBufferFormat)
                     {
                     }
@@ -289,7 +287,7 @@ namespace cera
                 // class MakeImGUIRenderer : public ImGUIRenderer
                 //{
                 // public:
-                //   MakeImGUIRenderer(renderer::Device* device, void* hwnd, const renderer::RenderTarget& renderTarget)
+                //   MakeImGUIRenderer(renderer::d3d12_device* device, void* hwnd, const renderer::RenderTarget& renderTarget)
                 //       : ImGUIRenderer(*device, (HWND)hwnd, renderTarget)
                 //   {
                 //   }
@@ -331,7 +329,7 @@ namespace cera
                 Context(const OutputWindowUserData& userData)
                     : m_frame_counter(0), m_current_backbuffer_index(0)
                 {
-                    m_device = Device::create();
+                    m_device = d3d12_device::create();
                     m_swapchain = std::make_shared<adaptors::MakeSwapchain>(m_device.get(), userData.primary_display_handle, userData.window_width, userData.window_height, DXGI_FORMAT_R8G8B8A8_UNORM);
                     m_resource_pool = std::make_unique<ResourcePool>();
                     m_render_target = std::make_unique<RenderTarget>();
@@ -608,7 +606,7 @@ namespace cera
                 }
 
                 //-------------------------------------------------------------------------
-                Device* device()
+                d3d12_device* device()
                 {
                     return m_device.get();
                 }
@@ -628,7 +626,7 @@ namespace cera
                 std::unique_ptr<RenderTarget> m_render_target;
                 std::unique_ptr<ResourcePool> m_resource_pool;
                 std::shared_ptr<PipelineStateObject> m_pipeline_state_object;
-                std::shared_ptr<Device> m_device;
+                std::shared_ptr<d3d12_device> m_device;
                 std::shared_ptr<Swapchain> m_swapchain;
 
                 std::unordered_map<s32, std::shared_ptr<CommandList>> m_direct_active_command_lists;
@@ -725,7 +723,7 @@ namespace cera
             //-------------------------------------------------------------------------
             ResourceSlot copy_index_buffer(size_t numIndices, Format indexFormat, const void* indexBufferData)
             {
-                std::shared_ptr<IndexBuffer> index_buffer = g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_COPY)->copy_index_buffer(numIndices, dxgi::conversions::to_DXGI(indexFormat), indexBufferData);
+                std::shared_ptr<IndexBuffer> index_buffer = g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_COPY)->copy_index_buffer(numIndices, conversions::to_dxgi_format(indexFormat), indexBufferData);
 
                 return g_ctx->resource_pool()->allocate(index_buffer);
             }
@@ -772,7 +770,7 @@ namespace cera
             //-------------------------------------------------------------------------
             ResourceSlot create_index_buffer(CreateIndexBufferDesc&& desc)
             {
-                DXGI_FORMAT dxgi_format = dxgi::conversions::to_DXGI(desc.index_format);
+                DXGI_FORMAT dxgi_format = conversions::to_dxgi_format(desc.index_format);
 
                 std::shared_ptr<IndexBuffer> index_buffer = g_ctx->device()->create_index_buffer(desc.num_indices, dxgi_format);
 
@@ -933,7 +931,7 @@ namespace cera
             //-------------------------------------------------------------------------
             void set_dynamic_index_buffer(size_t numIndicies, Format indexFormat, const void* indexBufferData)
             {
-                g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_DIRECT)->set_dynamic_index_buffer(numIndicies, dxgi::conversions::to_DXGI(indexFormat), indexBufferData);
+                g_ctx->command_list_for_current_backbuffer(D3D12_COMMAND_LIST_TYPE_DIRECT)->set_dynamic_index_buffer(numIndicies, conversions::to_dxgi_format(indexFormat), indexBufferData);
             }
 
             //-------------------------------------------------------------------------

@@ -10,7 +10,7 @@ namespace cera
 {
   namespace renderer
   {
-    ConstantBufferView::ConstantBufferView(Device& device, const std::shared_ptr<ConstantBuffer>& constantBuffer, size_t offset)
+    ConstantBufferView::ConstantBufferView(d3d12_device& device, const std::shared_ptr<ConstantBuffer>& constantBuffer, size_t offset)
         : m_device(device)
         , m_constant_buffer(constantBuffer)
     {

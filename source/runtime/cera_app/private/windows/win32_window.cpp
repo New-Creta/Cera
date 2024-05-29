@@ -347,7 +347,7 @@ namespace cera
     /** Native windows should implement MoveWindowTo by relocating the client area of the platform-specific window to (x,y). */
     void windows_window::move_window_to(s32 x, s32 y)
     {
-        // Slate gives the window position as relative to the client area of a window, so we may need to compensate for the OS border
+        // GUI gives the window position as relative to the client area of a window, so we may need to compensate for the OS border
         if (get_definition().has_os_window_border)
         {
             const LONG window_style = ::GetWindowLong(m_hwnd, GWL_STYLE);

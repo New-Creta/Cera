@@ -18,7 +18,7 @@ namespace cera
     {
       namespace internal
       {
-        std::shared_ptr<RootSignature> load_unlit_root_signature(Device* device)
+        std::shared_ptr<RootSignature> load_unlit_root_signature(d3d12_device* device)
         {
           // Create a root signature.
           // Allow input layout and deny unnecessary access to certain pipeline stages.
@@ -34,7 +34,7 @@ namespace cera
           return device->create_root_signature(root_signature_description.Desc_1_1);
         }
 
-        wrl::ComPtr<ID3DBlob> compile_unlit_vertex_shader()
+        wrl::com_ptr<ID3DBlob> compile_unlit_vertex_shader()
         {
           static const char* vertex_shader_code = "                                         \
                                                                                             \
@@ -77,10 +77,10 @@ namespace cera
           return shader_library::compile_shader(vertex_shader_compile_desc);
         }
 
-        wrl::ComPtr<ID3DBlob> load_unlit_vertex_shader()
+        wrl::com_ptr<ID3DBlob> load_unlit_vertex_shader()
         {
           // Load the vertex shader.
-          wrl::ComPtr<ID3DBlob> vertex_shader_blob;
+          wrl::com_ptr<ID3DBlob> vertex_shader_blob;
           if(DX_FAILED(D3DReadFileToBlob(L"unlit_vs.cso", &vertex_shader_blob)))
           {
             log::error("Failed to read compiled unlit vertex shader from file.");
@@ -90,7 +90,7 @@ namespace cera
           return vertex_shader_blob;
         }
 
-        wrl::ComPtr<ID3DBlob> compile_unlit_pixel_shader()
+        wrl::com_ptr<ID3DBlob> compile_unlit_pixel_shader()
         {
           static const char* pixel_shader_code = "                          \
                                                                             \
@@ -115,10 +115,10 @@ namespace cera
           return shader_library::compile_shader(pixel_shader_compile_desc);
         }
 
-        wrl::ComPtr<ID3DBlob> load_unlit_pixel_shader()
+        wrl::com_ptr<ID3DBlob> load_unlit_pixel_shader()
         {
           // Load the pixel shader.
-          wrl::ComPtr<ID3DBlob> pixel_shader_blob;
+          wrl::com_ptr<ID3DBlob> pixel_shader_blob;
           if(DX_FAILED(D3DReadFileToBlob(L"unlit_ps.cso", &pixel_shader_blob)))
           {
             log::error("Failed to read compiled unlit pixel shader from file.");
@@ -132,7 +132,7 @@ namespace cera
       std::unordered_map<std::string, ShaderInfo> g_shader_info;
 
       //-------------------------------------------------------------------------
-      wrl::ComPtr<ID3DBlob> compile_shader(const ShaderCompilationDesc& desc)
+      wrl::com_ptr<ID3DBlob> compile_shader(const ShaderCompilationDesc& desc)
       {
         s32 compile_flags = 0;
 #ifdef CERA_ENABLE_DEBUG_SHADER_COMPILATION
@@ -141,8 +141,8 @@ namespace cera
 
         HRESULT hr = S_OK;
 
-        wrl::ComPtr<ID3DBlob> byte_code = nullptr;
-        wrl::ComPtr<ID3DBlob> errors    = nullptr;
+        wrl::com_ptr<ID3DBlob> byte_code = nullptr;
+        wrl::com_ptr<ID3DBlob> errors    = nullptr;
 
         hr = D3DCompile2(desc.shader_code.data(), desc.shader_code.size(), desc.shader_name.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, desc.shader_entry_point.data(), desc.shader_feature_target.data(), compile_flags, 0, 0, 0, 0, &byte_code,
                          &errors);
@@ -163,7 +163,7 @@ namespace cera
       }
 
       //-------------------------------------------------------------------------
-      void load(Device* device)
+      void load(d3d12_device* device)
       {
         g_shader_info[tags::unlit] = 
         {

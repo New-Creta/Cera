@@ -3,7 +3,7 @@
 #include "util/assert.h"
 #include "util/log.h"
 
-#if defined(CERA_BUILD_DEBUG) || defined(CERA_BUILD_DEBUG_OPT)
+#if defined(_DEBUG)
 #define CERA_ENABLE_RESOURCE_SLOT_DEBUGGING
 #endif
 

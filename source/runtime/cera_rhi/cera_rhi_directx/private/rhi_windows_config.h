@@ -64,6 +64,6 @@ namespace cera
             std::optional<windows_rhi_type> get_first_rhi_with_feature_level_support(feature_level in_feature_level) const;
         };
 
-        extern std::array<windows_rhi_type, 3> g_search_order;
+        extern const std::array<windows_rhi_type, 3> g_search_order;
     }
 }

@@ -33,6 +33,9 @@ namespace cera
 
     bool game_engine::initialize(s32 game_window_width, s32 game_window_height)
     {
+        m_game_window = create_game_window(game_window_width, game_window_height);
+        m_game_window->set_window_mode(window_mode::windowed);
+
         if(!m_game_instance->initialize())
         {
             log::error("Failed to initialize game");
@@ -43,9 +46,6 @@ namespace cera
             log::error("Failed to load game content");
             return false;
         }
-
-        m_game_window = create_game_window(game_window_width, game_window_height);
-        m_game_window->set_window_mode(window_mode::windowed);
 
         return true;
     }

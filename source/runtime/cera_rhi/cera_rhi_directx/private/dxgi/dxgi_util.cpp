@@ -2,7 +2,7 @@
 
 namespace cera
 {
-    namespace dxgi
+    namespace renderer
     {
         namespace helpers
         {

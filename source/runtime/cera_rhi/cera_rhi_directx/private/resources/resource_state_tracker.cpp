@@ -82,7 +82,7 @@ namespace cera
       }
     }
 
-    void ResourceStateTracker::transition_resource(const Resource& resource, D3D12_RESOURCE_STATES stateAfter, u32 subResource)
+    void ResourceStateTracker::transition_resource(const resource& resource, D3D12_RESOURCE_STATES stateAfter, u32 subResource)
     {
       transition_resource(resource.d3d_resource().Get(), stateAfter, subResource);
     }
@@ -100,7 +100,7 @@ namespace cera
 
     uint32_t ResourceStateTracker::flush_pending_resource_barriers(const std::shared_ptr<CommandList>& commandList)
     {
-      CERA_ASSERT_X(s_is_locked, "Resource State Tracker is not locked");
+      CERA_ASSERT_X(s_is_locked, "resource State Tracker is not locked");
 
       // Resolve the pending resource barriers by checking the global state of the
       // (sub)resources. Add barriers if the pending state and the global state do
@@ -165,7 +165,7 @@ namespace cera
 
     void ResourceStateTracker::commit_final_resource_states()
     {
-      CERA_ASSERT_X(s_is_locked, "Resource State Tracker is not locked");
+      CERA_ASSERT_X(s_is_locked, "resource State Tracker is not locked");
 
       // Commit final resource states to the global resource state array (map).
       for(const auto& resource_state: m_final_resource_state)

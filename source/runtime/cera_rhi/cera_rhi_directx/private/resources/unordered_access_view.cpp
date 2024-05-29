@@ -9,7 +9,7 @@ namespace cera
 {
   namespace renderer
   {
-    UnorderedAccessView::UnorderedAccessView(Device& device, const std::shared_ptr<Resource>& inResource, const std::shared_ptr<Resource>& inCounterResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav)
+    UnorderedAccessView::UnorderedAccessView(d3d12_device& device, const std::shared_ptr<resource>& inResource, const std::shared_ptr<resource>& inCounterResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav)
         : m_device(device)
         , m_resource(inResource)
         , m_counter_resource(inCounterResource)
@@ -24,7 +24,7 @@ namespace cera
       {
         auto d3d_resource_desc = m_resource->d3d_resource_desc();
 
-        CERA_ASSERT_X((d3d_resource_desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS) != 0, "Resource must be created with the D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS flag");
+        CERA_ASSERT_X((d3d_resource_desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS) != 0, "resource must be created with the D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS flag");
       }
 
       m_descriptor_allocation = m_device.allocate_descriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -34,17 +34,17 @@ namespace cera
 
     UnorderedAccessView::~UnorderedAccessView() = default;
 
-    std::shared_ptr<Resource> UnorderedAccessView::resource() const
+    std::shared_ptr<resource> UnorderedAccessView::get_resource() const
     {
       return m_resource;
     }
 
-    std::shared_ptr<Resource> UnorderedAccessView::counter_resource() const
+    std::shared_ptr<resource> UnorderedAccessView::get_counter_resource() const
     {
       return m_counter_resource;
     }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE UnorderedAccessView::descriptor_handle() const
+    D3D12_CPU_DESCRIPTOR_HANDLE UnorderedAccessView::get_descriptor_handle() const
     {
       return m_descriptor_allocation.descriptor_handle();
     }

@@ -4,7 +4,7 @@ namespace cera
 {
   namespace renderer
   {
-    ConstantBuffer::ConstantBuffer(Device& device, wrl::ComPtr<ID3D12Resource> resource)
+    ConstantBuffer::ConstantBuffer(d3d12_device& device, wrl::com_ptr<ID3D12Resource> resource)
         : Buffer(device, resource)
     {
       m_size_in_bytes = d3d_resource_desc().Width;

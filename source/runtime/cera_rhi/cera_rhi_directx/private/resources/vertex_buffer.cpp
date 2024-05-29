@@ -4,14 +4,14 @@ namespace cera
 {
   namespace renderer
   {
-      VertexBuffer::VertexBuffer(Device& device, size_t num_vertices, size_t vertex_stride)
+      VertexBuffer::VertexBuffer(d3d12_device& device, size_t num_vertices, size_t vertex_stride)
           : Buffer(device, CD3DX12_RESOURCE_DESC::Buffer(num_vertices * vertex_stride)), m_num_vertices(num_vertices),
             m_vertex_stride(vertex_stride), m_vertex_buffer_view{}
       {
           create_vertex_buffer_view();
     }
 
-    VertexBuffer::VertexBuffer(Device& device, wrl::ComPtr<ID3D12Resource> resource, size_t num_vertices, size_t vertex_stride)
+    VertexBuffer::VertexBuffer(d3d12_device& device, wrl::com_ptr<ID3D12Resource> resource, size_t num_vertices, size_t vertex_stride)
         : Buffer(device, resource), m_num_vertices(num_vertices), m_vertex_stride(vertex_stride), m_vertex_buffer_view{}
     {
       create_vertex_buffer_view();

@@ -8,8 +8,6 @@
 
 namespace cera
 {
-    class command_list;
-
     namespace events
     {
         class args
@@ -45,16 +43,13 @@ namespace cera
         class render_args : public args
         {
         public:
-            render_args(u64 fDeltaTime, u64 fTotalTime, const std::shared_ptr<command_list>& commandList)
+            render_args(u64 fDeltaTime, u64 fTotalTime)
                 : elapsed_time(fDeltaTime)
                 , total_time(fTotalTime)
-                , command_list(commandList)
             {}
 
             u64 elapsed_time;
             u64 total_time;
-
-            std::shared_ptr<command_list> command_list;
         };
 
         class render_gui_args : public args

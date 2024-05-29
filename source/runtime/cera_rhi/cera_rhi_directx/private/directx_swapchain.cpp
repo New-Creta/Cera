@@ -11,7 +11,7 @@ namespace cera
 {
   namespace renderer
   {
-    Swapchain::Swapchain(Device& device, HWND hwnd, s32 clientWidth, s32 clientHeight, DXGI_FORMAT renderTargetFormat)
+    Swapchain::Swapchain(d3d12_device& device, HWND hwnd, s32 clientWidth, s32 clientHeight, DXGI_FORMAT renderTargetFormat)
         : m_device(device)
         , m_command_queue(device.command_queue(D3D12_COMMAND_LIST_TYPE_DIRECT))
         , m_hwnd(hwnd)
@@ -33,8 +33,8 @@ namespace cera
       auto dxgi_adapter = m_device.dxgi_adapter();
 
       // Get the factory that was used to create the dxgi_adapter.
-      wrl::ComPtr<IDXGIFactory> dxgi_factory;
-      wrl::ComPtr<IDXGIFactory5> dxgi_factory5;
+      wrl::com_ptr<IDXGIFactory> dxgi_factory;
+      wrl::com_ptr<IDXGIFactory5> dxgi_factory5;
 
       HRESULT hr = S_OK;
 
@@ -76,7 +76,7 @@ namespace cera
       swap_chain_desc.Flags |= DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
 
       // Now create the swap chain.
-      wrl::ComPtr<IDXGISwapChain1> dxgi_swap_chain1;
+      wrl::com_ptr<IDXGISwapChain1> dxgi_swap_chain1;
       hr = dxgi_factory5->CreateSwapChainForHwnd(d3d_command_queue.Get(), m_hwnd, &swap_chain_desc, nullptr, nullptr, &dxgi_swap_chain1);
       assert(SUCCEEDED(hr));
 
@@ -241,7 +241,7 @@ namespace cera
       return m_render_target_format;
     }
 
-    wrl::ComPtr<IDXGISwapChain4> Swapchain::dxgi_swap_chain() const
+    wrl::com_ptr<IDXGISwapChain4> Swapchain::dxgi_swap_chain() const
     {
       return m_dxgi_swap_chain;
     }
@@ -250,7 +250,7 @@ namespace cera
     {
       for(u32 i = 0; i < s_buffer_count; ++i)
       {
-        wrl::ComPtr<ID3D12Resource> back_buffer;
+        wrl::com_ptr<ID3D12Resource> back_buffer;
         if(DX_FAILED(m_dxgi_swap_chain->GetBuffer(i, IID_PPV_ARGS(&back_buffer))))
         {
           log::error("Unable to retrieve Swapchain buffer");

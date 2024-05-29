@@ -6,7 +6,7 @@ namespace cera
 {
   namespace renderer
   {
-    IndexBuffer::IndexBuffer(Device& device, s64 numIndices, DXGI_FORMAT indexFormat)
+    IndexBuffer::IndexBuffer(d3d12_device& device, s64 numIndices, DXGI_FORMAT indexFormat)
         : Buffer(device, CD3DX12_RESOURCE_DESC::Buffer(numIndices * (indexFormat == DXGI_FORMAT_R16_UINT ? 2 : 4)))
         , m_num_indicies(numIndices)
         , m_index_format(indexFormat)
@@ -16,7 +16,7 @@ namespace cera
       create_index_buffer_view();
     }
 
-    IndexBuffer::IndexBuffer(Device& device, wrl::ComPtr<ID3D12Resource> resource, s64 numIndices, DXGI_FORMAT indexFormat)
+    IndexBuffer::IndexBuffer(d3d12_device& device, wrl::com_ptr<ID3D12Resource> resource, s64 numIndices, DXGI_FORMAT indexFormat)
         : Buffer(device, resource)
         , m_num_indicies(numIndices)
         , m_index_format(indexFormat)

@@ -83,7 +83,7 @@ namespace cera
 
         /**
          * Native windows should implement SetWindowFocus to let the OS know that a window has taken focus.
-         * Slate handles focus on a per widget basis internally but the OS still needs to know what window has focus for proper message routing
+         * GUI handles focus on a per widget basis internally but the OS still needs to know what window has focus for proper message routing
          */
         virtual void set_window_focus();
 
@@ -128,6 +128,12 @@ namespace cera
 
         /** @return	The definition describing properties of the window */
         virtual const generic_window_definition& get_definition() const;
+
+        /** @return window region width */
+        virtual s32 get_window_width() const;
+
+        /** @return window region height */
+        virtual s32 get_window_height() const;
 
     protected:
         void set_definition(const generic_window_definition& definition);

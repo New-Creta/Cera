@@ -10,7 +10,7 @@ namespace cera
 {
   namespace renderer
   {
-    UploadBuffer::UploadBuffer(Device& device, memory_size pageSize)
+    UploadBuffer::UploadBuffer(d3d12_device& device, memory_size pageSize)
         : m_device(device)
         , m_page_size(pageSize)
     {
@@ -69,7 +69,7 @@ namespace cera
       return new_page;
     }
 
-    UploadBuffer::Page::Page(Device& device, memory_size sizeInBytes)
+    UploadBuffer::Page::Page(d3d12_device& device, memory_size sizeInBytes)
         : m_device(device)
         , m_page_size(sizeInBytes)
         , m_offset(0)

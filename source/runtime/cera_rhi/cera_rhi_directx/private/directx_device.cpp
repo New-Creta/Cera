@@ -24,7 +24,7 @@
 #include "util/pointer_math.h"
 
 #include "dxgi/dxgi_adapter_manager.h"
-#include "dxgi/objects/adapter.h"
+#include "dxgi/dxgi_adapter.h"
 #include "dxgi/objects/factory.h"
 
 #include "rhi_globals.h"
@@ -36,8 +36,105 @@ namespace cera
 {
     namespace renderer
     {
+        //-------------------------------------------------------------------------
+        s32 get_max_none_sampler_descriptor_count(wrl::com_ptr<ID3D12Device> device, D3D12_RESOURCE_BINDING_TIER resource_binding_tier)
+        {
+            switch (resource_binding_tier)
+            {
+            case D3D12_RESOURCE_BINDING_TIER_1:
+                return D3D12_MAX_SHADER_VISIBLE_DESCRIPTOR_HEAP_SIZE_TIER_1;
+            case D3D12_RESOURCE_BINDING_TIER_2:
+                return D3D12_MAX_SHADER_VISIBLE_DESCRIPTOR_HEAP_SIZE_TIER_2;
+            case D3D12_RESOURCE_BINDING_TIER_3: {
+                // From: https://microsoft.github.io/DirectX-Specs/d3d/ResourceBinding.html#levels-of-hardware-support
+                //   For Tier 3, the max # descriptors is listed as 1000000+. The + indicates that the runtime allows applications
+                //   to try creating descriptor heaps with more than 1000000 descriptors, leaving the driver to decide whether
+                //   it can support the request or fail the call. There is no cap exposed indicating how large of a descriptor
+                //   heap the hardware could support � applications can just try what they want and fall back to 1000000 if
+                //   larger doesn�t work.
+                // RenderDoc seems to give up on subsequent API calls if one of them return E_OUTOFMEMORY, so we don't use this
+                // detection method if the RD plug-in is loaded.
+
+#if _DEBUG
+                wrl::com_ptr<ID3D12InfoQueue> info_queue;
+
+                if (renderer::g_is_debug_layer_enabled)
+                {
+                    // Temporarily silence CREATE_DESCRIPTOR_HEAP_LARGE_NUM_DESCRIPTORS since we know we might break on it
+                    device->QueryInterface(IID_PPV_ARGS(info_queue.GetAddressOf()));
+                    if (info_queue)
+                    {
+                        D3D12_MESSAGE_ID message_id = D3D12_MESSAGE_ID_CREATE_DESCRIPTOR_HEAP_LARGE_NUM_DESCRIPTORS;
+
+                        D3D12_INFO_QUEUE_FILTER new_filter{};
+                        new_filter.DenyList.NumIDs = 1;
+                        new_filter.DenyList.pIDList = &message_id;
+
+                        info_queue->PushStorageFilter(&new_filter);
+                    }
+                }
+#endif
+
+                // create an overly large heap and test for failure
+                D3D12_DESCRIPTOR_HEAP_DESC temp_heap_desc{};
+                temp_heap_desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+                temp_heap_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+                // For single-adapter operation, set this to zero.
+                // https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_descriptor_heap_desc
+                temp_heap_desc.NodeMask = 0;
+                temp_heap_desc.NumDescriptors = 2 * D3D12_MAX_SHADER_VISIBLE_DESCRIPTOR_HEAP_SIZE_TIER_2;
+
+                wrl::com_ptr<ID3D12DescriptorHeap> temp_heap;
+                HRESULT hr = device->CreateDescriptorHeap(&temp_heap_desc, IID_PPV_ARGS(temp_heap.GetAddressOf()));
+                if (DX_SUCCESS(hr))
+                {
+                    return -1;
+                }
+                else
+                {
+                    return D3D12_MAX_SHADER_VISIBLE_DESCRIPTOR_HEAP_SIZE_TIER_2;
+                }
+
+#if _DEBUG
+                if (renderer::g_is_debug_layer_enabled)
+                {
+                    if (info_queue)
+                    {
+                        info_queue->PopStorageFilter();
+                    }
+                }
+#endif
+            }
+            break;
+            default:
+                return D3D12_MAX_SHADER_VISIBLE_DESCRIPTOR_HEAP_SIZE_TIER_2;
+            }
+        }
+        //-------------------------------------------------------------------------
+        s32 get_max_sampler_descriptor_count()
+        {
+            return D3D12_MAX_SHADER_VISIBLE_SAMPLER_HEAP_SIZE;
+        }
+
+        //-------------------------------------------------------------------------
+        D3D_ROOT_SIGNATURE_VERSION get_root_signature_version(wrl::com_ptr<ID3D12Device> device)
+        {
+            D3D12_FEATURE_DATA_ROOT_SIGNATURE d3d12_root_signature_caps = {};
+
+            // This is the highest version we currently support.
+            // If CheckFeatureSupport succeeds, the HighestVersion returned will not be greater than this.
+            d3d12_root_signature_caps.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
+            if (DX_FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &d3d12_root_signature_caps, sizeof(d3d12_root_signature_caps))))
+            {
+                d3d12_root_signature_caps.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
+            }
+
+            return d3d12_root_signature_caps.HighestVersion;
+        }
+
         namespace internal
         {
+            //-------------------------------------------------------------------------
             /**
              * Always enable the debug layer before doing anything DX12 related so all possible errors generated while creating
              * DX12 objects are caught by the debug layer.
@@ -48,7 +145,7 @@ namespace cera
                 // Always enable the debug layer before doing anything DX12 related
                 // so all possible errors generated while creating DX12 objects
                 // are caught by the debug layer.
-                wrl::ComPtr<ID3D12Debug> debug_interface;
+                wrl::com_ptr<ID3D12Debug> debug_interface;
                 if (DX_FAILED(D3D12GetDebugInterface(IID_PPV_ARGS(&debug_interface))))
                 {
                     log::error("The debug interface requires the D3D12 SDK Layers. Please install the Graphics Tools for Windows. See: "
@@ -62,7 +159,7 @@ namespace cera
 
                 if (g_with_gpu_validation)
                 {
-                    wrl::ComPtr<ID3D12Debug1> debug_interface1;
+                    wrl::com_ptr<ID3D12Debug1> debug_interface1;
                     if (DX_SUCCESS(debug_interface->QueryInterface(IID_PPV_ARGS(debug_interface1.GetAddressOf()))))
                     {
                         debug_interface1->SetEnableGPUBasedValidation(true);
@@ -73,7 +170,8 @@ namespace cera
                 return true;
             }
 
-            wrl::ComPtr<ID3D12Device2> create_device(const std::shared_ptr<dxgi::adapter>& adapter, bool is_debug_layer_enabled)
+            //-------------------------------------------------------------------------
+            wrl::com_ptr<ID3D12Device2> create_device(const std::shared_ptr<adapter>& adapter, bool is_debug_layer_enabled)
             {
                 if (is_debug_layer_enabled)
                 {
@@ -84,7 +182,7 @@ namespace cera
                     }
                 }
 
-                wrl::ComPtr<ID3D12Device2> d3d12_device;
+                wrl::com_ptr<ID3D12Device2> d3d12_device;
                 if (DX_FAILED((D3D12CreateDevice(const_cast<IDXGIAdapter*>(adapter->com_ptr()), adapter->description().max_supported_feature_level, IID_PPV_ARGS(&d3d12_device)))))
                 {
                     log::error("Unable to create D3D12Device");
@@ -95,7 +193,7 @@ namespace cera
 #if CERA_PLATFORM_WINDOWS
                 if (is_debug_layer_enabled)
                 {
-                    wrl::ComPtr<ID3D12InfoQueue> info_queue;
+                    wrl::com_ptr<ID3D12InfoQueue> info_queue;
                     if (DX_SUCCESS(d3d12_device.As(&info_queue)))
                     {
                         info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, TRUE);
@@ -130,13 +228,14 @@ namespace cera
                 return d3d12_device;
             }
 
-            bool check_tearing_support(std::shared_ptr<dxgi::adapter> adapter)
+            //-------------------------------------------------------------------------
+            bool check_tearing_support(std::shared_ptr<adapter> adapter)
             {
                 bool allow_tearing = false;
 
                 // Get the factory that was used to create the adapter.
-                wrl::ComPtr<IDXGIFactory> dxgi_factory;
-                wrl::ComPtr<IDXGIFactory5> dxgi_factory5;
+                wrl::com_ptr<IDXGIFactory> dxgi_factory;
+                wrl::com_ptr<IDXGIFactory5> dxgi_factory5;
                 if (DX_SUCCESS(adapter->com_ptr()->GetParent(IID_PPV_ARGS(&dxgi_factory))))
                 {
                     // Now get the DXGIFactory5 so I can use the IDXGIFactory5::CheckFeatureSupport method.
@@ -159,7 +258,7 @@ namespace cera
             class MakeUnorderedAccessView : public UnorderedAccessView
             {
               public:
-                MakeUnorderedAccessView(Device& device, const std::shared_ptr<Resource>& inResource, const std::shared_ptr<Resource>& inCounterResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav)
+                MakeUnorderedAccessView(d3d12_device& device, const std::shared_ptr<resource>& inResource, const std::shared_ptr<resource>& inCounterResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav)
                     : UnorderedAccessView(device, inResource, inCounterResource, uav)
                 {
                 }
@@ -170,7 +269,7 @@ namespace cera
             class MakeShaderResourceView : public ShaderResourceView
             {
               public:
-                MakeShaderResourceView(Device& device, const std::shared_ptr<Resource>& resource, const D3D12_SHADER_RESOURCE_VIEW_DESC* srv) : ShaderResourceView(device, resource, srv)
+                MakeShaderResourceView(d3d12_device& device, const std::shared_ptr<resource>& resource, const D3D12_SHADER_RESOURCE_VIEW_DESC* srv) : ShaderResourceView(device, resource, srv)
                 {
                 }
 
@@ -180,7 +279,7 @@ namespace cera
             class MakeConstantBufferView : public ConstantBufferView
             {
               public:
-                MakeConstantBufferView(Device& device, const std::shared_ptr<ConstantBuffer>& constantBuffer, size_t offset) : ConstantBufferView(device, constantBuffer, offset)
+                MakeConstantBufferView(d3d12_device& device, const std::shared_ptr<ConstantBuffer>& constantBuffer, size_t offset) : ConstantBufferView(device, constantBuffer, offset)
                 {
                 }
 
@@ -190,7 +289,7 @@ namespace cera
             class MakePipelineStateObject : public PipelineStateObject
             {
               public:
-                MakePipelineStateObject(Device& device, const D3D12_PIPELINE_STATE_STREAM_DESC& desc) : PipelineStateObject(device, desc)
+                MakePipelineStateObject(d3d12_device& device, const D3D12_PIPELINE_STATE_STREAM_DESC& desc) : PipelineStateObject(device, desc)
                 {
                 }
 
@@ -200,7 +299,7 @@ namespace cera
             class MakeRootSignature : public RootSignature
             {
               public:
-                MakeRootSignature(Device& device, const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc) : RootSignature(device, rootSignatureDesc)
+                MakeRootSignature(d3d12_device& device, const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc) : RootSignature(device, rootSignatureDesc)
                 {
                 }
 
@@ -212,11 +311,11 @@ namespace cera
             class MakeTexture : public Texture
             {
               public:
-                MakeTexture(Device& device, const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue) : Texture(device, resourceDesc, clearValue)
+                MakeTexture(d3d12_device& device, const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue) : Texture(device, resourceDesc, clearValue)
                 {
                 }
 
-                MakeTexture(Device& device, wrl::ComPtr<ID3D12Resource> resource, const D3D12_CLEAR_VALUE* clearValue) : Texture(device, resource, clearValue)
+                MakeTexture(d3d12_device& device, wrl::com_ptr<ID3D12Resource> resource, const D3D12_CLEAR_VALUE* clearValue) : Texture(device, resource, clearValue)
                 {
                 }
 
@@ -226,11 +325,11 @@ namespace cera
             class MakeVertexBuffer : public VertexBuffer
             {
               public:
-                MakeVertexBuffer(Device& device, size_t numVertices, size_t vertexStride) : VertexBuffer(device, numVertices, vertexStride)
+                MakeVertexBuffer(d3d12_device& device, size_t numVertices, size_t vertexStride) : VertexBuffer(device, numVertices, vertexStride)
                 {
                 }
 
-                MakeVertexBuffer(Device& device, wrl::ComPtr<ID3D12Resource> resource, size_t numVertices, size_t vertexStride) : VertexBuffer(device, resource, numVertices, vertexStride)
+                MakeVertexBuffer(d3d12_device& device, wrl::com_ptr<ID3D12Resource> resource, size_t numVertices, size_t vertexStride) : VertexBuffer(device, resource, numVertices, vertexStride)
                 {
                 }
 
@@ -240,11 +339,11 @@ namespace cera
             class MakeIndexBuffer : public IndexBuffer
             {
               public:
-                MakeIndexBuffer(Device& device, size_t numIndices, DXGI_FORMAT indexFormat) : IndexBuffer(device, numIndices, indexFormat)
+                MakeIndexBuffer(d3d12_device& device, size_t numIndices, DXGI_FORMAT indexFormat) : IndexBuffer(device, numIndices, indexFormat)
                 {
                 }
 
-                MakeIndexBuffer(Device& device, wrl::ComPtr<ID3D12Resource> resource, size_t numIndices, DXGI_FORMAT indexFormat) : IndexBuffer(device, resource, numIndices, indexFormat)
+                MakeIndexBuffer(d3d12_device& device, wrl::com_ptr<ID3D12Resource> resource, size_t numIndices, DXGI_FORMAT indexFormat) : IndexBuffer(device, resource, numIndices, indexFormat)
                 {
                 }
 
@@ -254,7 +353,7 @@ namespace cera
             class MakeConstantBuffer : public ConstantBuffer
             {
               public:
-                MakeConstantBuffer(Device& device, wrl::ComPtr<ID3D12Resource> resource) : ConstantBuffer(device, resource)
+                MakeConstantBuffer(d3d12_device& device, wrl::com_ptr<ID3D12Resource> resource) : ConstantBuffer(device, resource)
                 {
                 }
 
@@ -264,11 +363,11 @@ namespace cera
             class MakeByteAddressBuffer : public ByteAddressBuffer
             {
               public:
-                MakeByteAddressBuffer(Device& device, const D3D12_RESOURCE_DESC& desc) : ByteAddressBuffer(device, desc)
+                MakeByteAddressBuffer(d3d12_device& device, const D3D12_RESOURCE_DESC& desc) : ByteAddressBuffer(device, desc)
                 {
                 }
 
-                MakeByteAddressBuffer(Device& device, wrl::ComPtr<ID3D12Resource> resource) : ByteAddressBuffer(device, resource)
+                MakeByteAddressBuffer(d3d12_device& device, wrl::com_ptr<ID3D12Resource> resource) : ByteAddressBuffer(device, resource)
                 {
                 }
 
@@ -278,7 +377,7 @@ namespace cera
             class MakeDescriptorAllocator : public DescriptorAllocator
             {
               public:
-                MakeDescriptorAllocator(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, u32 numDescriptorsPerHeap = 256) : DescriptorAllocator(device, type, numDescriptorsPerHeap)
+                MakeDescriptorAllocator(d3d12_device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, u32 numDescriptorsPerHeap = 256) : DescriptorAllocator(device, type, numDescriptorsPerHeap)
                 {
                 }
 
@@ -288,17 +387,18 @@ namespace cera
             class MakeCommandQueue : public CommandQueue
             {
               public:
-                MakeCommandQueue(Device& device, D3D12_COMMAND_LIST_TYPE type) : CommandQueue(device, type)
+                MakeCommandQueue(d3d12_device& device, D3D12_COMMAND_LIST_TYPE type) : CommandQueue(device, type)
                 {
                 }
 
                 ~MakeCommandQueue() override = default;
             };
 
-            class make_device : public device
+            class make_device : public d3d12_device
             {
               public:
-                make_device(const std::shared_ptr<dxgi::adapter>& adaptor, wrl::ComPtr<ID3D12Device2> device, bool is_debug) : device(adaptor, device, is_debug)
+                make_device(const std::shared_ptr<adapter>& adaptor, wrl::com_ptr<ID3D12Device2> device, bool is_debug) 
+                    : d3d12_device(adaptor, device, is_debug)
                 {
                 }
 
@@ -306,7 +406,7 @@ namespace cera
             };
         } // namespace adaptors
 
-        void device::report_live_objects()
+        void d3d12_device::report_live_objects()
         {
             IDXGIDebug1* dxgi_debug;
             DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgi_debug));
@@ -315,11 +415,11 @@ namespace cera
             dxgi_debug->Release();
         }
 
-        std::shared_ptr<device> device::create(const std::shared_ptr<dxgi::adapter>& in_adapter, bool in_enable_debug_layer)
+        std::shared_ptr<d3d12_device> d3d12_device::create(const std::shared_ptr<adapter>& in_adapter, bool in_enable_debug_layer)
         {
             if (in_adapter)
             {
-                wrl::ComPtr<ID3D12Device2> d3d_device = internal::create_device(in_adapter, in_enable_debug_layer);
+                wrl::com_ptr<ID3D12Device2> d3d_device = internal::create_device(in_adapter, in_enable_debug_layer);
 
                 if (d3d_device)
                 {
@@ -336,8 +436,14 @@ namespace cera
             return nullptr;
         }
 
-        device::device(std::shared_ptr<dxgi::adapter> adaptor, wrl::ComPtr<ID3D12Device2> d3dDevice, bool is_debug)
-            : wrl::ComObject<ID3D12Device2>(std::move(d3dDevice)), m_adapter(adaptor), m_direct_command_queue(nullptr), m_compute_command_queue(nullptr), m_copy_command_queue(nullptr), m_tearing_supported(false), m_is_debug(is_debug)
+        d3d12_device::d3d12_device(std::shared_ptr<adapter> adaptor, wrl::com_ptr<ID3D12Device2> d3dDevice, bool is_debug)
+            : wrl::ComObject<ID3D12Device2>(d3dDevice)
+            , m_adapter(adaptor)
+            , m_direct_command_queue(nullptr)
+            , m_compute_command_queue(nullptr)
+            , m_copy_command_queue(nullptr)
+            , m_tearing_supported(false)
+            , m_is_debug(is_debug)
         {
             CERA_ASSERT_X(m_adapter != nullptr, "Invalid Adaptor given");
 
@@ -357,46 +463,41 @@ namespace cera
 
             // Check features.
             {
-                D3D12_FEATURE_DATA_ROOT_SIGNATURE feature_data;
-                feature_data.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
+                m_max_none_sampler_descriptors = get_max_none_sampler_descriptor_count(d3dDevice, m_adapter->description().resource_binding_tier);
+                m_max_sampler_descriptors = get_max_sampler_descriptor_count();
 
-                if (DX_FAILED(d3d_device()->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &feature_data, sizeof(D3D12_FEATURE_DATA_ROOT_SIGNATURE))))
-                {
-                    feature_data.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
-                }
-
-                m_highest_root_signature_version = feature_data.HighestVersion;
+                m_highest_root_signature_version = get_root_signature_version(d3dDevice);
             }
         }
 
-        device::~device() = default;
+        d3d12_device::~d3d12_device() = default;
 
-        const dxgi::adapter_description& device::adapter_description() const
+        const adapter_description& d3d12_device::adapter_description() const
         {
             return m_adapter->description();
         }
 
-        IDXGIAdapter* device::dxgi_adapter()
+        IDXGIAdapter* d3d12_device::dxgi_adapter()
         {
             return m_adapter->c_ptr();
         }
 
-        const IDXGIAdapter* device::dxgi_adapter() const
+        const IDXGIAdapter* d3d12_device::dxgi_adapter() const
         {
             return m_adapter->c_ptr();
         }
 
-        ID3D12Device2* device::d3d_device()
+        ID3D12Device2* d3d12_device::d3d_device()
         {
             return c_ptr();
         }
 
-        const ID3D12Device2* device::d3d_device() const
+        const ID3D12Device2* d3d12_device::d3d_device() const
         {
             return c_ptr();
         }
 
-        CommandQueue& device::command_queue(D3D12_COMMAND_LIST_TYPE type)
+        CommandQueue& d3d12_device::command_queue(D3D12_COMMAND_LIST_TYPE type)
         {
             CommandQueue* command_queue = nullptr;
 
@@ -418,19 +519,19 @@ namespace cera
             return *command_queue;
         }
 
-        void device::flush()
+        void d3d12_device::flush()
         {
             m_direct_command_queue->flush();
             m_compute_command_queue->flush();
             m_copy_command_queue->flush();
         }
 
-        DescriptorAllocation device::allocate_descriptors(D3D12_DESCRIPTOR_HEAP_TYPE type, u32 numDescriptors)
+        DescriptorAllocation d3d12_device::allocate_descriptors(D3D12_DESCRIPTOR_HEAP_TYPE type, u32 numDescriptors)
         {
             return m_descriptor_allocators[type]->allocate(numDescriptors);
         }
 
-        void device::release_stale_descriptors()
+        void d3d12_device::release_stale_descriptors()
         {
             for (int i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i)
             {
@@ -438,14 +539,14 @@ namespace cera
             }
         }
 
-        std::shared_ptr<ConstantBuffer> device::create_constant_buffer(wrl::ComPtr<ID3D12Resource> resource)
+        std::shared_ptr<ConstantBuffer> d3d12_device::create_constant_buffer(wrl::com_ptr<ID3D12Resource> resource)
         {
             std::shared_ptr<ConstantBuffer> constant_buffer = std::make_shared<adaptors::MakeConstantBuffer>(*this, resource);
 
             return constant_buffer;
         }
 
-        std::shared_ptr<ByteAddressBuffer> device::create_byte_address_buffer(memory_size bufferSize)
+        std::shared_ptr<ByteAddressBuffer> d3d12_device::create_byte_address_buffer(memory_size bufferSize)
         {
             // Align-up to 4-bytes
             auto aligned_buffer_size = align_up(bufferSize.size_in_bytes(), 4);
@@ -455,96 +556,96 @@ namespace cera
             return buffer;
         }
 
-        std::shared_ptr<ByteAddressBuffer> device::create_byte_address_buffer(wrl::ComPtr<ID3D12Resource> resource)
+        std::shared_ptr<ByteAddressBuffer> d3d12_device::create_byte_address_buffer(wrl::com_ptr<ID3D12Resource> resource)
         {
             std::shared_ptr<ByteAddressBuffer> buffer = std::make_shared<adaptors::MakeByteAddressBuffer>(*this, resource);
 
             return buffer;
         }
 
-        std::shared_ptr<IndexBuffer> device::create_index_buffer(size_t numIndices, DXGI_FORMAT indexFormat)
+        std::shared_ptr<IndexBuffer> d3d12_device::create_index_buffer(size_t numIndices, DXGI_FORMAT indexFormat)
         {
             std::shared_ptr<IndexBuffer> index_buffer = std::make_shared<adaptors::MakeIndexBuffer>(*this, numIndices, indexFormat);
 
             return index_buffer;
         }
 
-        std::shared_ptr<IndexBuffer> device::create_index_buffer(wrl::ComPtr<ID3D12Resource> resource, size_t numIndices, DXGI_FORMAT indexFormat)
+        std::shared_ptr<IndexBuffer> d3d12_device::create_index_buffer(wrl::com_ptr<ID3D12Resource> resource, size_t numIndices, DXGI_FORMAT indexFormat)
         {
             std::shared_ptr<IndexBuffer> index_buffer = std::make_shared<adaptors::MakeIndexBuffer>(*this, resource, numIndices, indexFormat);
 
             return index_buffer;
         }
 
-        std::shared_ptr<VertexBuffer> device::create_vertex_buffer(size_t numVertices, size_t vertexStride)
+        std::shared_ptr<VertexBuffer> d3d12_device::create_vertex_buffer(size_t numVertices, size_t vertexStride)
         {
             std::shared_ptr<VertexBuffer> vertex_buffer = std::make_shared<adaptors::MakeVertexBuffer>(*this, numVertices, vertexStride);
 
             return vertex_buffer;
         }
 
-        std::shared_ptr<VertexBuffer> device::create_vertex_buffer(wrl::ComPtr<ID3D12Resource> resource, size_t numVertices, size_t vertexStride)
+        std::shared_ptr<VertexBuffer> d3d12_device::create_vertex_buffer(wrl::com_ptr<ID3D12Resource> resource, size_t numVertices, size_t vertexStride)
         {
             std::shared_ptr<VertexBuffer> vertex_buffer = std::make_shared<adaptors::MakeVertexBuffer>(*this, resource, numVertices, vertexStride);
 
             return vertex_buffer;
         }
 
-        std::shared_ptr<Texture> device::create_texture(const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue)
+        std::shared_ptr<Texture> d3d12_device::create_texture(const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue)
         {
             std::shared_ptr<Texture> texture = std::make_shared<adaptors::MakeTexture>(*this, resourceDesc, clearValue);
 
             return texture;
         }
 
-        std::shared_ptr<Texture> device::create_texture(wrl::ComPtr<ID3D12Resource> resource, const D3D12_CLEAR_VALUE* clearValue)
+        std::shared_ptr<Texture> d3d12_device::create_texture(wrl::com_ptr<ID3D12Resource> resource, const D3D12_CLEAR_VALUE* clearValue)
         {
             std::shared_ptr<Texture> texture = std::make_shared<adaptors::MakeTexture>(*this, resource, clearValue);
 
             return texture;
         }
 
-        std::shared_ptr<RootSignature> device::create_root_signature(const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc)
+        std::shared_ptr<RootSignature> d3d12_device::create_root_signature(const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc)
         {
             std::shared_ptr<RootSignature> RootSignature = std::make_shared<adaptors::MakeRootSignature>(*this, rootSignatureDesc);
 
             return RootSignature;
         }
 
-        std::shared_ptr<PipelineStateObject> device::do_create_pipeline_state_object(const D3D12_PIPELINE_STATE_STREAM_DESC& pipelineStateStreamDesc)
+        std::shared_ptr<PipelineStateObject> d3d12_device::do_create_pipeline_state_object(const D3D12_PIPELINE_STATE_STREAM_DESC& pipelineStateStreamDesc)
         {
             std::shared_ptr<PipelineStateObject> pipeline_state_object = std::make_shared<adaptors::MakePipelineStateObject>(*this, pipelineStateStreamDesc);
 
             return pipeline_state_object;
         }
 
-        std::shared_ptr<ConstantBufferView> device::create_constant_buffer_view(const std::shared_ptr<ConstantBuffer>& constant_buffer, size_t offset)
+        std::shared_ptr<ConstantBufferView> d3d12_device::create_constant_buffer_view(const std::shared_ptr<ConstantBuffer>& constant_buffer, size_t offset)
         {
             std::shared_ptr<ConstantBufferView> constant_buffer_view = std::make_shared<adaptors::MakeConstantBufferView>(*this, constant_buffer, offset);
 
             return constant_buffer_view;
         }
 
-        std::shared_ptr<ShaderResourceView> device::create_shader_resource_view(const std::shared_ptr<Resource>& resource, const D3D12_SHADER_RESOURCE_VIEW_DESC* srv)
+        std::shared_ptr<ShaderResourceView> d3d12_device::create_shader_resource_view(const std::shared_ptr<resource>& resource, const D3D12_SHADER_RESOURCE_VIEW_DESC* srv)
         {
             std::shared_ptr<ShaderResourceView> ShaderResourceView = std::make_shared<adaptors::MakeShaderResourceView>(*this, resource, srv);
 
             return ShaderResourceView;
         }
 
-        std::shared_ptr<UnorderedAccessView> device::create_unordered_access_view(const std::shared_ptr<Resource>& inResource, const std::shared_ptr<Resource>& inCounterResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav)
+        std::shared_ptr<UnorderedAccessView> d3d12_device::create_unordered_access_view(const std::shared_ptr<resource>& inResource, const std::shared_ptr<resource>& inCounterResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC* uav)
         {
             std::shared_ptr<UnorderedAccessView> unordered_access_view = std::make_shared<adaptors::MakeUnorderedAccessView>(*this, inResource, inCounterResource, uav);
 
             return unordered_access_view;
         }
 
-        D3D_ROOT_SIGNATURE_VERSION device::highest_root_signature_version() const
+        D3D_ROOT_SIGNATURE_VERSION d3d12_device::highest_root_signature_version() const
         {
             return m_highest_root_signature_version;
         }
 
-        DXGI_SAMPLE_DESC device::multisample_quality_levels(DXGI_FORMAT format, u32 numSamples, D3D12_MULTISAMPLE_QUALITY_LEVEL_FLAGS flags) const
+        DXGI_SAMPLE_DESC d3d12_device::multisample_quality_levels(DXGI_FORMAT format, u32 numSamples, D3D12_MULTISAMPLE_QUALITY_LEVEL_FLAGS flags) const
         {
             DXGI_SAMPLE_DESC sample_desc = {1, 0};
 
@@ -570,7 +671,7 @@ namespace cera
             return sample_desc;
         }
 
-        bool device::is_tearing_supported() const
+        bool d3d12_device::is_tearing_supported() const
         {
             return m_tearing_supported;
         }

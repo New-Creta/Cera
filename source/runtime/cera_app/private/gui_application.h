@@ -20,9 +20,9 @@ namespace cera
         static std::shared_ptr<gui_application> create(const std::shared_ptr<generic_application> &in_platform_application);
 
         /**
-         * Returns true if a Slate application instance is currently initialized and ready
+         * Returns true if a GUI application instance is currently initialized and ready
          *
-         * @return  True if Slate application is initialized
+         * @return  True if GUI application is initialized
          */
         static bool is_initialized();
 
@@ -40,6 +40,9 @@ namespace cera
     public:
         /** Add a new window to the application */
         static std::shared_ptr<generic_window> add_window( const generic_window_definition& window_definition, const bool show = true );
+
+    public:
+        void initialize_renderer();
 
     protected:
         /** Event when application is closing down */

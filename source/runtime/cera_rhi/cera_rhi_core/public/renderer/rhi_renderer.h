@@ -76,7 +76,7 @@ namespace cera
     }
 
     /**
-     * Resource creation functions
+     * resource creation functions
      */
     ResourceSlot create_clear_state(CreateClearStateDesc&& clearStateParams);
     ResourceSlot create_raster_state(CreateRasterStateDesc&& rasterStateParams);

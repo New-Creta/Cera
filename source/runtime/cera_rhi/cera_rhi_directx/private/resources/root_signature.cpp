@@ -10,7 +10,7 @@ namespace cera
 {
   namespace renderer
   {
-    RootSignature::RootSignature(Device& device, const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc)
+    RootSignature::RootSignature(d3d12_device& device, const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc)
         : m_device(device)
         , m_root_signature_description {}
         , m_num_descriptors_per_table {0}
@@ -92,8 +92,8 @@ namespace cera
       D3D_ROOT_SIGNATURE_VERSION highest_version = m_device.highest_root_signature_version();
 
       // Serialize the root signature.
-      wrl::ComPtr<ID3DBlob> root_signature_blob;
-      wrl::ComPtr<ID3DBlob> error_blob;
+      wrl::com_ptr<ID3DBlob> root_signature_blob;
+      wrl::com_ptr<ID3DBlob> error_blob;
 
       if(DX_FAILED(D3DX12SerializeVersionedRootSignature(&version_root_signature_desc, highest_version, &root_signature_blob, &error_blob)))
       {
@@ -113,7 +113,7 @@ namespace cera
       return true;
     }
 
-    wrl::ComPtr<ID3D12RootSignature> RootSignature::d3d_root_signature() const
+    wrl::com_ptr<ID3D12RootSignature> RootSignature::d3d_root_signature() const
     {
       return m_root_signature;
     }

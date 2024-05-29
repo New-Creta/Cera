@@ -4,12 +4,12 @@ namespace cera
 {
   namespace renderer
   {
-      ByteAddressBuffer::ByteAddressBuffer(Device& device, const D3D12_RESOURCE_DESC& res_desc)
+      ByteAddressBuffer::ByteAddressBuffer(d3d12_device& device, const D3D12_RESOURCE_DESC& res_desc)
           : Buffer(device, res_desc)
       {
     }
 
-    ByteAddressBuffer::ByteAddressBuffer(Device& device, wrl::ComPtr<ID3D12Resource> resource)
+    ByteAddressBuffer::ByteAddressBuffer(d3d12_device& device, wrl::com_ptr<ID3D12Resource> resource)
         : Buffer(device, resource)
     {
     }

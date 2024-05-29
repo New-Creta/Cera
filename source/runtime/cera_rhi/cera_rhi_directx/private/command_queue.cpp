@@ -18,9 +18,9 @@ namespace cera
   {
     namespace internal
     {
-      wrl::ComPtr<ID3D12CommandQueue> create_command_queue(wrl::ComPtr<ID3D12Device2> device, D3D12_COMMAND_LIST_TYPE type)
+      wrl::com_ptr<ID3D12CommandQueue> create_command_queue(wrl::com_ptr<ID3D12Device2> device, D3D12_COMMAND_LIST_TYPE type)
       {
-        wrl::ComPtr<ID3D12CommandQueue> d3d12_command_queue;
+        wrl::com_ptr<ID3D12CommandQueue> d3d12_command_queue;
 
         D3D12_COMMAND_QUEUE_DESC desc = {};
         desc.Type                     = type;
@@ -37,9 +37,9 @@ namespace cera
         return d3d12_command_queue;
       }
 
-      wrl::ComPtr<ID3D12Fence> create_fence(wrl::ComPtr<ID3D12Device2> device)
+      wrl::com_ptr<ID3D12Fence> create_fence(wrl::com_ptr<ID3D12Device2> device)
       {
-        wrl::ComPtr<ID3D12Fence> fence;
+        wrl::com_ptr<ID3D12Fence> fence;
 
         if(DX_FAILED((device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)))))
         {
@@ -56,7 +56,7 @@ namespace cera
       class MakeCommandList : public CommandList
       {
       public:
-        MakeCommandList(Device& device, D3D12_COMMAND_LIST_TYPE type)
+        MakeCommandList(d3d12_device& device, D3D12_COMMAND_LIST_TYPE type)
             : CommandList(device, type)
         {
         }
@@ -65,7 +65,7 @@ namespace cera
       };
     } // namespace adaptors
 
-    CommandQueue::CommandQueue(Device& device, D3D12_COMMAND_LIST_TYPE type)
+    CommandQueue::CommandQueue(d3d12_device& device, D3D12_COMMAND_LIST_TYPE type)
         : m_device(device)
         , m_command_list_type(type)
         , m_fence_value(0)
@@ -125,7 +125,7 @@ namespace cera
       return command_list;
     }
 
-    wrl::ComPtr<ID3D12CommandQueue> CommandQueue::d3d_command_queue() const
+    wrl::com_ptr<ID3D12CommandQueue> CommandQueue::d3d_command_queue() const
     {
       return m_d3d_command_queue;
     }

@@ -203,13 +203,13 @@ namespace cera
       }
     } // namespace internal
 
-    Texture::Texture(Device& device, const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue)
-        : Resource(device, resourceDesc, clearValue)
+    Texture::Texture(d3d12_device& device, const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue)
+        : resource(device, resourceDesc, clearValue)
     {
       create_views();
     }
-    Texture::Texture(Device& device, wrl::ComPtr<ID3D12Resource> resource, const D3D12_CLEAR_VALUE* clearValue)
-        : Resource(device, resource, clearValue)
+    Texture::Texture(d3d12_device& device, wrl::com_ptr<ID3D12Resource> resource, const D3D12_CLEAR_VALUE* clearValue)
+        : resource(device, resource, clearValue)
     {
       create_views();
     }
@@ -217,7 +217,7 @@ namespace cera
 
     bool Texture::resize(u32 width, u32 height, u16 depthOrArraySize)
     {
-      // Resource can't be resized if it was never created in the first place.
+      // resource can't be resized if it was never created in the first place.
       if(d3d_resource())
       {
         CD3DX12_RESOURCE_DESC res_desc(d3d_resource()->GetDesc());

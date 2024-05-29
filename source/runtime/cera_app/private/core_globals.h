@@ -1,5 +1,7 @@
 #pragma once
 
+#include "util/types.h"
+
 #include <string>
 
 namespace cera
@@ -18,4 +20,10 @@ namespace cera
 
     /** Wheter the application can ever render. */
     extern bool g_can_ever_render;
+
+    /** Minimum width of a window */
+    extern s32 g_minimum_window_width;
+
+    /** Maximum height of a window */
+    extern s32 g_minimum_window_height;
 }

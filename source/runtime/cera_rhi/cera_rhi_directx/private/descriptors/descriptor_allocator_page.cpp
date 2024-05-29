@@ -9,7 +9,7 @@ namespace cera
 {
   namespace renderer
   {
-    DescriptorAllocatorPage::DescriptorAllocatorPage(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, u32 numDescriptors)
+    DescriptorAllocatorPage::DescriptorAllocatorPage(d3d12_device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, u32 numDescriptors)
         : m_device(device)
         , m_heap_type(type)
         , m_num_descriptors_in_heap(numDescriptors)

@@ -31,9 +31,9 @@ namespace cera
     }
 
     /**
-     * Returns true if a Slate application instance is currently initialized and ready
+     * Returns true if a GUI application instance is currently initialized and ready
      *
-     * @return  True if Slate application is initialized
+     * @return  True if GUI application is initialized
      */
     bool gui_application::is_initialized()
     {
@@ -75,6 +75,11 @@ namespace cera
         s_platform_application->initialize_window(window, window_definition, show);
 
         return window;
+    }
+
+    void gui_application::initialize_renderer()
+    {
+
     }
 
     void gui_application::on_shutdown()

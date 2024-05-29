@@ -33,7 +33,7 @@ namespace cera
       class MakeUploadBuffer : public UploadBuffer
       {
       public:
-        MakeUploadBuffer(Device& device, memory_size pageSize = 2_mb)
+        MakeUploadBuffer(d3d12_device& device, memory_size pageSize = 2_mb)
             : UploadBuffer(device, pageSize)
         {
         }
@@ -42,7 +42,7 @@ namespace cera
       };
     } // namespace adaptors
 
-    CommandList::CommandList(Device& device, D3D12_COMMAND_LIST_TYPE type)
+    CommandList::CommandList(d3d12_device& device, D3D12_COMMAND_LIST_TYPE type)
         : m_device(device)
         , m_d3d_command_list_type(type)
         , m_root_signature(nullptr)
@@ -75,17 +75,17 @@ namespace cera
       return m_d3d_command_list_type;
     }
 
-    Device* CommandList::device() const
+    d3d12_device* CommandList::device() const
     {
       return &m_device;
     }
 
-    wrl::ComPtr<ID3D12GraphicsCommandList2> CommandList::graphics_command_list() const
+    wrl::com_ptr<ID3D12GraphicsCommandList2> CommandList::graphics_command_list() const
     {
       return m_d3d_command_list;
     }
 
-    void CommandList::transition_barrier(wrl::ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES stateAfter, u32 subresource, bool flushBarriers)
+    void CommandList::transition_barrier(wrl::com_ptr<ID3D12Resource> resource, D3D12_RESOURCE_STATES stateAfter, u32 subresource, bool flushBarriers)
     {
       if(resource)
       {
@@ -100,7 +100,7 @@ namespace cera
       }
     }
 
-    void CommandList::transition_barrier(const std::shared_ptr<Resource>& resource, D3D12_RESOURCE_STATES stateAfter, u32 subresource, bool flushBarriers)
+    void CommandList::transition_barrier(const std::shared_ptr<resource>& resource, D3D12_RESOURCE_STATES stateAfter, u32 subresource, bool flushBarriers)
     {
       if(resource)
       {
@@ -113,7 +113,7 @@ namespace cera
       m_resource_state_tracker->flush_resource_barriers(shared_from_this());
     }
 
-    void CommandList::copy_resource(wrl::ComPtr<ID3D12Resource> dstRes, wrl::ComPtr<ID3D12Resource> srcRes)
+    void CommandList::copy_resource(wrl::com_ptr<ID3D12Resource> dstRes, wrl::com_ptr<ID3D12Resource> srcRes)
     {
       transition_barrier(dstRes, D3D12_RESOURCE_STATE_COPY_DEST);
       transition_barrier(srcRes, D3D12_RESOURCE_STATE_COPY_SOURCE);
@@ -126,14 +126,14 @@ namespace cera
       track_resource(srcRes);
     }
 
-    void CommandList::copy_resource(const std::shared_ptr<Resource>& dstRes, const std::shared_ptr<Resource>& srcRes)
+    void CommandList::copy_resource(const std::shared_ptr<resource>& dstRes, const std::shared_ptr<resource>& srcRes)
     {
       assert(dstRes && srcRes);
 
       copy_resource(dstRes->d3d_resource(), srcRes->d3d_resource());
     }
 
-    void CommandList::resolve_subresource(const std::shared_ptr<Resource>& dstRes, const std::shared_ptr<Resource>& srcRes, u32 dstSubresource, u32 srcSubresource)
+    void CommandList::resolve_subresource(const std::shared_ptr<resource>& dstRes, const std::shared_ptr<resource>& srcRes, u32 dstSubresource, u32 srcSubresource)
     {
       transition_barrier(dstRes, D3D12_RESOURCE_STATE_RESOLVE_DEST, dstSubresource);
       transition_barrier(srcRes, D3D12_RESOURCE_STATE_RESOLVE_SOURCE, srcSubresource);
@@ -147,9 +147,9 @@ namespace cera
       track_resource(dstRes);
     }
 
-    wrl::ComPtr<ID3D12Resource> CommandList::copy_buffer(memory_size bufferSize, const void* bufferData, D3D12_RESOURCE_FLAGS flags)
+    wrl::com_ptr<ID3D12Resource> CommandList::copy_buffer(memory_size bufferSize, const void* bufferData, D3D12_RESOURCE_FLAGS flags)
     {
-      wrl::ComPtr<ID3D12Resource> d3d_resource;
+      wrl::com_ptr<ID3D12Resource> d3d_resource;
 
       if(bufferSize == 0)
       {
@@ -174,7 +174,7 @@ namespace cera
         if(bufferData != nullptr)
         {
           // Create an upload resource to use as an intermediate buffer to copy the buffer resource
-          wrl::ComPtr<ID3D12Resource> upload_resource;
+          wrl::com_ptr<ID3D12Resource> upload_resource;
 
           auto upload_heap_properties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
           auto upload_resource_desc_buffer = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
@@ -276,7 +276,7 @@ namespace cera
 
       if(destination_resource)
       {
-        // Resource must be in the copy-destination state.
+        // resource must be in the copy-destination state.
         transition_barrier(texture, D3D12_RESOURCE_STATE_COPY_DEST);
         flush_resource_barriers();
 
@@ -286,7 +286,7 @@ namespace cera
         auto upload_heap_properties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
         auto upload_resource_desc_buffer = CD3DX12_RESOURCE_DESC::Buffer(required_size);
 
-        wrl::ComPtr<ID3D12Resource> intermediate_resource;
+        wrl::com_ptr<ID3D12Resource> intermediate_resource;
         if(DX_FAILED(d3d_device->CreateCommittedResource(&upload_heap_properties, D3D12_HEAP_FLAG_NONE, &upload_resource_desc_buffer, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&intermediate_resource))))
         {
           log::error("Failed to CreateCommittedResource");
@@ -481,7 +481,7 @@ namespace cera
     {
       assert(srv);
 
-      auto resource = srv->resource();
+      auto resource = srv->get_resource();
       if(resource)
       {
         if(numSubresources < D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES)
@@ -499,7 +499,7 @@ namespace cera
         track_resource(resource);
       }
 
-      m_dynamic_descriptor_heap[D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV]->stage_descriptors(rootParameterIndex, descriptorOffset, 1, srv->descriptor_handle());
+      m_dynamic_descriptor_heap[D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV]->stage_descriptors(rootParameterIndex, descriptorOffset, 1, srv->get_descriptor_handle());
     }
 
     void CommandList::set_shader_resource_view_with_texture(s32 rootParameterIndex, u32 descriptorOffset, const std::shared_ptr<Texture>& texture, D3D12_RESOURCE_STATES stateAfter, u32 firstSubresource, u32 numSubresources)
@@ -528,7 +528,7 @@ namespace cera
     {
       assert(uav);
 
-      auto resource = uav->resource();
+      auto resource = uav->get_resource();
       if(resource)
       {
         if(numSubresources < D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES)
@@ -546,7 +546,7 @@ namespace cera
         track_resource(resource);
       }
 
-      m_dynamic_descriptor_heap[D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV]->stage_descriptors(rootParameterIndex, descriptorOffset, 1, uav->descriptor_handle());
+      m_dynamic_descriptor_heap[D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV]->stage_descriptors(rootParameterIndex, descriptorOffset, 1, uav->get_descriptor_handle());
     }
 
     void CommandList::set_unordered_access_view(u32 rootParameterIndex, u32 descriptorOffset, const std::shared_ptr<Texture>& texture, u32 mip, D3D12_RESOURCE_STATES stateAfter, u32 firstSubresource, u32 numSubresources)
@@ -695,12 +695,12 @@ namespace cera
       return true;
     }
 
-    void CommandList::track_resource(wrl::ComPtr<ID3D12Object> object)
+    void CommandList::track_resource(wrl::com_ptr<ID3D12Object> object)
     {
       m_tracked_objects.push_back(object);
     }
 
-    void CommandList::track_resource(const std::shared_ptr<Resource>& res)
+    void CommandList::track_resource(const std::shared_ptr<resource>& res)
     {
       assert(res);
 

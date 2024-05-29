@@ -537,7 +537,7 @@ namespace cera
                     border_height = border_rect.bottom - border_rect.top;
                 }
 
-                // We always apply border_width and BorderHeight since Slate always works with client area window sizes
+                // We always apply border_width and BorderHeight since GUI always works with client area window sizes
                 min_max_info->ptMinTrackSize.x = static_cast<s32>(std::round(size_limits.get_min_width().value_or((f32)min_max_info->ptMinTrackSize.x)));
                 min_max_info->ptMinTrackSize.y = static_cast<s32>(std::round(size_limits.get_min_height().value_or((f32)min_max_info->ptMinTrackSize.y)));
                 min_max_info->ptMaxTrackSize.x = static_cast<s32>(std::round(size_limits.get_max_width().value_or((f32)min_max_info->ptMaxTrackSize.x)) + border_width);
@@ -588,7 +588,7 @@ namespace cera
             break;
             case WM_GETDLGCODE:
             {
-                // Slate wants all keys and messages.
+                // GUI wants all keys and messages.
                 return DLGC_WANTALLKEYS;
             }
             break;
@@ -633,7 +633,7 @@ namespace cera
         // that message pumping doesn't occur (which causes these messages).
         ::DisableProcessWindowsGhosting();
 
-        // Register the Win32 class for Slate windows and assign the application instance and icon
+        // Register the Win32 class for GUI windows and assign the application instance and icon
         if (!register_class(instance_handle, icon_handle))
         {
             log::error("Unable to execute RegisterClass");

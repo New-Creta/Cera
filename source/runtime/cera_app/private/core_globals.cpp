@@ -16,4 +16,8 @@ namespace cera
     bool g_pumping_messages = false;
     /** Wheter the application can ever render. */
     bool g_can_ever_render = CERA_CAN_EVER_RENDER;
+    /** Minimum width of a window */
+    s32 g_minimum_window_width = 8;
+    /** Maximum height of a window */
+    s32 g_minimum_window_height = 8;
 }

@@ -3,6 +3,9 @@ add_library(cera_rhi_null STATIC)
 # Sources
 ## private sources
 target_sources(cera_rhi_null PRIVATE 
+    ### renderer
+    ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_null/private/renderer/rhi_null_renderer_window_context.cpp
+
     ${SOURCE_RUNTIME_DIRECTORY}/cera_rhi/cera_rhi_null/private/rhi_null.cpp)
 
 ## public sources
